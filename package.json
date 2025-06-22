@@ -1,0 +1,20 @@
+{
+  "name": "jsrogue",
+  "version": "1.0.0",
+  "description": "A web-based rogue/nethack clone with pixelated graphics and turn-based gameplay",
+  "license": "ISC",
+  "author": "",
+  "type": "commonjs",
+  "main": "index.js",
+  "scripts": {
+    "start": "python3 -m http.server 8000",
+    "dev": "python3 -m http.server 8000",
+    "build": "echo 'No build step needed for vanilla JS'",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": ["roguelike", "game", "javascript", "canvas", "turn-based"],
+  "repository": {
+    "type": "git",
+    "url": ""
+  }
+}

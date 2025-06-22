@@ -1,0 +1,286 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Press Start 2P', monospace;
+    background: #0a0a0a;
+    color: #00ff00;
+    overflow: hidden;
+    image-rendering: pixelated;
+    image-rendering: -moz-crisp-edges;
+    image-rendering: crisp-edges;
+}
+
+.game-container {
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+    padding: 10px;
+    background: linear-gradient(45deg, #0a0a0a, #1a1a1a);
+}
+
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px;
+    border-bottom: 2px solid #00ff00;
+    margin-bottom: 10px;
+}
+
+.header h1 {
+    font-size: 24px;
+    text-shadow: 2px 2px 4px rgba(0, 255, 0, 0.5);
+}
+
+.game-info {
+    display: flex;
+    gap: 20px;
+    font-size: 12px;
+}
+
+.main-content {
+    display: flex;
+    flex: 1;
+    gap: 20px;
+}
+
+.game-area {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+#gameCanvas {
+    border: 2px solid #00ff00;
+    background: #000;
+    box-shadow: 0 0 20px rgba(0, 255, 0, 0.3);
+    margin-bottom: 10px;
+}
+
+.controls {
+    text-align: center;
+    font-size: 10px;
+    color: #888;
+}
+
+.controls p {
+    margin: 5px 0;
+}
+
+.sidebar {
+    width: 300px;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.player-stats, .inventory, .message-log {
+    border: 1px solid #00ff00;
+    padding: 10px;
+    background: rgba(0, 0, 0, 0.8);
+}
+
+.player-stats h3, .inventory h3, .message-log h3 {
+    font-size: 14px;
+    margin-bottom: 10px;
+    text-align: center;
+    border-bottom: 1px solid #00ff00;
+    padding-bottom: 5px;
+}
+
+#playerStats p, #inventoryList p, #messageLog p {
+    font-size: 10px;
+    margin: 5px 0;
+    line-height: 1.4;
+}
+
+.message-log {
+    flex: 1;
+    overflow-y: auto;
+    max-height: 200px;
+}
+
+#messageLog {
+    font-size: 9px;
+    line-height: 1.3;
+}
+
+/* Modal Styles */
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.8);
+}
+
+.modal-content {
+    background: #000;
+    border: 2px solid #00ff00;
+    margin: 10% auto;
+    padding: 20px;
+    width: 80%;
+    max-width: 600px;
+    box-shadow: 0 0 30px rgba(0, 255, 0, 0.5);
+}
+
+.modal-content h2 {
+    text-align: center;
+    margin-bottom: 20px;
+    font-size: 18px;
+}
+
+.battle-participants {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 20px;
+}
+
+.player-battle, .enemy-battle {
+    flex: 1;
+    text-align: center;
+    padding: 10px;
+    border: 1px solid #00ff00;
+    margin: 0 10px;
+}
+
+.player-battle h3, .enemy-battle h3 {
+    font-size: 12px;
+    margin-bottom: 10px;
+}
+
+.player-battle p, .enemy-battle p {
+    font-size: 10px;
+    margin: 5px 0;
+}
+
+#battleLog {
+    border: 1px solid #00ff00;
+    padding: 10px;
+    margin-bottom: 20px;
+    max-height: 150px;
+    overflow-y: auto;
+    background: rgba(0, 0, 0, 0.5);
+}
+
+#battleLog p {
+    font-size: 10px;
+    margin: 3px 0;
+}
+
+.battle-actions {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+}
+
+button {
+    background: #000;
+    color: #00ff00;
+    border: 1px solid #00ff00;
+    padding: 8px 16px;
+    font-family: 'Press Start 2P', monospace;
+    font-size: 10px;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+button:hover {
+    background: #00ff00;
+    color: #000;
+    box-shadow: 0 0 10px rgba(0, 255, 0, 0.5);
+}
+
+button:active {
+    transform: scale(0.95);
+}
+
+#inventoryModalList {
+    max-height: 300px;
+    overflow-y: auto;
+    margin-bottom: 20px;
+}
+
+.inventory-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 8px;
+    border: 1px solid #333;
+    margin: 5px 0;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.inventory-item:hover {
+    border-color: #00ff00;
+    background: rgba(0, 255, 0, 0.1);
+}
+
+.inventory-item-name {
+    font-size: 10px;
+}
+
+.inventory-item-type {
+    font-size: 8px;
+    color: #888;
+}
+
+/* Scrollbar styling */
+::-webkit-scrollbar {
+    width: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: #000;
+}
+
+::-webkit-scrollbar-thumb {
+    background: #00ff00;
+    border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: #00cc00;
+}
+
+/* Responsive design */
+@media (max-width: 1200px) {
+    .main-content {
+        flex-direction: column;
+    }
+    
+    .sidebar {
+        width: 100%;
+        flex-direction: row;
+    }
+    
+    .sidebar > div {
+        flex: 1;
+    }
+}
+
+@media (max-width: 800px) {
+    .header {
+        flex-direction: column;
+        gap: 10px;
+    }
+    
+    .game-info {
+        flex-direction: column;
+        gap: 5px;
+    }
+    
+    #gameCanvas {
+        width: 100%;
+        height: auto;
+    }
+} 

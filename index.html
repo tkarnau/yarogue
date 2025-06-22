@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JSRogue - A Web-Based Roguelike</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="game-container">
+        <div class="header">
+            <h1>JSRogue</h1>
+            <div class="game-info">
+                <span id="level">Level: 1</span>
+                <span id="health">HP: 20/20</span>
+                <span id="gold">Gold: 0</span>
+            </div>
+        </div>
+        
+        <div class="main-content">
+            <div class="game-area">
+                <canvas id="gameCanvas" width="800" height="600"></canvas>
+                <div class="controls">
+                    <p>Use WASD or Arrow Keys to move</p>
+                    <p>Space to wait, I for inventory, E to examine</p>
+                </div>
+            </div>
+            
+            <div class="sidebar">
+                <div class="player-stats">
+                    <h3>Player Stats</h3>
+                    <div id="playerStats">
+                        <p>Level: <span id="playerLevel">1</span></p>
+                        <p>HP: <span id="playerHP">20</span>/<span id="playerMaxHP">20</span></p>
+                        <p>Attack: <span id="playerAttack">5</span></p>
+                        <p>Defense: <span id="playerDefense">2</span></p>
+                        <p>Experience: <span id="playerXP">0</span>/<span id="playerNextXP">100</span></p>
+                    </div>
+                </div>
+                
+                <div class="inventory">
+                    <h3>Inventory</h3>
+                    <div id="inventoryList">
+                        <p>Empty</p>
+                    </div>
+                </div>
+                
+                <div class="message-log">
+                    <h3>Messages</h3>
+                    <div id="messageLog">
+                        <p>Welcome to JSRogue! Use WASD to move.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Battle Modal -->
+    <div id="battleModal" class="modal">
+        <div class="modal-content">
+            <h2>Battle!</h2>
+            <div id="battleInfo">
+                <div class="battle-participants">
+                    <div class="player-battle">
+                        <h3>You</h3>
+                        <p>HP: <span id="battlePlayerHP">20</span></p>
+                        <p>Attack: <span id="battlePlayerAttack">5</span></p>
+                    </div>
+                    <div class="enemy-battle">
+                        <h3 id="battleEnemyName">Enemy</h3>
+                        <p>HP: <span id="battleEnemyHP">10</span></p>
+                        <p>Attack: <span id="battleEnemyAttack">3</span></p>
+                    </div>
+                </div>
+                <div id="battleLog">
+                    <p>Battle begins!</p>
+                </div>
+            </div>
+            <div class="battle-actions">
+                <button id="attackBtn">Attack</button>
+                <button id="useItemBtn">Use Item</button>
+                <button id="fleeBtn">Flee</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Inventory Modal -->
+    <div id="inventoryModal" class="modal">
+        <div class="modal-content">
+            <h2>Inventory</h2>
+            <div id="inventoryModalList">
+                <!-- Items will be populated here -->
+            </div>
+            <button id="closeInventoryBtn">Close</button>
+        </div>
+    </div>
+
+    <script src="js/game.js"></script>
+    <script src="js/player.js"></script>
+    <script src="js/enemy.js"></script>
+    <script src="js/item.js"></script>
+    <script src="js/map.js"></script>
+    <script src="js/battle.js"></script>
+    <script src="js/ui.js"></script>
+    <script src="js/main.js"></script>
+</body>
+</html> 
