@@ -33,7 +33,7 @@ class Item {
             case 'sword':
                 this.name = 'Iron Sword';
                 this.symbol = '/';
-                this.color = '#cccccc';
+                this.color = '#BDBDBD'; // Light gray
                 this.attackBonus = 3;
                 this.value = 25;
                 this.description = 'A sharp iron sword';
@@ -42,7 +42,7 @@ class Item {
             case 'axe':
                 this.name = 'Battle Axe';
                 this.symbol = '\\';
-                this.color = '#8b4513';
+                this.color = '#8D6E63'; // Brown
                 this.attackBonus = 5;
                 this.value = 40;
                 this.description = 'A heavy battle axe';
@@ -51,7 +51,7 @@ class Item {
             case 'mace':
                 this.name = 'Iron Mace';
                 this.symbol = 'M';
-                this.color = '#696969';
+                this.color = '#757575'; // Dark gray
                 this.attackBonus = 4;
                 this.value = 30;
                 this.description = 'A solid iron mace';
@@ -60,7 +60,7 @@ class Item {
             case 'dagger':
                 this.name = 'Steel Dagger';
                 this.symbol = '|';
-                this.color = '#c0c0c0';
+                this.color = '#E0E0E0'; // Silver
                 this.attackBonus = 2;
                 this.value = 15;
                 this.description = 'A sharp steel dagger';
@@ -69,7 +69,7 @@ class Item {
             case 'staff':
                 this.name = 'Magic Staff';
                 this.symbol = 'I';
-                this.color = '#daa520';
+                this.color = '#FFD700'; // Gold
                 this.attackBonus = 6;
                 this.value = 60;
                 this.description = 'A magical staff';
@@ -79,7 +79,7 @@ class Item {
             case 'leather':
                 this.name = 'Leather Armor';
                 this.symbol = ']';
-                this.color = '#8b4513';
+                this.color = '#8D6E63'; // Brown
                 this.defenseBonus = 2;
                 this.value = 20;
                 this.description = 'Light leather armor';
@@ -88,7 +88,7 @@ class Item {
             case 'chain':
                 this.name = 'Chain Mail';
                 this.symbol = ']';
-                this.color = '#c0c0c0';
+                this.color = '#BDBDBD'; // Silver
                 this.defenseBonus = 4;
                 this.value = 35;
                 this.description = 'Flexible chain mail';
@@ -97,7 +97,7 @@ class Item {
             case 'plate':
                 this.name = 'Plate Armor';
                 this.symbol = ']';
-                this.color = '#696969';
+                this.color = '#757575'; // Dark gray
                 this.defenseBonus = 6;
                 this.value = 50;
                 this.description = 'Heavy plate armor';
@@ -106,7 +106,7 @@ class Item {
             case 'robe':
                 this.name = 'Magic Robe';
                 this.symbol = ']';
-                this.color = '#4169e1';
+                this.color = '#3F51B5'; // Blue
                 this.defenseBonus = 3;
                 this.value = 45;
                 this.description = 'A magical robe';
@@ -116,7 +116,7 @@ class Item {
             case 'shield':
                 this.name = 'Wooden Shield';
                 this.symbol = 'O';
-                this.color = '#8b4513';
+                this.color = '#8D6E63'; // Brown
                 this.defenseBonus = 2;
                 this.value = 15;
                 this.description = 'A sturdy wooden shield';
@@ -125,7 +125,7 @@ class Item {
             case 'buckler':
                 this.name = 'Iron Buckler';
                 this.symbol = 'O';
-                this.color = '#696969';
+                this.color = '#757575'; // Dark gray
                 this.defenseBonus = 3;
                 this.value = 25;
                 this.description = 'A small iron buckler';
@@ -136,7 +136,7 @@ class Item {
             case 'healing_potion':
                 this.name = 'Healing Potion';
                 this.symbol = '!';
-                this.color = '#ff0000';
+                this.color = '#F44336'; // Red
                 this.healAmount = 15;
                 this.value = 10;
                 this.description = 'Restores 15 HP';
@@ -145,7 +145,7 @@ class Item {
             case 'strength_potion':
                 this.name = 'Strength Potion';
                 this.symbol = '!';
-                this.color = '#ff6600';
+                this.color = '#FF9800'; // Orange
                 this.temporaryEffect = 'strength';
                 this.effectDuration = 10;
                 this.value = 20;
@@ -156,7 +156,7 @@ class Item {
             case 'scroll':
                 this.name = 'Mysterious Scroll';
                 this.symbol = '?';
-                this.color = '#ffff00';
+                this.color = '#FFEB3B'; // Yellow
                 this.value = 5;
                 this.description = 'A mysterious scroll';
                 break;
@@ -164,7 +164,7 @@ class Item {
             case 'fireball_scroll':
                 this.name = 'Fireball Scroll';
                 this.symbol = '?';
-                this.color = '#ff0000';
+                this.color = '#F44336'; // Red
                 this.scrollEffect = 'fireball';
                 this.value = 25;
                 this.description = 'Casts a powerful fireball';
@@ -173,7 +173,7 @@ class Item {
             case 'lightning_scroll':
                 this.name = 'Lightning Scroll';
                 this.symbol = '?';
-                this.color = '#00ffff';
+                this.color = '#00BCD4'; // Cyan
                 this.scrollEffect = 'lightning';
                 this.value = 30;
                 this.description = 'Casts a lightning bolt';
@@ -183,7 +183,7 @@ class Item {
             case 'gold':
                 this.name = 'Gold Coins';
                 this.symbol = '$';
-                this.color = '#ffd700';
+                this.color = '#FFD700'; // Gold
                 this.value = 10;
                 this.description = 'Shiny gold coins';
                 break;
@@ -191,7 +191,7 @@ class Item {
             case 'gem':
                 this.name = 'Precious Gem';
                 this.symbol = '*';
-                this.color = '#ff69b4';
+                this.color = '#E91E63'; // Pink
                 this.value = 100;
                 this.description = 'A precious gemstone';
                 break;

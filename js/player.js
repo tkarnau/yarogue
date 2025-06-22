@@ -3,7 +3,7 @@ class Player {
         this.x = x;
         this.y = y;
         this.symbol = '@';
-        this.color = '#ffff00';
+        this.color = '#2196F3'; // Blue - more modern and appealing
         
         // Base stats
         this.level = 1;

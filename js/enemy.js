@@ -13,7 +13,7 @@ class Enemy {
             case 'goblin':
                 this.name = 'Goblin';
                 this.symbol = 'g';
-                this.color = '#00ff00';
+                this.color = '#4CAF50'; // Bright green
                 this.hp = 8;
                 this.maxHp = 8;
                 this.attack = 3;
@@ -25,7 +25,7 @@ class Enemy {
             case 'orc':
                 this.name = 'Orc';
                 this.symbol = 'o';
-                this.color = '#ff6600';
+                this.color = '#FF9800'; // Orange
                 this.hp = 15;
                 this.maxHp = 15;
                 this.attack = 5;
@@ -37,7 +37,7 @@ class Enemy {
             case 'troll':
                 this.name = 'Troll';
                 this.symbol = 'T';
-                this.color = '#800080';
+                this.color = '#9C27B0'; // Purple
                 this.hp = 25;
                 this.maxHp = 25;
                 this.attack = 7;
@@ -49,7 +49,7 @@ class Enemy {
             case 'dragon':
                 this.name = 'Dragon';
                 this.symbol = 'D';
-                this.color = '#ff0000';
+                this.color = '#F44336'; // Red
                 this.hp = 50;
                 this.maxHp = 50;
                 this.attack = 12;
@@ -61,7 +61,7 @@ class Enemy {
             case 'skeleton':
                 this.name = 'Skeleton';
                 this.symbol = 's';
-                this.color = '#cccccc';
+                this.color = '#E0E0E0'; // Light gray
                 this.hp = 12;
                 this.maxHp = 12;
                 this.attack = 4;
@@ -73,7 +73,7 @@ class Enemy {
             case 'zombie':
                 this.name = 'Zombie';
                 this.symbol = 'z';
-                this.color = '#8b4513';
+                this.color = '#795548'; // Brown
                 this.hp = 18;
                 this.maxHp = 18;
                 this.attack = 6;

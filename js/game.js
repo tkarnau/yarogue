@@ -13,7 +13,7 @@ class Game {
             throw new Error('Could not get 2D context from canvas');
         }
         
-        this.tileSize = 20;
+        this.tileSize = 24;
         this.mapWidth = 50;
         this.mapHeight = 38;
         this.cameraX = 0;
@@ -430,6 +430,9 @@ class Game {
         // Render player
         this.renderPlayer();
         
+        // Add lighting effect around player
+        this.renderLighting();
+        
         console.log('Frame rendered successfully');
     }
     
@@ -448,16 +451,34 @@ class Game {
                     const screenY = y * this.tileSize;
                     
                     if (tile === '#') {
-                        // Wall
-                        this.ctx.fillStyle = '#333';
+                        // Wall - draw as dark stone blocks
+                        this.ctx.fillStyle = '#2a2a2a';
                         this.ctx.fillRect(screenX, screenY, this.tileSize, this.tileSize);
-                        this.ctx.strokeStyle = '#666';
-                        this.ctx.strokeRect(screenX, screenY, this.tileSize, this.tileSize);
+                        
+                        // Add stone texture
+                        this.ctx.fillStyle = '#3a3a3a';
+                        this.ctx.fillRect(screenX + 2, screenY + 2, this.tileSize - 4, this.tileSize - 4);
+                        
+                        // Add highlights
+                        this.ctx.fillStyle = '#4a4a4a';
+                        this.ctx.fillRect(screenX + 1, screenY + 1, 2, 2);
+                        this.ctx.fillRect(screenX + this.tileSize - 3, screenY + 1, 2, 2);
+                        
                         wallTilesRendered++;
                     } else if (tile === '.') {
-                        // Floor
-                        this.ctx.fillStyle = '#222';
+                        // Floor - draw as stone tiles
+                        this.ctx.fillStyle = '#1a1a1a';
                         this.ctx.fillRect(screenX, screenY, this.tileSize, this.tileSize);
+                        
+                        // Add tile pattern
+                        this.ctx.fillStyle = '#252525';
+                        this.ctx.fillRect(screenX + 1, screenY + 1, this.tileSize - 2, this.tileSize - 2);
+                        
+                        // Add subtle grid lines
+                        this.ctx.strokeStyle = '#333';
+                        this.ctx.lineWidth = 0.5;
+                        this.ctx.strokeRect(screenX + 0.5, screenY + 0.5, this.tileSize - 1, this.tileSize - 1);
+                        
                         floorTilesRendered++;
                     }
                 }
@@ -475,11 +496,96 @@ class Game {
             if (screenX >= 0 && screenX < this.canvas.width && 
                 screenY >= 0 && screenY < this.canvas.height) {
                 
-                this.ctx.fillStyle = item.color;
-                this.ctx.font = '16px monospace';
-                this.ctx.fillText(item.symbol, screenX + 3, screenY + 15);
+                this.renderItemSprite(item, screenX, screenY);
             }
         });
+    }
+    
+    renderItemSprite(item, x, y) {
+        const centerX = x + this.tileSize / 2;
+        const centerY = y + this.tileSize / 2;
+        const size = this.tileSize * 0.6;
+        
+        switch (item.type) {
+            case 'weapon':
+                // Draw weapon as a sword shape
+                this.ctx.fillStyle = item.color;
+                this.ctx.fillRect(centerX - 1, y + 2, 2, this.tileSize - 4); // Handle
+                this.ctx.fillRect(centerX - 3, y + 3, 6, 2); // Crossguard
+                this.ctx.fillRect(centerX - 2, y + 2, 4, 3); // Blade
+                break;
+                
+            case 'armor':
+                // Draw armor as a chest piece
+                this.ctx.fillStyle = item.color;
+                this.ctx.fillRect(centerX - 3, centerY - 2, 6, 4); // Main body
+                this.ctx.fillRect(centerX - 2, centerY - 3, 4, 2); // Shoulders
+                break;
+                
+            case 'shield':
+                // Draw shield as a circle
+                this.ctx.fillStyle = item.color;
+                this.ctx.beginPath();
+                this.ctx.arc(centerX, centerY, size / 2, 0, Math.PI * 2);
+                this.ctx.fill();
+                // Add shield boss
+                this.ctx.fillStyle = '#8b4513';
+                this.ctx.beginPath();
+                this.ctx.arc(centerX, centerY, size / 4, 0, Math.PI * 2);
+                this.ctx.fill();
+                break;
+                
+            case 'potion':
+                // Draw potion as a bottle
+                this.ctx.fillStyle = item.color;
+                this.ctx.fillRect(centerX - 2, centerY - 3, 4, 6); // Bottle body
+                this.ctx.fillRect(centerX - 1, centerY - 4, 2, 2); // Bottle neck
+                // Add liquid
+                this.ctx.fillStyle = '#ff6666';
+                this.ctx.fillRect(centerX - 1, centerY - 2, 2, 4);
+                break;
+                
+            case 'scroll':
+                // Draw scroll as a rolled paper
+                this.ctx.fillStyle = '#f5f5dc';
+                this.ctx.fillRect(centerX - 3, centerY - 2, 6, 4);
+                // Add scroll details
+                this.ctx.fillStyle = '#8b4513';
+                this.ctx.fillRect(centerX - 2, centerY - 1, 4, 2);
+                break;
+                
+            case 'treasure':
+                if (item.name.includes('Gold')) {
+                    // Draw gold as coins
+                    this.ctx.fillStyle = '#ffd700';
+                    this.ctx.beginPath();
+                    this.ctx.arc(centerX - 2, centerY, 2, 0, Math.PI * 2);
+                    this.ctx.fill();
+                    this.ctx.beginPath();
+                    this.ctx.arc(centerX + 2, centerY, 2, 0, Math.PI * 2);
+                    this.ctx.fill();
+                } else if (item.name.includes('Gem')) {
+                    // Draw gem as a diamond
+                    this.ctx.fillStyle = item.color;
+                    this.ctx.beginPath();
+                    this.ctx.moveTo(centerX, y + 2);
+                    this.ctx.lineTo(centerX - 3, centerY);
+                    this.ctx.lineTo(centerX, y + this.tileSize - 2);
+                    this.ctx.lineTo(centerX + 3, centerY);
+                    this.ctx.closePath();
+                    this.ctx.fill();
+                } else {
+                    // Default treasure
+                    this.ctx.fillStyle = item.color;
+                    this.ctx.fillRect(centerX - 2, centerY - 2, 4, 4);
+                }
+                break;
+                
+            default:
+                // Default item
+                this.ctx.fillStyle = item.color;
+                this.ctx.fillRect(centerX - 2, centerY - 2, 4, 4);
+        }
     }
     
     renderEnemies() {
@@ -490,20 +596,172 @@ class Game {
             if (screenX >= 0 && screenX < this.canvas.width && 
                 screenY >= 0 && screenY < this.canvas.height) {
                 
-                this.ctx.fillStyle = enemy.color;
-                this.ctx.font = '16px monospace';
-                this.ctx.fillText(enemy.symbol, screenX + 3, screenY + 15);
+                this.renderEnemySprite(enemy, screenX, screenY);
             }
         });
+    }
+    
+    renderEnemySprite(enemy, x, y) {
+        const centerX = x + this.tileSize / 2;
+        const centerY = y + this.tileSize / 2;
+        const size = this.tileSize * 0.7;
+        
+        switch (enemy.type) {
+            case 'goblin':
+                // Draw goblin as a small humanoid
+                this.ctx.fillStyle = enemy.color;
+                this.ctx.fillRect(centerX - 2, centerY - 3, 4, 6); // Body
+                this.ctx.fillRect(centerX - 1, centerY - 4, 2, 2); // Head
+                // Add eyes
+                this.ctx.fillStyle = '#000';
+                this.ctx.fillRect(centerX - 1, centerY - 4, 1, 1);
+                this.ctx.fillRect(centerX, centerY - 4, 1, 1);
+                break;
+                
+            case 'orc':
+                // Draw orc as a larger humanoid
+                this.ctx.fillStyle = enemy.color;
+                this.ctx.fillRect(centerX - 3, centerY - 4, 6, 8); // Body
+                this.ctx.fillRect(centerX - 2, centerY - 5, 4, 2); // Head
+                // Add tusks
+                this.ctx.fillStyle = '#fff';
+                this.ctx.fillRect(centerX - 2, centerY - 4, 1, 1);
+                this.ctx.fillRect(centerX + 1, centerY - 4, 1, 1);
+                break;
+                
+            case 'troll':
+                // Draw troll as a large, bulky creature
+                this.ctx.fillStyle = enemy.color;
+                this.ctx.fillRect(centerX - 4, centerY - 5, 8, 10); // Large body
+                this.ctx.fillRect(centerX - 3, centerY - 6, 6, 2); // Head
+                // Add club
+                this.ctx.fillStyle = '#8b4513';
+                this.ctx.fillRect(centerX + 3, centerY - 2, 3, 6);
+                break;
+                
+            case 'dragon':
+                // Draw dragon as a large winged creature
+                this.ctx.fillStyle = enemy.color;
+                this.ctx.fillRect(centerX - 4, centerY - 4, 8, 8); // Body
+                this.ctx.fillRect(centerX - 3, centerY - 5, 6, 2); // Head
+                // Add wings
+                this.ctx.fillStyle = '#8b0000';
+                this.ctx.fillRect(centerX - 6, centerY - 2, 3, 4);
+                this.ctx.fillRect(centerX + 3, centerY - 2, 3, 4);
+                // Add tail
+                this.ctx.fillRect(centerX + 2, centerY + 2, 4, 2);
+                break;
+                
+            case 'skeleton':
+                // Draw skeleton as a bony humanoid
+                this.ctx.fillStyle = enemy.color;
+                this.ctx.fillRect(centerX - 2, centerY - 3, 4, 6); // Body
+                this.ctx.fillRect(centerX - 1, centerY - 4, 2, 2); // Head
+                // Add bone details
+                this.ctx.fillStyle = '#fff';
+                this.ctx.fillRect(centerX - 1, centerY - 2, 2, 1);
+                this.ctx.fillRect(centerX - 1, centerY, 2, 1);
+                break;
+                
+            case 'zombie':
+                // Draw zombie as a shambling humanoid
+                this.ctx.fillStyle = enemy.color;
+                this.ctx.fillRect(centerX - 3, centerY - 4, 6, 8); // Body
+                this.ctx.fillRect(centerX - 2, centerY - 5, 4, 2); // Head
+                // Add zombie details
+                this.ctx.fillStyle = '#654321';
+                this.ctx.fillRect(centerX - 1, centerY - 4, 2, 1);
+                break;
+                
+            default:
+                // Default enemy
+                this.ctx.fillStyle = enemy.color;
+                this.ctx.fillRect(centerX - 2, centerY - 2, 4, 4);
+        }
+        
+        // Add health bar for enemies
+        const healthPercent = enemy.hp / enemy.maxHp;
+        const barWidth = this.tileSize - 4;
+        const barHeight = 2;
+        
+        this.ctx.fillStyle = '#333';
+        this.ctx.fillRect(x + 2, y - 4, barWidth, barHeight);
+        this.ctx.fillStyle = healthPercent > 0.5 ? '#00ff00' : healthPercent > 0.25 ? '#ffff00' : '#ff0000';
+        this.ctx.fillRect(x + 2, y - 4, barWidth * healthPercent, barHeight);
     }
     
     renderPlayer() {
         const screenX = (this.player.x - this.cameraX) * this.tileSize;
         const screenY = (this.player.y - this.cameraY) * this.tileSize;
         
+        this.renderPlayerSprite(screenX, screenY);
+    }
+    
+    renderPlayerSprite(x, y) {
+        const centerX = x + this.tileSize / 2;
+        const centerY = y + this.tileSize / 2;
+        
+        // Draw player as a heroic figure
         this.ctx.fillStyle = this.player.color;
-        this.ctx.font = '16px monospace';
-        this.ctx.fillText(this.player.symbol, screenX + 3, screenY + 15);
+        
+        // Body
+        this.ctx.fillRect(centerX - 3, centerY - 3, 6, 6);
+        
+        // Head
+        this.ctx.fillRect(centerX - 2, centerY - 5, 4, 3);
+        
+        // Eyes
+        this.ctx.fillStyle = '#000';
+        this.ctx.fillRect(centerX - 1, centerY - 4, 1, 1);
+        this.ctx.fillRect(centerX, centerY - 4, 1, 1);
+        
+        // Equipment indicators
+        if (this.player.weapon) {
+            this.ctx.fillStyle = '#ccc';
+            this.ctx.fillRect(centerX + 2, centerY - 1, 3, 2); // Sword
+        }
+        
+        if (this.player.shield) {
+            this.ctx.fillStyle = '#8b4513';
+            this.ctx.fillRect(centerX - 5, centerY - 1, 2, 2); // Shield
+        }
+        
+        // Add a subtle glow effect
+        this.ctx.shadowColor = this.player.color;
+        this.ctx.shadowBlur = 5;
+        this.ctx.fillRect(centerX - 3, centerY - 3, 6, 6);
+        this.ctx.shadowBlur = 0;
+        
+        // Health bar
+        const healthPercent = this.player.hp / this.player.maxHp;
+        const barWidth = this.tileSize - 4;
+        const barHeight = 3;
+        
+        this.ctx.fillStyle = '#333';
+        this.ctx.fillRect(x + 2, y - 8, barWidth, barHeight);
+        this.ctx.fillStyle = healthPercent > 0.5 ? '#00ff00' : healthPercent > 0.25 ? '#ffff00' : '#ff0000';
+        this.ctx.fillRect(x + 2, y - 8, barWidth * healthPercent, barHeight);
+    }
+    
+    renderLighting() {
+        // Create a radial gradient for lighting effect around the player
+        const playerScreenX = (this.player.x - this.cameraX) * this.tileSize + this.tileSize / 2;
+        const playerScreenY = (this.player.y - this.cameraY) * this.tileSize + this.tileSize / 2;
+        const lightRadius = this.tileSize * 8;
+        
+        // Create gradient
+        const gradient = this.ctx.createRadialGradient(
+            playerScreenX, playerScreenY, 0,
+            playerScreenX, playerScreenY, lightRadius
+        );
+        
+        gradient.addColorStop(0, 'rgba(255, 255, 255, 0.1)');
+        gradient.addColorStop(0.3, 'rgba(255, 255, 255, 0.05)');
+        gradient.addColorStop(0.7, 'rgba(0, 0, 0, 0.1)');
+        gradient.addColorStop(1, 'rgba(0, 0, 0, 0.3)');
+        
+        this.ctx.fillStyle = gradient;
+        this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
     }
     
     gameLoop() {
