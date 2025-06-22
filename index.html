@@ -20,7 +20,7 @@
         
         <div class="main-content">
             <div class="game-area">
-                <canvas id="gameCanvas" width="800" height="600"></canvas>
+                <canvas id="gameCanvas" width="1000" height="760"></canvas>
                 <div class="controls">
                     <p>Use WASD or Arrow Keys to move</p>
                     <p>Space to wait, I for inventory, E to examine</p>
@@ -96,13 +96,72 @@
         </div>
     </div>
 
-    <script src="js/game.js"></script>
-    <script src="js/player.js"></script>
-    <script src="js/enemy.js"></script>
-    <script src="js/item.js"></script>
-    <script src="js/map.js"></script>
-    <script src="js/battle.js"></script>
-    <script src="js/ui.js"></script>
-    <script src="js/main.js"></script>
+    <!-- Load scripts in dependency order -->
+    <script>
+        console.log("Loading scripts...");
+        
+        // Error handler function
+        function showError(message) {
+            const errorDiv = document.createElement("div");
+            errorDiv.style.position = "fixed";
+            errorDiv.style.top = "50%";
+            errorDiv.style.left = "50%";
+            errorDiv.style.transform = "translate(-50%, -50%)";
+            errorDiv.style.background = "#800000";
+            errorDiv.style.border = "2px solid #ff0000";
+            errorDiv.style.padding = "20px";
+            errorDiv.style.color = "#ffffff";
+            errorDiv.style.fontFamily = "monospace";
+            errorDiv.style.zIndex = "9999";
+            errorDiv.style.maxWidth = "600px";
+            errorDiv.style.textAlign = "center";
+            errorDiv.innerHTML = `
+                <h2>Game Initialization Error</h2>
+                <p>Failed to start JSRogue:</p>
+                <p style="color: #ffcccc;">${message}</p>
+                <p>Please check the browser console (F12) for more details.</p>
+                <p>Refresh the page to try again.</p>
+            `;
+            document.body.appendChild(errorDiv);
+        }
+        
+        function loadScript(src) {
+            return new Promise((resolve, reject) => {
+                const script = document.createElement('script');
+                script.src = src;
+                script.onload = () => {
+                    console.log(`✓ Loaded: ${src}`);
+                    resolve();
+                };
+                script.onerror = () => {
+                    console.error(`✗ Failed to load: ${src}`);
+                    reject(new Error(`Failed to load ${src}`));
+                };
+                document.head.appendChild(script);
+            });
+        }
+        
+        // Load scripts sequentially
+        loadScript('js/item.js')
+            .then(() => loadScript('js/map.js'))
+            .then(() => loadScript('js/enemy.js'))
+            .then(() => loadScript('js/player.js'))
+            .then(() => loadScript('js/battle.js'))
+            .then(() => loadScript('js/ui.js'))
+            .then(() => loadScript('js/game.js'))
+            .then(() => loadScript('js/main.js'))
+            .then(() => {
+                console.log("All scripts loaded successfully!");
+                if (window.initializeGame) {
+                    window.initializeGame();
+                } else {
+                    console.error("initializeGame is not defined!");
+                }
+            })
+            .catch(error => {
+                console.error("Script loading failed:", error);
+                showError(`Script loading failed: ${error.message}`);
+            });
+    </script>
 </body>
 </html> 

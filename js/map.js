@@ -1,4 +1,4 @@
-class Map {
+class GameMap {
     constructor(width, height) {
         this.width = width;
         this.height = height;
@@ -328,4 +328,6 @@ class Map {
             y: Math.floor(room.y + room.height / 2)
         };
     }
-} 
+}
+
+window.GameMap = GameMap; 

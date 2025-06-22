@@ -4,7 +4,7 @@ class UI {
         this.battleModal = document.getElementById('battleModal');
         this.inventoryModal = document.getElementById('inventoryModal');
         
-        this.init();
+        // Don't call init() here - will be called after player is created
     }
     
     init() {
@@ -337,4 +337,6 @@ class UI {
         // Update health bar color (should be green after level up)
         this.updateHealthBarColor();
     }
-} 
+}
+
+window.UI = UI; 

@@ -24,9 +24,20 @@ class Player {
         this.inventory = [];
         this.maxInventory = 20;
         
-        // Starting equipment
-        this.addToInventory(new Item(null, null, 'sword'));
-        this.equipItem(this.inventory[0]);
+        // Don't add starting equipment here - will be called later
+    }
+    
+    addStartingEquipment() {
+        // Only add starting equipment if Item class is available
+        if (typeof Item !== 'undefined') {
+            try {
+                const startingSword = new Item(null, null, 'sword');
+                this.addToInventory(startingSword);
+                this.equipItem(startingSword);
+            } catch (error) {
+                console.warn('Could not create starting equipment:', error);
+            }
+        }
     }
     
     addToInventory(item) {
@@ -204,4 +215,6 @@ class Player {
             item.type === 'weapon' || item.type === 'armor' || item.type === 'shield'
         );
     }
-} 
+}
+
+window.Player = Player; 

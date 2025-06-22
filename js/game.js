@@ -1,8 +1,19 @@
 class Game {
     constructor() {
+        console.log('Game constructor called');
+        
+        // Check if canvas exists
         this.canvas = document.getElementById('gameCanvas');
+        if (!this.canvas) {
+            throw new Error('Canvas element with id "gameCanvas" not found. Make sure the HTML is loaded before creating the Game instance.');
+        }
+        
         this.ctx = this.canvas.getContext('2d');
-        this.tileSize = 16;
+        if (!this.ctx) {
+            throw new Error('Could not get 2D context from canvas');
+        }
+        
+        this.tileSize = 20;
         this.mapWidth = 50;
         this.mapHeight = 38;
         this.cameraX = 0;
@@ -21,66 +32,178 @@ class Game {
         this.messageLog = [];
         this.maxMessages = 10;
         
+        console.log('Game constructor completed, calling init()');
         this.init();
     }
     
     init() {
-        // Initialize game systems
-        this.map = new Map(this.mapWidth, this.mapHeight);
-        this.player = new Player(25, 19); // Start in center
-        this.battleSystem = new BattleSystem(this);
-        this.ui = new UI(this);
+        console.log('Game init() called');
         
-        // Generate initial map
-        this.map.generate();
+        try {
+            console.log('Creating GameMap...');
+            // Initialize game systems
+            this.map = new GameMap(this.mapWidth, this.mapHeight);
+            
+            console.log('Creating BattleSystem...');
+            this.battleSystem = new BattleSystem(this);
+            
+            console.log('Creating UI...');
+            this.ui = new UI(this);
+            
+            console.log('Generating map...');
+            // Generate initial map
+            this.map.generate();
+            
+            console.log('Finding spawn position...');
+            // Find a valid spawn position for the player
+            const spawnPos = this.findValidSpawnPosition();
+            
+            console.log('Creating Player...');
+            this.player = new Player(spawnPos.x, spawnPos.y);
+            
+            console.log('Adding starting equipment...');
+            // Add starting equipment after player is created
+            this.player.addStartingEquipment();
+            
+            console.log('Initializing UI...');
+            // Initialize UI after player is created
+            this.ui.init();
+            
+            console.log('Spawning enemies...');
+            // Add some enemies
+            this.spawnEnemies();
+            
+            console.log('Spawning items...');
+            // Add some items
+            this.spawnItems();
+            
+            console.log('Setting up event listeners...');
+            // Set up event listeners
+            this.setupEventListeners();
+            
+            console.log('Starting game loop...');
+            // Start game loop
+            this.gameLoop();
+            
+            console.log('Game initialization completed successfully!');
+        } catch (error) {
+            console.error('Error in Game.init():', error);
+            console.error('Error stack:', error.stack);
+            throw error;
+        }
+    }
+    
+    findValidSpawnPosition() {
+        // Try to find a room center first
+        if (this.map.rooms.length > 0) {
+            const room = this.map.rooms[0]; // Use the first room
+            const centerX = Math.floor(room.x + room.width / 2);
+            const centerY = Math.floor(room.y + room.height / 2);
+            
+            if (this.map.isWalkable(centerX, centerY)) {
+                return { x: centerX, y: centerY };
+            }
+        }
         
-        // Add some enemies
-        this.spawnEnemies();
+        // If no room or room center is invalid, find any floor tile
+        const floorTiles = [];
+        for (let y = 0; y < this.mapHeight; y++) {
+            for (let x = 0; x < this.mapWidth; x++) {
+                if (this.map.isWalkable(x, y)) {
+                    floorTiles.push({ x, y });
+                }
+            }
+        }
         
-        // Add some items
-        this.spawnItems();
+        if (floorTiles.length > 0) {
+            // Choose a random floor tile
+            return floorTiles[Math.floor(Math.random() * floorTiles.length)];
+        }
         
-        // Set up event listeners
-        this.setupEventListeners();
-        
-        // Start game loop
-        this.gameLoop();
+        // Fallback to center of map
+        console.warn('No valid spawn position found, using map center');
+        return { x: Math.floor(this.mapWidth / 2), y: Math.floor(this.mapHeight / 2) };
     }
     
     spawnEnemies() {
         const enemyTypes = ['goblin', 'orc', 'troll', 'dragon'];
-        const numEnemies = 5 + Math.floor(Math.random() * 5);
+        const numEnemies = 10 + Math.floor(Math.random() * 5);
         
         for (let i = 0; i < numEnemies; i++) {
-            let x, y;
-            do {
-                x = Math.floor(Math.random() * this.mapWidth);
-                y = Math.floor(Math.random() * this.mapHeight);
-            } while (this.map.getTile(x, y) !== '.' || 
-                     (x === this.player.x && y === this.player.y));
-            
-            const enemyType = enemyTypes[Math.floor(Math.random() * enemyTypes.length)];
-            const enemy = new Enemy(x, y, enemyType);
-            this.enemies.push(enemy);
+            const spawnPos = this.findValidEnemySpawnPosition();
+            if (spawnPos) {
+                const enemyType = enemyTypes[Math.floor(Math.random() * enemyTypes.length)];
+                const enemy = new Enemy(spawnPos.x, spawnPos.y, enemyType);
+                this.enemies.push(enemy);
+            }
         }
+    }
+    
+    findValidEnemySpawnPosition() {
+        const attempts = 50; // Limit attempts to prevent infinite loops
+        
+        for (let attempt = 0; attempt < attempts; attempt++) {
+            const x = Math.floor(Math.random() * this.mapWidth);
+            const y = Math.floor(Math.random() * this.mapHeight);
+            
+            // Check if position is valid
+            if (this.map.isWalkable(x, y) && 
+                !this.isPositionOccupied(x, y)) {
+                return { x, y };
+            }
+        }
+        
+        return null; // Could not find valid position
+    }
+    
+    isPositionOccupied(x, y) {
+        // Check if player is at this position
+        if (this.player && this.player.x === x && this.player.y === y) {
+            return true;
+        }
+        
+        // Check if enemy is at this position
+        if (this.enemies.some(enemy => enemy.x === x && enemy.y === y)) {
+            return true;
+        }
+        
+        // Check if item is at this position
+        if (this.items.some(item => item.x === x && item.y === y)) {
+            return true;
+        }
+        
+        return false;
     }
     
     spawnItems() {
         const itemTypes = ['sword', 'shield', 'potion', 'scroll', 'gold'];
-        const numItems = 3 + Math.floor(Math.random() * 3);
+        const numItems = 8 + Math.floor(Math.random() * 3);
         
         for (let i = 0; i < numItems; i++) {
-            let x, y;
-            do {
-                x = Math.floor(Math.random() * this.mapWidth);
-                y = Math.floor(Math.random() * this.mapHeight);
-            } while (this.map.getTile(x, y) !== '.' || 
-                     (x === this.player.x && y === this.player.y));
-            
-            const itemType = itemTypes[Math.floor(Math.random() * itemTypes.length)];
-            const item = new Item(x, y, itemType);
-            this.items.push(item);
+            const spawnPos = this.findValidItemSpawnPosition();
+            if (spawnPos) {
+                const itemType = itemTypes[Math.floor(Math.random() * itemTypes.length)];
+                const item = new Item(spawnPos.x, spawnPos.y, itemType);
+                this.items.push(item);
+            }
         }
+    }
+    
+    findValidItemSpawnPosition() {
+        const attempts = 30;
+        
+        for (let attempt = 0; attempt < attempts; attempt++) {
+            const x = Math.floor(Math.random() * this.mapWidth);
+            const y = Math.floor(Math.random() * this.mapHeight);
+            
+            // Check if position is valid
+            if (this.map.isWalkable(x, y) && 
+                !this.isPositionOccupied(x, y)) {
+                return { x, y };
+            }
+        }
+        
+        return null;
     }
     
     setupEventListeners() {
@@ -152,7 +275,7 @@ class Game {
         const newY = this.player.y + dy;
         
         // Check if move is valid
-        if (this.map.getTile(newX, newY) === '.') {
+        if (this.map.isWalkable(newX, newY)) {
             // Check for enemies
             const enemy = this.getEnemyAt(newX, newY);
             if (enemy) {
@@ -259,7 +382,7 @@ class Game {
                 const newX = enemy.x + dx;
                 const newY = enemy.y + dy;
                 
-                if (this.map.getTile(newX, newY) === '.' && 
+                if (this.map.isWalkable(newX, newY) && 
                     !this.getEnemyAt(newX, newY) && 
                     !this.getItemAt(newX, newY) &&
                     !(newX === this.player.x && newY === this.player.y)) {
@@ -285,24 +408,35 @@ class Game {
     }
     
     render() {
+        console.log('Rendering frame...');
+        
         // Clear canvas
         this.ctx.fillStyle = '#000';
         this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
         
+        console.log('Canvas cleared, rendering map...');
         // Render map
         this.renderMap();
         
+        console.log('Map rendered, rendering items...');
         // Render items
         this.renderItems();
         
+        console.log('Items rendered, rendering enemies...');
         // Render enemies
         this.renderEnemies();
         
+        console.log('Enemies rendered, rendering player...');
         // Render player
         this.renderPlayer();
+        
+        console.log('Frame rendered successfully');
     }
     
     renderMap() {
+        let floorTilesRendered = 0;
+        let wallTilesRendered = 0;
+        
         for (let y = 0; y < 38; y++) {
             for (let x = 0; x < 50; x++) {
                 const mapX = x + this.cameraX;
@@ -313,16 +447,24 @@ class Game {
                     const screenX = x * this.tileSize;
                     const screenY = y * this.tileSize;
                     
-                    this.ctx.fillStyle = tile === '#' ? '#333' : '#000';
-                    this.ctx.fillRect(screenX, screenY, this.tileSize, this.tileSize);
-                    
                     if (tile === '#') {
+                        // Wall
+                        this.ctx.fillStyle = '#333';
+                        this.ctx.fillRect(screenX, screenY, this.tileSize, this.tileSize);
                         this.ctx.strokeStyle = '#666';
                         this.ctx.strokeRect(screenX, screenY, this.tileSize, this.tileSize);
+                        wallTilesRendered++;
+                    } else if (tile === '.') {
+                        // Floor
+                        this.ctx.fillStyle = '#222';
+                        this.ctx.fillRect(screenX, screenY, this.tileSize, this.tileSize);
+                        floorTilesRendered++;
                     }
                 }
             }
         }
+        
+        console.log(`Map rendered: ${floorTilesRendered} floor tiles, ${wallTilesRendered} wall tiles`);
     }
     
     renderItems() {
@@ -334,8 +476,8 @@ class Game {
                 screenY >= 0 && screenY < this.canvas.height) {
                 
                 this.ctx.fillStyle = item.color;
-                this.ctx.font = '12px monospace';
-                this.ctx.fillText(item.symbol, screenX + 2, screenY + 12);
+                this.ctx.font = '16px monospace';
+                this.ctx.fillText(item.symbol, screenX + 3, screenY + 15);
             }
         });
     }
@@ -349,8 +491,8 @@ class Game {
                 screenY >= 0 && screenY < this.canvas.height) {
                 
                 this.ctx.fillStyle = enemy.color;
-                this.ctx.font = '12px monospace';
-                this.ctx.fillText(enemy.symbol, screenX + 2, screenY + 12);
+                this.ctx.font = '16px monospace';
+                this.ctx.fillText(enemy.symbol, screenX + 3, screenY + 15);
             }
         });
     }
@@ -360,8 +502,8 @@ class Game {
         const screenY = (this.player.y - this.cameraY) * this.tileSize;
         
         this.ctx.fillStyle = this.player.color;
-        this.ctx.font = '12px monospace';
-        this.ctx.fillText(this.player.symbol, screenX + 2, screenY + 12);
+        this.ctx.font = '16px monospace';
+        this.ctx.fillText(this.player.symbol, screenX + 3, screenY + 15);
     }
     
     gameLoop() {
@@ -369,4 +511,6 @@ class Game {
         this.ui.update();
         requestAnimationFrame(() => this.gameLoop());
     }
-} 
+}
+
+window.Game = Game; 

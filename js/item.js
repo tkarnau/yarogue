@@ -290,4 +290,6 @@ class Item {
         
         return desc;
     }
-} 
+}
+
+window.Item = Item; 

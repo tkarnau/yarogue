@@ -190,4 +190,6 @@ class Enemy {
         
         return `A ${this.name} (${healthStatus})`;
     }
-} 
+}
+
+window.Enemy = Enemy; 

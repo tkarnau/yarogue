@@ -264,4 +264,6 @@ class BattleSystem {
             ended: this.battleEnded
         };
     }
-} 
+}
+
+window.BattleSystem = BattleSystem; 
