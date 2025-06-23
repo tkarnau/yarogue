@@ -10,12 +10,12 @@ class Item {
     
     getItemType(baseType) {
         // Categorize items by type
-        const weaponTypes = ['sword', 'axe', 'mace', 'dagger', 'staff'];
+        const weaponTypes = ['sword', 'axe', 'mace', 'dagger', 'staff', 'poison_dagger'];
         const armorTypes = ['leather', 'chain', 'plate', 'robe'];
         const shieldTypes = ['shield', 'buckler'];
-        const potionTypes = ['potion', 'healing_potion', 'strength_potion'];
+        const potionTypes = ['potion', 'healing_potion', 'strength_potion', 'poison_potion', 'antidote'];
         const scrollTypes = ['scroll', 'fireball_scroll', 'lightning_scroll'];
-        const treasureTypes = ['gold', 'gem', 'ring', 'amulet'];
+        const treasureTypes = ['gold', 'gem', 'ring', 'amulet', 'ring_of_regeneration', 'ring_of_battle_regeneration', 'ring_of_poison_resistance'];
         
         if (weaponTypes.includes(baseType)) return 'weapon';
         if (armorTypes.includes(baseType)) return 'armor';
@@ -152,6 +152,25 @@ class Item {
                 this.description = 'Temporarily increases attack';
                 break;
                 
+            case 'poison_potion':
+                this.name = 'Poison Potion';
+                this.symbol = '!';
+                this.color = '#4CAF50'; // Green
+                this.value = 25;
+                this.description = 'A dangerous poison potion';
+                this.poisonDamage = 3;
+                this.poisonDuration = 5;
+                break;
+                
+            case 'antidote':
+                this.name = 'Antidote';
+                this.symbol = '!';
+                this.color = '#2196F3'; // Blue
+                this.value = 30;
+                this.description = 'Cures poison effects';
+                this.curesPoison = true;
+                break;
+                
             // Scrolls
             case 'scroll':
                 this.name = 'Mysterious Scroll';
@@ -204,6 +223,47 @@ class Item {
                 this.description = 'A magical ring';
                 break;
                 
+            case 'ring_of_regeneration':
+                this.name = 'Ring of Regeneration';
+                this.symbol = 'o';
+                this.color = '#4CAF50'; // Green
+                this.value = 150;
+                this.description = 'Regenerates 1 HP every 5 tiles walked';
+                this.regenerationTiles = 5;
+                this.regenerationAmount = 1;
+                break;
+                
+            case 'ring_of_battle_regeneration':
+                this.name = 'Ring of Battle Regeneration';
+                this.symbol = 'o';
+                this.color = '#FF5722'; // Deep orange
+                this.value = 200;
+                this.description = 'Regenerates 1 HP every 5 turns in battle';
+                this.regenerationTurns = 5;
+                this.regenerationAmount = 1;
+                break;
+                
+            case 'ring_of_poison_resistance':
+                this.name = 'Ring of Poison Resistance';
+                this.symbol = 'o';
+                this.color = '#8BC34A'; // Light green
+                this.value = 120;
+                this.description = 'Reduces poison damage by 50%';
+                this.poisonResistance = 0.5;
+                break;
+                
+            case 'poison_dagger':
+                this.name = 'Poison Dagger';
+                this.symbol = '|';
+                this.color = '#4CAF50'; // Green
+                this.attackBonus = 1;
+                this.value = 35;
+                this.description = 'A dagger coated with poison';
+                this.poisonChance = 0.3;
+                this.poisonDamage = 2;
+                this.poisonDuration = 3;
+                break;
+                
             case 'amulet':
                 this.name = 'Protection Amulet';
                 this.symbol = 'a';
@@ -230,6 +290,26 @@ class Item {
                     player.heal(this.healAmount);
                     const healed = player.hp - oldHp;
                     return `You drink the potion and recover ${healed} HP!`;
+                }
+                
+                if (this.poisonDamage) {
+                    // Poison potion - apply poison effect
+                    player.addStatusEffect({
+                        type: 'poison',
+                        intensity: this.poisonDamage,
+                        duration: this.poisonDuration
+                    });
+                    return `You drink the poison potion! You feel sick...`;
+                }
+                
+                if (this.curesPoison) {
+                    // Antidote - cure poison
+                    if (player.hasStatusEffect('poison')) {
+                        player.removeStatusEffect('poison');
+                        return `You drink the antidote and feel better!`;
+                    } else {
+                        return `You drink the antidote, but you weren't poisoned.`;
+                    }
                 }
                 break;
                 

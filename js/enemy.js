@@ -111,6 +111,21 @@ class Enemy {
         const damage = Math.max(1, this.attack - player.getTotalDefense());
         const result = player.takeDamage(damage);
         
+        // Check if player has a poison weapon equipped
+        if (player.weapon && player.weapon.poisonChance && Math.random() < player.weapon.poisonChance) {
+            player.addStatusEffect({
+                type: 'poison',
+                intensity: player.weapon.poisonDamage,
+                duration: player.weapon.poisonDuration
+            });
+            
+            if (result === 'death') {
+                return `The ${this.name} deals ${damage} damage and poisons you! You are defeated!`;
+            } else {
+                return `The ${this.name} deals ${damage} damage and poisons you!`;
+            }
+        }
+        
         if (result === 'death') {
             return `The ${this.name} deals ${damage} damage! You are defeated!`;
         } else {

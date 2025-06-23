@@ -13,12 +13,14 @@ class UI {
         this.updateInventory();
         this.updateMessageLog();
         this.updateHeader();
+        this.updateStatusEffects();
     }
     
     update() {
         // Called every frame to update UI
         this.updatePlayerStats();
         this.updateHeader();
+        this.updateStatusEffects();
     }
     
     updatePlayerStats() {
@@ -336,6 +338,55 @@ class UI {
         
         // Update health bar color (should be green after level up)
         this.updateHealthBarColor();
+    }
+    
+    updateStatusEffects() {
+        const player = this.game.player;
+        const statusEffectsList = document.getElementById('statusEffectsList');
+        
+        if (!statusEffectsList) return;
+        
+        if (player.statusEffects.length === 0) {
+            statusEffectsList.innerHTML = '<p>None</p>';
+            return;
+        }
+        
+        statusEffectsList.innerHTML = '';
+        
+        player.statusEffects.forEach(effect => {
+            const effectElement = document.createElement('p');
+            effectElement.style.fontSize = '9px';
+            effectElement.style.margin = '2px 0';
+            
+            let effectText = '';
+            let effectColor = '#ffffff';
+            
+            switch (effect.type) {
+                case 'poison':
+                    effectText = `Poison (${effect.intensity} damage, ${effect.duration} turns)`;
+                    effectColor = '#4CAF50'; // Green
+                    break;
+                case 'regeneration':
+                    effectText = `Regeneration (${effect.intensity} HP, ${effect.duration} turns)`;
+                    effectColor = '#2196F3'; // Blue
+                    break;
+                case 'strength':
+                    effectText = `Strength (+${effect.intensity} attack, ${effect.duration} turns)`;
+                    effectColor = '#FF9800'; // Orange
+                    break;
+                case 'weakness':
+                    effectText = `Weakness (-${effect.intensity} attack, ${effect.duration} turns)`;
+                    effectColor = '#F44336'; // Red
+                    break;
+                default:
+                    effectText = `${effect.type} (${effect.duration} turns)`;
+                    break;
+            }
+            
+            effectElement.textContent = effectText;
+            effectElement.style.color = effectColor;
+            statusEffectsList.appendChild(effectElement);
+        });
     }
 }
 

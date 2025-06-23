@@ -26,6 +26,19 @@ class BattleSystem {
         const player = this.game.player;
         const enemy = this.currentEnemy;
         
+        // Handle status effects and regeneration at start of turn
+        const statusMessage = player.onBattleTurn();
+        if (statusMessage) {
+            this.addBattleMessage(statusMessage);
+        }
+        
+        // Check if player died from status effects
+        if (!player.isAlive()) {
+            this.addBattleMessage("You have been defeated!");
+            this.endBattle();
+            return;
+        }
+        
         // Calculate damage
         const playerAttack = player.getTotalAttack();
         const damage = Math.max(1, playerAttack - enemy.defense);

@@ -198,7 +198,11 @@ class Game {
     }
     
     spawnItems() {
-        const itemTypes = ['sword', 'shield', 'potion', 'scroll', 'gold'];
+        const itemTypes = [
+            'sword', 'shield', 'potion', 'scroll', 'gold',
+            'ring_of_regeneration', 'ring_of_battle_regeneration', 'ring_of_poison_resistance',
+            'poison_dagger', 'poison_potion', 'antidote'
+        ];
         const numItems = 8 + Math.floor(Math.random() * 3);
         
         for (let i = 0; i < numItems; i++) {
@@ -314,6 +318,12 @@ class Game {
             // Move player
             this.player.x = newX;
             this.player.y = newY;
+            
+            // Handle status effects and regeneration
+            const statusMessage = this.player.onTileWalked();
+            if (statusMessage) {
+                this.addMessage(statusMessage);
+            }
             
             // Update camera
             this.updateCamera();

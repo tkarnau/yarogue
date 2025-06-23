@@ -19,10 +19,17 @@ class Player {
         this.weapon = null;
         this.armor = null;
         this.shield = null;
+        this.ring = null;
+        this.amulet = null;
         
         // Inventory
         this.inventory = [];
         this.maxInventory = 20;
+        
+        // Status effects
+        this.statusEffects = [];
+        this.tilesWalked = 0;
+        this.battleTurns = 0;
         
         // Don't add starting equipment here - will be called later
     }
@@ -84,6 +91,18 @@ class Player {
                 this.shield = item;
                 this.defense += (item.defenseBonus || 0);
                 break;
+            case 'ring':
+                if (this.ring) {
+                    this.unequipItem(this.ring);
+                }
+                this.ring = item;
+                break;
+            case 'amulet':
+                if (this.amulet) {
+                    this.unequipItem(this.amulet);
+                }
+                this.amulet = item;
+                break;
         }
         
         return true;
@@ -109,6 +128,16 @@ class Player {
                     this.defense = 2 + (this.armor ? this.armor.defenseBonus : 0);
                 }
                 break;
+            case 'ring':
+                if (this.ring === item) {
+                    this.ring = null;
+                }
+                break;
+            case 'amulet':
+                if (this.amulet === item) {
+                    this.amulet = null;
+                }
+                break;
         }
     }
     
@@ -119,10 +148,37 @@ class Player {
         
         switch (item.type) {
             case 'potion':
-                const healAmount = item.healAmount || 10;
-                this.hp = Math.min(this.maxHp, this.hp + healAmount);
+                if (item.healAmount) {
+                    const healAmount = item.healAmount || 10;
+                    this.hp = Math.min(this.maxHp, this.hp + healAmount);
+                    this.removeFromInventory(item);
+                    return `You drink the potion and recover ${healAmount} HP!`;
+                }
+                
+                if (item.poisonDamage) {
+                    // Poison potion - apply poison effect
+                    this.addStatusEffect({
+                        type: 'poison',
+                        intensity: item.poisonDamage,
+                        duration: item.poisonDuration
+                    });
+                    this.removeFromInventory(item);
+                    return `You drink the poison potion! You feel sick...`;
+                }
+                
+                if (item.curesPoison) {
+                    // Antidote - cure poison
+                    this.removeFromInventory(item);
+                    if (this.hasStatusEffect('poison')) {
+                        this.removeStatusEffect('poison');
+                        return `You drink the antidote and feel better!`;
+                    } else {
+                        return `You drink the antidote, but you weren't poisoned.`;
+                    }
+                }
+                
                 this.removeFromInventory(item);
-                return `You drink the potion and recover ${healAmount} HP!`;
+                return `You drink the potion.`;
                 
             case 'scroll':
                 // Scroll effects could be implemented here
@@ -162,6 +218,20 @@ class Player {
     }
     
     takeDamage(amount) {
+        // Apply poison resistance if equipped
+        if (this.ring && this.ring.poisonResistance && amount === 1) {
+            // Assume damage of 1 is poison damage
+            const reducedDamage = Math.ceil(amount * (1 - this.ring.poisonResistance));
+            this.hp -= reducedDamage;
+            
+            if (this.hp <= 0) {
+                this.hp = 0;
+                return 'death';
+            }
+            
+            return reducedDamage;
+        }
+        
         const actualDamage = Math.max(1, amount - this.defense);
         this.hp -= actualDamage;
         
@@ -186,6 +256,18 @@ class Player {
         if (this.weapon) {
             total += this.weapon.attackBonus || 0;
         }
+        
+        // Apply status effect modifiers
+        const strengthEffect = this.getStatusEffect('strength');
+        if (strengthEffect) {
+            total += strengthEffect.intensity || 0;
+        }
+        
+        const weaknessEffect = this.getStatusEffect('weakness');
+        if (weaknessEffect) {
+            total = Math.max(1, total - (weaknessEffect.intensity || 0));
+        }
+        
         return total;
     }
     
@@ -212,8 +294,116 @@ class Player {
     
     getEquippableItems() {
         return this.inventory.filter(item => 
-            item.type === 'weapon' || item.type === 'armor' || item.type === 'shield'
+            item.type === 'weapon' || item.type === 'armor' || item.type === 'shield' ||
+            item.type === 'ring' || item.type === 'amulet'
         );
+    }
+    
+    addStatusEffect(effect) {
+        // Check if effect already exists
+        const existingEffect = this.statusEffects.find(e => e.type === effect.type);
+        if (existingEffect) {
+            // Refresh duration if it's longer
+            if (effect.duration > existingEffect.duration) {
+                existingEffect.duration = effect.duration;
+            }
+            // Stack intensity if applicable
+            if (effect.intensity) {
+                existingEffect.intensity = (existingEffect.intensity || 0) + effect.intensity;
+            }
+        } else {
+            this.statusEffects.push({...effect});
+        }
+    }
+    
+    removeStatusEffect(effectType) {
+        const index = this.statusEffects.findIndex(e => e.type === effectType);
+        if (index > -1) {
+            this.statusEffects.splice(index, 1);
+        }
+    }
+    
+    hasStatusEffect(effectType) {
+        return this.statusEffects.some(e => e.type === effectType);
+    }
+    
+    getStatusEffect(effectType) {
+        return this.statusEffects.find(e => e.type === effectType);
+    }
+    
+    updateStatusEffects() {
+        for (let i = this.statusEffects.length - 1; i >= 0; i--) {
+            const effect = this.statusEffects[i];
+            
+            // Apply effect
+            this.applyStatusEffect(effect);
+            
+            // Decrease duration
+            effect.duration--;
+            
+            // Remove expired effects
+            if (effect.duration <= 0) {
+                this.statusEffects.splice(i, 1);
+                if (effect.onExpire) {
+                    effect.onExpire(this);
+                }
+            }
+        }
+    }
+    
+    applyStatusEffect(effect) {
+        switch (effect.type) {
+            case 'poison':
+                const poisonDamage = effect.intensity || 1;
+                this.takeDamage(poisonDamage);
+                return `You take ${poisonDamage} poison damage!`;
+                
+            case 'regeneration':
+                const healAmount = effect.intensity || 1;
+                this.heal(healAmount);
+                return `You regenerate ${healAmount} HP!`;
+                
+            case 'strength':
+                // Temporary attack boost - handled in getTotalAttack()
+                break;
+                
+            case 'weakness':
+                // Temporary attack penalty - handled in getTotalAttack()
+                break;
+        }
+        return null;
+    }
+    
+    onTileWalked() {
+        this.tilesWalked++;
+        
+        // Check for regeneration from equipment
+        if (this.ring && this.ring.regenerationTiles && this.tilesWalked % this.ring.regenerationTiles === 0) {
+            const healAmount = this.ring.regenerationAmount || 1;
+            this.heal(healAmount);
+            return `Your ${this.ring.name} regenerates ${healAmount} HP!`;
+        }
+        
+        // Update status effects
+        this.updateStatusEffects();
+        
+        return null;
+    }
+    
+    onBattleTurn() {
+        this.battleTurns++;
+        
+        // Check for regeneration from equipment
+        if (this.ring && this.ring.regenerationTurns && this.battleTurns % this.ring.regenerationTurns === 0) {
+            const healAmount = this.ring.regenerationAmount || 1;
+            this.heal(healAmount);
+            return `Your ${this.ring.name} regenerates ${healAmount} HP!`;
+        }
+        
+        // Update status effects
+        this.updateStatusEffects();
+        
+        return null;
     }
 }
 
