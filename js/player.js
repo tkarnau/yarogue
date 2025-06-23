@@ -38,7 +38,7 @@ class Player {
         // Only add starting equipment if Item class is available
         if (typeof Item !== 'undefined') {
             try {
-                const startingSword = new Item(null, null, 'sword');
+                const startingSword = new Item(null, null, 'short_sword');
                 this.addToInventory(startingSword);
                 this.equipItem(startingSword);
             } catch (error) {
