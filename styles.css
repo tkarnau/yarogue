@@ -80,13 +80,13 @@ body {
     gap: 20px;
 }
 
-.player-stats, .inventory, .message-log, .status-effects {
+.player-stats, .inventory, .message-log, .status-effects, .character-panel {
     border: 2px solid #00ff00;
     padding: 15px;
     background: rgba(0, 0, 0, 0.8);
 }
 
-.player-stats h3, .inventory h3, .message-log h3, .status-effects h3 {
+.player-stats h3, .inventory h3, .message-log h3, .status-effects h3, .character-panel h3 {
     font-size: 18px;
     margin-bottom: 15px;
     text-align: center;
@@ -94,7 +94,7 @@ body {
     padding-bottom: 8px;
 }
 
-#playerStats p, #inventoryList p, #messageLog p, #statusEffectsList p {
+#playerStats p, #inventoryList p, #messageLog p, #statusEffectsList p, #characterPanel p {
     font-size: 14px;
     margin: 8px 0;
     line-height: 1.5;
@@ -284,4 +284,51 @@ button:active {
         width: 100%;
         height: auto;
     }
+}
+
+/* Character Panel Specific Styles */
+.character-panel {
+    max-height: 400px;
+    overflow-y: auto;
+}
+
+.character-panel h4 {
+    font-size: 14px;
+    margin: 15px 0 8px 0;
+    color: #00ff00;
+    border-bottom: 1px solid #00ff00;
+    padding-bottom: 4px;
+}
+
+.character-panel h4:first-child {
+    margin-top: 0;
+}
+
+.equipped-items, .detailed-stats, .resistances, .bonuses {
+    margin-bottom: 15px;
+}
+
+.equipped-items p, .detailed-stats p, .resistances p, .bonuses p {
+    font-size: 12px;
+    margin: 4px 0;
+    display: flex;
+    justify-content: space-between;
+}
+
+.equipped-items span, .detailed-stats span, .resistances span, .bonuses span {
+    font-weight: bold;
+}
+
+/* Inventory Category Styles */
+.inventory-category {
+    font-size: 12px;
+    margin-bottom: 8px;
+}
+
+.inventory-item {
+    transition: background-color 0.2s;
+}
+
+.inventory-item:hover {
+    background-color: rgba(0, 255, 0, 0.1);
 } 

@@ -15,6 +15,19 @@ class Player {
         this.nextLevelExp = 100;
         this.gold = 0;
         
+        // Additional base stats
+        this.speed = 1;
+        this.critChance = 0.05; // 5% base crit chance
+        this.critMultiplier = 1.5; // 50% bonus damage on crit
+        this.lifeSteal = 0;
+        this.magicResistance = 0;
+        this.poisonResistance = 0;
+        this.fireResistance = 0;
+        this.iceResistance = 0;
+        this.lightningResistance = 0;
+        this.goldBonus = 0;
+        this.expBonus = 0;
+        
         // Equipment
         this.weapon = null;
         this.armor = null;
@@ -47,9 +60,144 @@ class Player {
         }
     }
     
+    // Calculate total stats from equipment and affixes
+    calculateTotalStats() {
+        // Reset to base stats
+        this.totalAttack = this.attack;
+        this.totalDefense = this.defense;
+        this.totalMaxHp = this.maxHp;
+        this.totalSpeed = this.speed;
+        this.totalCritChance = this.critChance;
+        this.totalCritMultiplier = this.critMultiplier;
+        this.totalLifeSteal = this.lifeSteal;
+        this.totalMagicResistance = this.magicResistance;
+        this.totalPoisonResistance = this.poisonResistance;
+        this.totalFireResistance = this.fireResistance;
+        this.totalIceResistance = this.iceResistance;
+        this.totalLightningResistance = this.lightningResistance;
+        this.totalGoldBonus = this.goldBonus;
+        this.totalExpBonus = this.expBonus;
+        
+        // Add equipment bonuses
+        const equipment = [this.weapon, this.armor, this.shield, this.ring, this.amulet];
+        equipment.forEach(item => {
+            if (item) {
+                this.addItemStats(item);
+            }
+        });
+        
+        // Apply status effect modifiers
+        this.applyStatusEffectModifiers();
+    }
+    
+    addItemStats(item) {
+        if (item.attackBonus) this.totalAttack += item.attackBonus;
+        if (item.defenseBonus) this.totalDefense += item.defenseBonus;
+        if (item.healthBonus) this.totalMaxHp += item.healthBonus;
+        if (item.speedBonus) this.totalSpeed += item.speedBonus;
+        if (item.critChance) this.totalCritChance += item.critChance;
+        if (item.critMultiplier) this.totalCritMultiplier += item.critMultiplier;
+        if (item.lifeSteal) this.totalLifeSteal += item.lifeSteal;
+        if (item.magicResistance) this.totalMagicResistance += item.magicResistance;
+        if (item.poisonResistance) this.totalPoisonResistance += item.poisonResistance;
+        if (item.fireResistance) this.totalFireResistance += item.fireResistance;
+        if (item.iceResistance) this.totalIceResistance += item.iceResistance;
+        if (item.lightningResistance) this.totalLightningResistance += item.lightningResistance;
+        if (item.goldBonus) this.totalGoldBonus += item.goldBonus;
+        if (item.expBonus) this.totalExpBonus += item.expBonus;
+    }
+    
+    applyStatusEffectModifiers() {
+        const strengthEffect = this.getStatusEffect('strength');
+        if (strengthEffect) {
+            this.totalAttack += strengthEffect.intensity || 0;
+        }
+        
+        const weaknessEffect = this.getStatusEffect('weakness');
+        if (weaknessEffect) {
+            this.totalAttack = Math.max(1, this.totalAttack - (weaknessEffect.intensity || 0));
+        }
+    }
+    
+    // Get formatted stat display
+    getStatDisplay(statName) {
+        const stats = {
+            'attack': { value: this.totalAttack, base: this.attack, color: '#ff6b6b' },
+            'defense': { value: this.totalDefense, base: this.defense, color: '#4ecdc4' },
+            'maxHp': { value: this.totalMaxHp, base: this.maxHp, color: '#45b7d1' },
+            'speed': { value: this.totalSpeed, base: this.speed, color: '#96ceb4' },
+            'critChance': { value: this.totalCritChance, base: this.critChance, color: '#feca57', format: 'percent' },
+            'critMultiplier': { value: this.totalCritMultiplier, base: this.critMultiplier, color: '#ff9ff3', format: 'multiplier' },
+            'lifeSteal': { value: this.totalLifeSteal, base: this.lifeSteal, color: '#ff6b6b', format: 'percent' },
+            'magicResistance': { value: this.totalMagicResistance, base: this.magicResistance, color: '#5f27cd', format: 'percent' },
+            'poisonResistance': { value: this.totalPoisonResistance, base: this.poisonResistance, color: '#00d2d3', format: 'percent' },
+            'fireResistance': { value: this.totalFireResistance, base: this.fireResistance, color: '#ff9f43', format: 'percent' },
+            'iceResistance': { value: this.totalIceResistance, base: this.iceResistance, color: '#54a0ff', format: 'percent' },
+            'lightningResistance': { value: this.totalLightningResistance, base: this.lightningResistance, color: '#ff9ff3', format: 'percent' },
+            'goldBonus': { value: this.totalGoldBonus, base: this.goldBonus, color: '#feca57', format: 'percent' },
+            'expBonus': { value: this.totalExpBonus, base: this.expBonus, color: '#48dbfb', format: 'percent' }
+        };
+        
+        const stat = stats[statName];
+        if (!stat) return { text: '0', color: '#ffffff' };
+        
+        let text = '';
+        switch (stat.format) {
+            case 'percent':
+                text = `${Math.round(stat.value * 100)}%`;
+                break;
+            case 'multiplier':
+                text = `${stat.value.toFixed(1)}x`;
+                break;
+            default:
+                text = Math.round(stat.value).toString();
+        }
+        
+        const color = stat.value > stat.base ? '#00ff00' : stat.value < stat.base ? '#ff0000' : stat.color;
+        return { text, color };
+    }
+    
+    // Get equipped items info
+    getEquippedItems() {
+        return {
+            weapon: this.weapon,
+            armor: this.armor,
+            shield: this.shield,
+            ring: this.ring,
+            amulet: this.amulet
+        };
+    }
+    
+    // Get inventory by category with better organization
+    getInventoryByCategory() {
+        const categories = {
+            weapons: this.inventory.filter(item => item.type === 'weapon'),
+            armor: this.inventory.filter(item => item.type === 'armor'),
+            shields: this.inventory.filter(item => item.type === 'shield'),
+            accessories: this.inventory.filter(item => item.type === 'accessory'),
+            consumables: this.inventory.filter(item => item.type === 'consumable'),
+            treasure: this.inventory.filter(item => item.type === 'treasure')
+        };
+        
+        return categories;
+    }
+    
+    // Get item rarity color
+    getItemRarityColor(item) {
+        const rarityColors = {
+            'normal': '#ffffff',
+            'magic': '#4169e1',
+            'rare': '#ffd700',
+            'epic': '#9932cc',
+            'legendary': '#ff4500'
+        };
+        return rarityColors[item.rarity] || '#ffffff';
+    }
+    
     addToInventory(item) {
         if (this.inventory.length < this.maxInventory) {
             this.inventory.push(item);
+            this.calculateTotalStats(); // Recalculate stats when inventory changes
             return true;
         }
         return false;
@@ -59,6 +207,7 @@ class Player {
         const index = this.inventory.indexOf(item);
         if (index > -1) {
             this.inventory.splice(index, 1);
+            this.calculateTotalStats(); // Recalculate stats when inventory changes
             return true;
         }
         return false;
@@ -75,36 +224,36 @@ class Player {
                     this.unequipItem(this.weapon);
                 }
                 this.weapon = item;
-                this.attack = 5 + (item.attackBonus || 0);
                 break;
             case 'armor':
                 if (this.armor) {
                     this.unequipItem(this.armor);
                 }
                 this.armor = item;
-                this.defense = 2 + (item.defenseBonus || 0);
                 break;
             case 'shield':
                 if (this.shield) {
                     this.unequipItem(this.shield);
                 }
                 this.shield = item;
-                this.defense += (item.defenseBonus || 0);
                 break;
-            case 'ring':
-                if (this.ring) {
-                    this.unequipItem(this.ring);
+            case 'accessory':
+                // For accessories, we'll use the base type to determine slot
+                if (item.baseType === 'ring') {
+                    if (this.ring) {
+                        this.unequipItem(this.ring);
+                    }
+                    this.ring = item;
+                } else if (item.baseType === 'amulet') {
+                    if (this.amulet) {
+                        this.unequipItem(this.amulet);
+                    }
+                    this.amulet = item;
                 }
-                this.ring = item;
-                break;
-            case 'amulet':
-                if (this.amulet) {
-                    this.unequipItem(this.amulet);
-                }
-                this.amulet = item;
                 break;
         }
         
+        this.calculateTotalStats(); // Recalculate stats when equipment changes
         return true;
     }
     
@@ -113,32 +262,28 @@ class Player {
             case 'weapon':
                 if (this.weapon === item) {
                     this.weapon = null;
-                    this.attack = 5;
                 }
                 break;
             case 'armor':
                 if (this.armor === item) {
                     this.armor = null;
-                    this.defense = 2;
                 }
                 break;
             case 'shield':
                 if (this.shield === item) {
                     this.shield = null;
-                    this.defense = 2 + (this.armor ? this.armor.defenseBonus : 0);
                 }
                 break;
-            case 'ring':
-                if (this.ring === item) {
+            case 'accessory':
+                if (item.baseType === 'ring' && this.ring === item) {
                     this.ring = null;
-                }
-                break;
-            case 'amulet':
-                if (this.amulet === item) {
+                } else if (item.baseType === 'amulet' && this.amulet === item) {
                     this.amulet = null;
                 }
                 break;
         }
+        
+        this.calculateTotalStats(); // Recalculate stats when equipment changes
     }
     
     useItem(item) {
@@ -147,10 +292,10 @@ class Player {
         }
         
         switch (item.type) {
-            case 'potion':
+            case 'consumable':
                 if (item.healAmount) {
                     const healAmount = item.healAmount || 10;
-                    this.hp = Math.min(this.maxHp, this.hp + healAmount);
+                    this.hp = Math.min(this.totalMaxHp, this.hp + healAmount);
                     this.removeFromInventory(item);
                     return `You drink the potion and recover ${healAmount} HP!`;
                 }
@@ -177,30 +322,43 @@ class Player {
                     }
                 }
                 
-                this.removeFromInventory(item);
-                return `You drink the potion.`;
+                if (item.scrollEffect) {
+                    this.removeFromInventory(item);
+                    switch (item.scrollEffect) {
+                        case 'fireball':
+                            return 'You cast a fireball! It explodes with great force!';
+                        case 'lightning':
+                            return 'You cast lightning! The air crackles with energy!';
+                        default:
+                            return 'You read the scroll. It crumbles to dust.';
+                    }
+                }
                 
-            case 'scroll':
-                // Scroll effects could be implemented here
                 this.removeFromInventory(item);
-                return `You read the scroll. It crumbles to dust.`;
+                return `You use the ${item.name}.`;
                 
-            case 'gold':
-                this.gold += item.value || 10;
-                this.removeFromInventory(item);
-                return `You pick up ${item.value || 10} gold!`;
-                
-            default:
-                return false;
+            case 'treasure':
+                if (item.name === 'Gold Coins') {
+                    const goldGained = Math.floor(item.value * (1 + this.totalGoldBonus));
+                    this.gold += goldGained;
+                    this.removeFromInventory(item);
+                    return `You collect ${goldGained} gold!`;
+                }
+                break;
         }
+        
+        return false;
     }
     
     gainExperience(amount) {
-        this.experience += amount;
+        const expGained = Math.floor(amount * (1 + this.totalExpBonus));
+        this.experience += expGained;
         
         while (this.experience >= this.nextLevelExp) {
             this.levelUp();
         }
+        
+        return expGained;
     }
     
     levelUp() {
@@ -214,25 +372,35 @@ class Player {
         this.attack += 2;
         this.defense += 1;
         
+        this.calculateTotalStats(); // Recalculate stats after level up
+        
         return `You reached level ${this.level}!`;
     }
     
-    takeDamage(amount) {
-        // Apply poison resistance if equipped
-        if (this.ring && this.ring.poisonResistance && amount === 1) {
-            // Assume damage of 1 is poison damage
-            const reducedDamage = Math.ceil(amount * (1 - this.ring.poisonResistance));
-            this.hp -= reducedDamage;
-            
-            if (this.hp <= 0) {
-                this.hp = 0;
-                return 'death';
-            }
-            
-            return reducedDamage;
+    takeDamage(amount, damageType = 'physical') {
+        let actualDamage = amount;
+        
+        // Apply resistances based on damage type
+        switch (damageType) {
+            case 'poison':
+                actualDamage = Math.ceil(amount * (1 - this.totalPoisonResistance));
+                break;
+            case 'fire':
+                actualDamage = Math.ceil(amount * (1 - this.totalFireResistance));
+                break;
+            case 'ice':
+                actualDamage = Math.ceil(amount * (1 - this.totalIceResistance));
+                break;
+            case 'lightning':
+                actualDamage = Math.ceil(amount * (1 - this.totalLightningResistance));
+                break;
+            case 'magic':
+                actualDamage = Math.ceil(amount * (1 - this.totalMagicResistance));
+                break;
+            default:
+                actualDamage = Math.max(1, amount - this.totalDefense);
         }
         
-        const actualDamage = Math.max(1, amount - this.defense);
         this.hp -= actualDamage;
         
         if (this.hp <= 0) {
@@ -244,7 +412,7 @@ class Player {
     }
     
     heal(amount) {
-        this.hp = Math.min(this.maxHp, this.hp + amount);
+        this.hp = Math.min(this.totalMaxHp, this.hp + amount);
     }
     
     isAlive() {
@@ -252,34 +420,11 @@ class Player {
     }
     
     getTotalAttack() {
-        let total = this.attack;
-        if (this.weapon) {
-            total += this.weapon.attackBonus || 0;
-        }
-        
-        // Apply status effect modifiers
-        const strengthEffect = this.getStatusEffect('strength');
-        if (strengthEffect) {
-            total += strengthEffect.intensity || 0;
-        }
-        
-        const weaknessEffect = this.getStatusEffect('weakness');
-        if (weaknessEffect) {
-            total = Math.max(1, total - (weaknessEffect.intensity || 0));
-        }
-        
-        return total;
+        return this.totalAttack;
     }
     
     getTotalDefense() {
-        let total = this.defense;
-        if (this.armor) {
-            total += this.armor.defenseBonus || 0;
-        }
-        if (this.shield) {
-            total += this.shield.defenseBonus || 0;
-        }
-        return total;
+        return this.totalDefense;
     }
     
     getInventoryByType(type) {
@@ -288,14 +433,13 @@ class Player {
     
     getUsableItems() {
         return this.inventory.filter(item => 
-            item.type === 'potion' || item.type === 'scroll' || item.type === 'gold'
+            item.type === 'consumable' || item.type === 'treasure'
         );
     }
     
     getEquippableItems() {
         return this.inventory.filter(item => 
-            item.type === 'weapon' || item.type === 'armor' || item.type === 'shield' ||
-            item.type === 'ring' || item.type === 'amulet'
+            item.type === 'weapon' || item.type === 'armor' || item.type === 'shield' || item.type === 'accessory'
         );
     }
     
@@ -355,7 +499,7 @@ class Player {
         switch (effect.type) {
             case 'poison':
                 const poisonDamage = effect.intensity || 1;
-                this.takeDamage(poisonDamage);
+                this.takeDamage(poisonDamage, 'poison');
                 return `You take ${poisonDamage} poison damage!`;
                 
             case 'regeneration':
@@ -364,11 +508,11 @@ class Player {
                 return `You regenerate ${healAmount} HP!`;
                 
             case 'strength':
-                // Temporary attack boost - handled in getTotalAttack()
+                // Temporary attack boost - handled in calculateTotalStats()
                 break;
                 
             case 'weakness':
-                // Temporary attack penalty - handled in getTotalAttack()
+                // Temporary attack penalty - handled in calculateTotalStats()
                 break;
         }
         return null;

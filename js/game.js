@@ -83,6 +83,10 @@ class Game {
       console.log("Adding starting equipment...");
       // Add starting equipment after player is created
       this.player.addStartingEquipment();
+      
+      console.log("Calculating player stats...");
+      // Calculate total stats after equipment is added
+      this.player.calculateTotalStats();
 
       console.log("Initializing UI...");
       // Initialize UI after player is created
