@@ -294,6 +294,12 @@ class Game {
       }
     });
 
+    // Mobile touch controls
+    this.setupMobileControls();
+
+    // Canvas touch handling for movement
+    this.setupCanvasTouchControls();
+
     // Battle modal event listeners
     document.getElementById("attackBtn").addEventListener("click", () => {
       this.battleSystem.playerAttack();
@@ -313,6 +319,150 @@ class Game {
       .addEventListener("click", () => {
         this.closeInventory();
       });
+  }
+
+  setupMobileControls() {
+    // D-pad controls
+    const dpadButtons = document.querySelectorAll('.dpad-btn');
+    dpadButtons.forEach(button => {
+      button.addEventListener('touchstart', (e) => {
+        e.preventDefault();
+        this.handleMobileInput(button.dataset.direction || button.dataset.action);
+      });
+      
+      button.addEventListener('click', (e) => {
+        e.preventDefault();
+        this.handleMobileInput(button.dataset.direction || button.dataset.action);
+      });
+    });
+
+    // Action buttons
+    const actionButtons = document.querySelectorAll('.action-btn');
+    actionButtons.forEach(button => {
+      button.addEventListener('touchstart', (e) => {
+        e.preventDefault();
+        this.handleMobileAction(button.id);
+      });
+      
+      button.addEventListener('click', (e) => {
+        e.preventDefault();
+        this.handleMobileAction(button.id);
+      });
+    });
+  }
+
+  setupCanvasTouchControls() {
+    let touchStartX = 0;
+    let touchStartY = 0;
+    let touchEndX = 0;
+    let touchEndY = 0;
+    const minSwipeDistance = 30; // Minimum distance for a swipe
+
+    this.canvas.addEventListener('touchstart', (e) => {
+      e.preventDefault();
+      const touch = e.touches[0];
+      touchStartX = touch.clientX;
+      touchStartY = touch.clientY;
+    }, { passive: false });
+
+    this.canvas.addEventListener('touchend', (e) => {
+      e.preventDefault();
+      const touch = e.changedTouches[0];
+      touchEndX = touch.clientX;
+      touchEndY = touch.clientY;
+      
+      this.handleCanvasSwipe(touchStartX, touchStartY, touchEndX, touchEndY, minSwipeDistance);
+    }, { passive: false });
+
+    // Prevent context menu on long press
+    this.canvas.addEventListener('contextmenu', (e) => {
+      e.preventDefault();
+    });
+  }
+
+  handleCanvasSwipe(startX, startY, endX, endY, minDistance) {
+    if (this.gameState !== "playing") return;
+
+    const deltaX = endX - startX;
+    const deltaY = endY - startY;
+    const distance = Math.sqrt(deltaX * deltaX + deltaY * deltaY);
+
+    if (distance < minDistance) {
+      // Tap - examine tile
+      this.examineTile();
+      return;
+    }
+
+    // Determine swipe direction
+    if (Math.abs(deltaX) > Math.abs(deltaY)) {
+      // Horizontal swipe
+      if (deltaX > 0) {
+        this.movePlayer(1, 0); // Right
+      } else {
+        this.movePlayer(-1, 0); // Left
+      }
+    } else {
+      // Vertical swipe
+      if (deltaY > 0) {
+        this.movePlayer(0, 1); // Down
+      } else {
+        this.movePlayer(0, -1); // Up
+      }
+    }
+  }
+
+  handleMobileInput(input) {
+    if (this.gameState !== "playing") return;
+
+    let dx = 0, dy = 0;
+
+    switch (input) {
+      case 'up':
+        dy = -1;
+        break;
+      case 'down':
+        dy = 1;
+        break;
+      case 'left':
+        dx = -1;
+        break;
+      case 'right':
+        dx = 1;
+        break;
+      case 'wait':
+        this.addMessage("You wait a moment...");
+        this.updateEnemies();
+        
+        if (this.player.checkForDeath()) {
+          return;
+        }
+        break;
+    }
+
+    if (dx !== 0 || dy !== 0) {
+      this.movePlayer(dx, dy);
+    }
+  }
+
+  handleMobileAction(actionId) {
+    if (this.gameState !== "playing") return;
+
+    switch (actionId) {
+      case 'mobileInventoryBtn':
+        this.openInventory();
+        break;
+      case 'mobileExamineBtn':
+        this.examineTile();
+        break;
+      case 'mobileWaitBtn':
+        this.addMessage("You wait a moment...");
+        this.updateEnemies();
+        
+        if (this.player.checkForDeath()) {
+          return;
+        }
+        break;
+    }
   }
 
   handlePlayerInput(e) {

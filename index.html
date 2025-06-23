@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, maximum-scale=1.0">
     <title>YARogue - A Web-Based Roguelike</title>
     <link rel="stylesheet" href="styles.css">
     <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
@@ -35,6 +35,29 @@
                     <p>Use WASD or Arrow Keys to move</p>
                     <p>Space to wait, I to toggle inventory, E to examine</p>
                     <p>A to attack in battle</p>
+                </div>
+                
+                <!-- Mobile Controls -->
+                <div class="mobile-controls">
+                    <div class="mobile-dpad">
+                        <div class="dpad-row">
+                            <button class="dpad-btn" id="dpadUp" data-direction="up">▲</button>
+                        </div>
+                        <div class="dpad-row">
+                            <button class="dpad-btn" id="dpadLeft" data-direction="left">◀</button>
+                            <button class="dpad-btn" id="dpadCenter" data-action="wait">⏸</button>
+                            <button class="dpad-btn" id="dpadRight" data-direction="right">▶</button>
+                        </div>
+                        <div class="dpad-row">
+                            <button class="dpad-btn" id="dpadDown" data-direction="down">▼</button>
+                        </div>
+                    </div>
+                    
+                    <div class="mobile-action-buttons">
+                        <button class="action-btn" id="mobileInventoryBtn" title="Inventory">📦</button>
+                        <button class="action-btn" id="mobileExamineBtn" title="Examine">👁</button>
+                        <button class="action-btn" id="mobileWaitBtn" title="Wait">⏸</button>
+                    </div>
                 </div>
             </div>
             

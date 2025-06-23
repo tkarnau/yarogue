@@ -9,6 +9,12 @@ const panelStates = {
     messageLog: true
 };
 
+// Mobile detection
+const isMobile = () => {
+    return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) ||
+           (window.innerWidth <= 1024 && 'ontouchstart' in window);
+};
+
 // Toggle panel function
 function togglePanel(panelId) {
     const panel = document.getElementById(panelId);
@@ -122,10 +128,19 @@ function initializeGame() {
 
     console.log("YARogue - Game initialized successfully!");
 
-    // Add some initial messages
+    // Add initial messages based on device type
     game.addMessage("Welcome to YARogue!");
-    game.addMessage("Use WASD or arrow keys to move.");
-    game.addMessage("Press I to toggle inventory, E to examine.");
+    
+    if (isMobile()) {
+      game.addMessage("Mobile controls enabled!");
+      game.addMessage("Swipe on the game area to move.");
+      game.addMessage("Tap to examine tiles.");
+      game.addMessage("Use the D-pad and action buttons below.");
+    } else {
+      game.addMessage("Use WASD or arrow keys to move.");
+      game.addMessage("Press I to toggle inventory, E to examine.");
+    }
+    
     game.addMessage("Press A to attack in battle, Space to wait.");
     game.addMessage("Drag items in inventory to reorganize, drop on trash to destroy.");
     game.addMessage("Press S in inventory to sort items automatically.");

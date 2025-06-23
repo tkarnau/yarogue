@@ -412,6 +412,9 @@ class UI {
         
         // Setup sort button
         this.setupSortButton();
+        
+        // Setup mobile touch handling for inventory
+        this.setupInventoryTouchHandling();
     }
     
     createInventoryItemElement(item, index) {
@@ -942,6 +945,78 @@ class UI {
         
         // Setup trash zone
         this.setupTrashZone();
+        
+        // Setup mobile-specific event listeners
+        this.setupMobileEventListeners();
+    }
+    
+    setupMobileEventListeners() {
+        // Add touch event listeners for better mobile experience
+        const modals = [this.battleModal, this.inventoryModal, this.deathModal, this.confirmationModal];
+        
+        modals.forEach(modal => {
+            if (modal) {
+                // Prevent zoom on double tap
+                modal.addEventListener('touchend', (e) => {
+                    e.preventDefault();
+                }, { passive: false });
+                
+                // Close modal when tapping outside content
+                modal.addEventListener('click', (e) => {
+                    if (e.target === modal) {
+                        if (modal === this.battleModal) {
+                            // Don't close battle modal by tapping outside
+                            return;
+                        }
+                        if (modal === this.inventoryModal) {
+                            this.hideInventoryModal();
+                        } else if (modal === this.deathModal) {
+                            // Don't close death modal by tapping outside
+                            return;
+                        } else if (modal === this.confirmationModal) {
+                            this.hideConfirmationModal();
+                        }
+                    }
+                });
+            }
+        });
+        
+        // Add touch handling for inventory items
+        this.setupInventoryTouchHandling();
+    }
+    
+    setupInventoryTouchHandling() {
+        // This will be called when inventory modal is shown
+        const inventoryGrid = document.getElementById('inventoryGrid');
+        if (inventoryGrid) {
+            // Add touch event listeners for inventory slots
+            const slots = inventoryGrid.querySelectorAll('.inventory-slot');
+            slots.forEach((slot, index) => {
+                // Add touch event for item interaction
+                slot.addEventListener('touchstart', (e) => {
+                    e.preventDefault();
+                    const item = this.game.player.inventory[index];
+                    if (item) {
+                        // Show tooltip on touch
+                        const rect = slot.getBoundingClientRect();
+                        this.showTooltip(item, rect.left, rect.top - 10);
+                    }
+                }, { passive: false });
+                
+                slot.addEventListener('touchend', (e) => {
+                    e.preventDefault();
+                    const item = this.game.player.inventory[index];
+                    if (item) {
+                        // Handle item interaction on touch end
+                        this.handleItemClick(item, index);
+                        // Clean up tooltip after a short delay
+                        setTimeout(() => {
+                            this.cleanupAllTooltips();
+                        }, 2000);
+                    }
+                }, { passive: false });
+            });
+        }
     }
     
     setupWindowEventListeners() {
