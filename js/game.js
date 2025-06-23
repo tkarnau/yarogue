@@ -51,6 +51,12 @@ class Game {
     this.messageLog = [];
     this.maxMessages = 10;
 
+    // Floor system properties
+    this.currentFloor = 1;
+    this.floorExit = null; // Will be set when all enemies are defeated
+    this.enemiesDefeatedThisFloor = 0;
+    this.totalEnemiesThisFloor = 0;
+
     console.log("Game constructor completed, calling init()");
     this.init();
   }
@@ -163,18 +169,42 @@ class Game {
   }
 
   spawnEnemies() {
-    const enemyTypes = ["goblin", "orc", "troll", "dragon"];
-    const numEnemies = 10 + Math.floor(Math.random() * 5);
+    // Base enemy types for floor 1
+    const baseEnemyTypes = ["goblin", "orc", "troll", "dragon"];
+    
+    // Advanced enemy types for higher floors
+    const advancedEnemyTypes = ["skeleton", "zombie", "demon", "lich"];
+    
+    // Choose enemy types based on floor level
+    let enemyTypes = [...baseEnemyTypes];
+    if (this.currentFloor >= 3) {
+      enemyTypes.push(...advancedEnemyTypes);
+    } else if (this.currentFloor >= 2) {
+      // Add some advanced enemies on floor 2
+      enemyTypes.push("skeleton", "zombie");
+    }
+    
+    // Scale enemy count with floor level
+    const baseEnemies = 8;
+    const floorBonus = Math.floor(this.currentFloor * 1.5);
+    const numEnemies = baseEnemies + floorBonus + Math.floor(Math.random() * 5);
+    
+    // Track total enemies for this floor
+    this.totalEnemiesThisFloor = 0;
+    this.enemiesDefeatedThisFloor = 0;
 
     for (let i = 0; i < numEnemies; i++) {
       const spawnPos = this.findValidEnemySpawnPosition();
       if (spawnPos) {
         const enemyType =
           enemyTypes[Math.floor(Math.random() * enemyTypes.length)];
-        const enemy = new Enemy(spawnPos.x, spawnPos.y, enemyType);
+        const enemy = new Enemy(spawnPos.x, spawnPos.y, enemyType, this.currentFloor);
         this.enemies.push(enemy);
+        this.totalEnemiesThisFloor++;
       }
     }
+    
+    console.log(`Spawned ${this.totalEnemiesThisFloor} enemies for floor ${this.currentFloor}`);
   }
 
   findValidEnemySpawnPosition() {
@@ -336,6 +366,12 @@ class Game {
 
     // Check if move is valid
     if (this.map.isWalkable(newX, newY)) {
+      // Check for floor exit
+      if (this.floorExit && this.floorExit.x === newX && this.floorExit.y === newY) {
+        this.descendToNextFloor();
+        return;
+      }
+      
       // Check for enemies
       const enemy = this.getEnemyAt(newX, newY);
       if (enemy) {
@@ -400,6 +436,7 @@ class Game {
     if (this.currentEnemy.hp <= 0) {
       // Enemy defeated
       this.enemies = this.enemies.filter((e) => e !== this.currentEnemy);
+      this.enemiesDefeatedThisFloor++;
       this.player.gainExperience(this.currentEnemy.experienceValue);
       this.addMessage(`You defeated the ${this.currentEnemy.name}!`);
 
@@ -427,9 +464,84 @@ class Game {
           `The ${this.currentEnemy.name} dropped a ${item.name}!`
         );
       }
+      
+      // Check if all enemies on this floor are defeated
+      if (this.enemiesDefeatedThisFloor >= this.totalEnemiesThisFloor) {
+        this.spawnFloorExit();
+      }
     }
 
     this.currentEnemy = null;
+  }
+
+  spawnFloorExit() {
+    // Find a good position for the floor exit (preferably in a room center)
+    let exitPos = null;
+    
+    if (this.map.rooms.length > 0) {
+      // Try to place in a room center
+      const room = this.map.rooms[Math.floor(Math.random() * this.map.rooms.length)];
+      const centerX = Math.floor(room.x + room.width / 2);
+      const centerY = Math.floor(room.y + room.height / 2);
+      
+      if (this.map.isWalkable(centerX, centerY) && !this.isPositionOccupied(centerX, centerY)) {
+        exitPos = { x: centerX, y: centerY };
+      }
+    }
+    
+    // If no room center available, find any walkable position
+    if (!exitPos) {
+      const attempts = 50;
+      for (let attempt = 0; attempt < attempts; attempt++) {
+        const x = Math.floor(Math.random() * this.mapWidth);
+        const y = Math.floor(Math.random() * this.mapHeight);
+        
+        if (this.map.isWalkable(x, y) && !this.isPositionOccupied(x, y)) {
+          exitPos = { x, y };
+          break;
+        }
+      }
+    }
+    
+    if (exitPos) {
+      this.floorExit = {
+        x: exitPos.x,
+        y: exitPos.y,
+        symbol: '>',
+        color: '#FFD700', // Gold color
+        name: 'Floor Exit'
+      };
+      
+      this.addMessage(`A stairway to the next floor has appeared!`);
+      this.addMessage(`You can descend to floor ${this.currentFloor + 1} by stepping on the > symbol.`);
+    }
+  }
+
+  descendToNextFloor() {
+    this.currentFloor++;
+    this.floorExit = null;
+    this.enemiesDefeatedThisFloor = 0;
+    this.totalEnemiesThisFloor = 0;
+    
+    // Generate new map
+    this.map.generate();
+    
+    // Find new spawn position
+    const spawnPos = this.findValidSpawnPosition();
+    this.player.x = spawnPos.x;
+    this.player.y = spawnPos.y;
+    
+    // Spawn new enemies and items
+    this.spawnEnemies();
+    this.spawnItems();
+    
+    // Update UI
+    this.ui.updateHeader();
+    this.ui.updatePlayerStats();
+    
+    // Add floor transition message
+    this.addMessage(`You descend to floor ${this.currentFloor}...`);
+    this.addMessage(`The air grows thicker with danger...`);
   }
 
   pickupItem(item) {
@@ -456,6 +568,7 @@ class Game {
     // Store death statistics
     this.deathStats = {
       level: this.player.level,
+      floor: this.currentFloor,
       experience: this.player.experience,
       gold: this.player.gold,
       enemiesDefeated: this.calculateEnemiesDefeated()
@@ -476,12 +589,14 @@ class Game {
   
   showDeathModal() {
     const deathLevel = document.getElementById('deathLevel');
+    const deathFloor = document.getElementById('deathFloor');
     const deathXP = document.getElementById('deathXP');
     const deathGold = document.getElementById('deathGold');
     const deathEnemiesDefeated = document.getElementById('deathEnemiesDefeated');
     
     // Update death statistics
     deathLevel.textContent = this.deathStats.level;
+    deathFloor.textContent = this.deathStats.floor;
     deathXP.textContent = this.deathStats.experience;
     deathGold.textContent = this.deathStats.gold;
     deathEnemiesDefeated.textContent = this.deathStats.enemiesDefeated;
@@ -528,6 +643,14 @@ class Game {
     // Clear existing game objects
     this.enemies = [];
     this.items = [];
+    this.floorExit = null;
+    
+    // Reset floor system for new game
+    if (newLevel) {
+      this.currentFloor = 1;
+      this.enemiesDefeatedThisFloor = 0;
+      this.totalEnemiesThisFloor = 0;
+    }
     
     if (newLevel) {
       // Generate new map
@@ -579,6 +702,7 @@ class Game {
     const stats = `
 Final Statistics:
 Level: ${this.deathStats.level}
+Floor: ${this.deathStats.floor}
 Experience: ${this.deathStats.experience}
 Gold: ${this.deathStats.gold}
 Enemies Defeated: ${this.deathStats.enemiesDefeated}
@@ -589,6 +713,13 @@ Enemies Defeated: ${this.deathStats.enemiesDefeated}
   examineTile() {
     const x = this.player.x;
     const y = this.player.y;
+
+    // Check for floor exit first
+    if (this.floorExit && this.floorExit.x === x && this.floorExit.y === y) {
+      this.addMessage(`You see a stairway leading down to floor ${this.currentFloor + 1}`);
+      this.addMessage(`Step on it to descend deeper into the dungeon...`);
+      return;
+    }
 
     const enemy = this.getEnemyAt(x, y);
     const item = this.getItemAt(x, y);
@@ -714,6 +845,10 @@ Enemies Defeated: ${this.deathStats.enemiesDefeated}
     console.log("Items rendered, rendering enemies...");
     // Render enemies
     this.renderEnemies();
+
+    console.log("Enemies rendered, rendering floor exit...");
+    // Render floor exit
+    this.renderFloorExit();
 
     console.log("Enemies rendered, rendering player...");
     // Render player
@@ -1359,6 +1494,47 @@ Enemies Defeated: ${this.deathStats.enemiesDefeated}
 
     this.ctx.fillStyle = gradient;
     this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
+  }
+
+  renderFloorExit() {
+    if (this.floorExit) {
+      const screenX = (this.floorExit.x - this.cameraX) * this.tileSize;
+      const screenY = (this.floorExit.y - this.cameraY) * this.tileSize;
+
+      if (
+        screenX >= 0 &&
+        screenX < this.canvas.width &&
+        screenY >= 0 &&
+        screenY < this.canvas.height
+      ) {
+        this.renderFloorExitSprite(screenX, screenY);
+      }
+    }
+  }
+
+  renderFloorExitSprite(x, y) {
+    // Draw a glowing golden stairway symbol
+    const centerX = x + this.tileSize / 2;
+    const centerY = y + this.tileSize / 2;
+    
+    // Draw glow effect
+    this.ctx.shadowColor = '#FFD700';
+    this.ctx.shadowBlur = 10;
+    
+    // Draw the stairway symbol
+    this.ctx.fillStyle = this.floorExit.color;
+    this.ctx.font = `${this.tileSize * 0.8}px monospace`;
+    this.ctx.textAlign = 'center';
+    this.ctx.textBaseline = 'middle';
+    this.ctx.fillText(this.floorExit.symbol, centerX, centerY);
+    
+    // Reset shadow
+    this.ctx.shadowBlur = 0;
+    
+    // Add a pulsing effect
+    const pulse = Math.sin(Date.now() * 0.005) * 0.3 + 0.7;
+    this.ctx.fillStyle = `rgba(255, 215, 0, ${pulse * 0.3})`;
+    this.ctx.fillRect(x, y, this.tileSize, this.tileSize);
   }
 
   gameLoop() {

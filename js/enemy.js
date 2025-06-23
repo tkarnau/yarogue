@@ -1,11 +1,15 @@
 class Enemy {
-    constructor(x, y, type) {
+    constructor(x, y, type, floor = 1) {
         this.x = x;
         this.y = y;
         this.type = type;
+        this.floor = floor;
         
         // Set properties based on enemy type
         this.setupEnemyType(type);
+        
+        // Scale stats based on floor level
+        this.scaleStatsForFloor();
     }
     
     setupEnemyType(type) {
@@ -82,6 +86,30 @@ class Enemy {
                 this.goldValue = 12;
                 break;
                 
+            case 'demon':
+                this.name = 'Demon';
+                this.symbol = 'd';
+                this.color = '#8B0000'; // Dark red
+                this.hp = 35;
+                this.maxHp = 35;
+                this.attack = 10;
+                this.defense = 4;
+                this.experienceValue = 60;
+                this.goldValue = 25;
+                break;
+                
+            case 'lich':
+                this.name = 'Lich';
+                this.symbol = 'L';
+                this.color = '#4A148C'; // Deep purple
+                this.hp = 40;
+                this.maxHp = 40;
+                this.attack = 11;
+                this.defense = 6;
+                this.experienceValue = 80;
+                this.goldValue = 35;
+                break;
+                
             default:
                 this.name = 'Unknown';
                 this.symbol = '?';
@@ -92,6 +120,25 @@ class Enemy {
                 this.defense = 1;
                 this.experienceValue = 20;
                 this.goldValue = 10;
+        }
+    }
+    
+    scaleStatsForFloor() {
+        if (this.floor <= 1) return; // No scaling for floor 1
+        
+        const floorMultiplier = 1 + (this.floor - 1) * 0.3; // 30% increase per floor
+        
+        // Scale HP, attack, defense, and rewards
+        this.hp = Math.floor(this.hp * floorMultiplier);
+        this.maxHp = this.hp;
+        this.attack = Math.floor(this.attack * floorMultiplier);
+        this.defense = Math.floor(this.defense * floorMultiplier);
+        this.experienceValue = Math.floor(this.experienceValue * floorMultiplier);
+        this.goldValue = Math.floor(this.goldValue * floorMultiplier);
+        
+        // Update name to show floor level for higher floors
+        if (this.floor > 1) {
+            this.name = `${this.name} (Floor ${this.floor})`;
         }
     }
     

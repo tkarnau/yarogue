@@ -13,6 +13,7 @@
             <h1>JSRogue</h1>
             <div class="game-info">
                 <span id="level">Level: 1</span>
+                <span id="floor">Floor: 1</span>
                 <span id="health">HP: 20/20</span>
                 <span id="gold">Gold: 0</span>
             </div>
@@ -23,7 +24,8 @@
                 <canvas id="gameCanvas" width="1000" height="760"></canvas>
                 <div class="controls">
                     <p>Use WASD or Arrow Keys to move</p>
-                    <p>Space to wait, I for inventory, E to examine</p>
+                    <p>Space to wait, I to toggle inventory, E to examine</p>
+                    <p>A to attack in battle</p>
                 </div>
             </div>
             
@@ -168,6 +170,7 @@
                 <p>Your journey has come to an end...</p>
                 <div class="death-stats">
                     <p>Final Level: <span id="deathLevel">1</span></p>
+                    <p>Final Floor: <span id="deathFloor">1</span></p>
                     <p>Final Experience: <span id="deathXP">0</span></p>
                     <p>Final Gold: <span id="deathGold">0</span></p>
                     <p>Enemies Defeated: <span id="deathEnemiesDefeated">0</span></p>

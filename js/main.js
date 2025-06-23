@@ -125,8 +125,8 @@ function initializeGame() {
     // Add some initial messages
     game.addMessage("Welcome to JSRogue!");
     game.addMessage("Use WASD or arrow keys to move.");
-    game.addMessage("Press I to open inventory, E to examine.");
-    game.addMessage("Press Space to wait.");
+    game.addMessage("Press I to toggle inventory, E to examine.");
+    game.addMessage("Press A to attack in battle, Space to wait.");
   } catch (error) {
     console.error("Failed to initialize game:", error);
     console.error("Error stack:", error.stack);
@@ -178,6 +178,24 @@ document.addEventListener("keydown", function (e) {
 
     if (game.gameState === "inventory") {
       game.closeInventory();
+    }
+  }
+
+  // 'A' key for attack in battle mode
+  if (e.key.toLowerCase() === "a" && game.gameState === "battle") {
+    e.preventDefault();
+    if (game.battleSystem && game.battleSystem.playerTurn && !game.battleSystem.battleEnded) {
+      game.battleSystem.playerAttack();
+    }
+  }
+
+  // 'I' key to toggle inventory (open if closed, close if open)
+  if (e.key.toLowerCase() === "i") {
+    e.preventDefault();
+    if (game.gameState === "inventory") {
+      game.closeInventory();
+    } else if (game.gameState === "playing") {
+      game.openInventory();
     }
   }
 

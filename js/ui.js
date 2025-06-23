@@ -158,10 +158,12 @@ class UI {
         
         // Update header info
         const levelSpan = document.getElementById('level');
+        const floorSpan = document.getElementById('floor');
         const healthSpan = document.getElementById('health');
         const goldSpan = document.getElementById('gold');
         
         if (levelSpan) levelSpan.textContent = `Level: ${player.level}`;
+        if (floorSpan) floorSpan.textContent = `Floor: ${this.game.currentFloor}`;
         if (healthSpan) healthSpan.textContent = `HP: ${player.hp}/${player.totalMaxHp || player.maxHp}`;
         if (goldSpan) goldSpan.textContent = `Gold: ${player.gold}`;
     }
