@@ -32,7 +32,7 @@ window.togglePanel = togglePanel;
 
 // Initialize the game when the page loads
 document.addEventListener("DOMContentLoaded", function () {
-  console.log("JSRogue - DOM loaded, starting initialization...");
+  console.log("YARogue - DOM loaded, starting initialization...");
 
   // Check if required DOM elements exist
   const requiredElements = [
@@ -70,7 +70,7 @@ document.addEventListener("DOMContentLoaded", function () {
 });
 
 function initializeGame() {
-  console.log("JSRogue - Starting initialization...");
+  console.log("YARogue - Starting initialization...");
 
   // Check if all required classes are available
   const requiredClasses = [
@@ -120,10 +120,10 @@ function initializeGame() {
     // Make game globally accessible for debugging
     window.game = game;
 
-    console.log("JSRogue - Game initialized successfully!");
+    console.log("YARogue - Game initialized successfully!");
 
     // Add some initial messages
-    game.addMessage("Welcome to JSRogue!");
+    game.addMessage("Welcome to YARogue!");
     game.addMessage("Use WASD or arrow keys to move.");
     game.addMessage("Press I to toggle inventory, E to examine.");
     game.addMessage("Press A to attack in battle, Space to wait.");
@@ -161,7 +161,7 @@ function showError(message) {
   errorDiv.style.textAlign = "center";
   errorDiv.innerHTML = `
         <h2>Game Initialization Error</h2>
-        <p>Failed to start JSRogue:</p>
+        <p>Failed to start YARogue:</p>
         <p style="color: #ffcccc;">${message}</p>
         <p>Please check the browser console (F12) for more details.</p>
         <p>Refresh the page to try again.</p>
@@ -331,7 +331,7 @@ function saveGame() {
       timestamp: Date.now(),
     };
 
-    localStorage.setItem("jsrogue_save", JSON.stringify(saveData));
+    localStorage.setItem("yarogue_save", JSON.stringify(saveData));
     console.log("Game saved successfully");
     return true;
   } catch (error) {
@@ -344,7 +344,7 @@ function loadGame() {
   if (!game) return false;
 
   try {
-    const saveData = localStorage.getItem("jsrogue_save");
+    const saveData = localStorage.getItem("yarogue_save");
     if (!saveData) {
       console.log("No save data found");
       return false;
@@ -447,6 +447,6 @@ if (game && game.gameLoop) {
   };
 }
 
-console.log("JSRogue - Main script loaded successfully!");
+console.log("YARogue - Main script loaded successfully!");
 
 window.initializeGame = initializeGame;

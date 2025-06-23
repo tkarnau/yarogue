@@ -1,5 +1,5 @@
 {
-  "name": "jsrogue",
+  "name": "yarogue",
   "version": "1.0.0",
   "description": "A web-based rogue/nethack clone with pixelated graphics and turn-based gameplay",
   "license": "ISC",

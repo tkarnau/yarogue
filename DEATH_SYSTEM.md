@@ -1,8 +1,8 @@
-# JSRogue Death System
+# YARogue Death System
 
 ## Overview
 
-The death system in JSRogue provides a comprehensive way to handle player death scenarios with multiple restart options and detailed statistics tracking.
+The death system in YARogue provides a comprehensive way to handle player death scenarios with multiple restart options and detailed statistics tracking.
 
 ## Features
 

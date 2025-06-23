@@ -1,4 +1,4 @@
-# JSRogue - A Web-Based Roguelike Game
+# YARogue - A Web-Based Roguelike Game
 
 A modern web-based roguelike game inspired by classic games like NetHack and Rogue, featuring pixelated graphics, turn-based combat, and procedural dungeon generation.
 
@@ -63,7 +63,7 @@ A modern web-based roguelike game inspired by classic games like NetHack and Rog
 
    ```bash
    git clone <repository-url>
-   cd jsrogue
+   cd yarogue
    ```
 
 2. **Start the development server**
@@ -168,7 +168,7 @@ A modern web-based roguelike game inspired by classic games like NetHack and Rog
 ### File Structure
 
 ```
-jsrogue/
+yarogue/
 ├── index.html          # Main HTML file
 ├── styles.css          # CSS styling
 ├── package.json        # Project configuration
@@ -226,4 +226,4 @@ ISC License - See package.json for details
 
 ---
 
-**Enjoy exploring the dungeons of JSRogue!** 🗡️🛡️⚔️
+**Enjoy exploring the dungeons of YARogue!** 🗡️🛡️⚔️

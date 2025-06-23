@@ -3,14 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>JSRogue - A Web-Based Roguelike</title>
+    <title>YARogue - A Web-Based Roguelike</title>
     <link rel="stylesheet" href="styles.css">
     <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
 </head>
 <body>
     <div class="game-container">
         <div class="header">
-            <h1>JSRogue</h1>
+            <h1>YARogue</h1>
             <div class="game-info">
                 <span id="level">Level: 1</span>
                 <span id="floor">Floor: 1</span>
@@ -114,7 +114,7 @@
                         <button class="collapse-btn" onclick="togglePanel('messageLog')">-</button>
                     </div>
                     <div id="messageLog" class="panel-content">
-                        <p>Welcome to JSRogue! Use WASD to move.</p>
+                        <p>Welcome to YARogue! Use WASD to move.</p>
                     </div>
                 </div>
             </div>
@@ -229,7 +229,7 @@
             errorDiv.style.textAlign = "center";
             errorDiv.innerHTML = `
                 <h2>Game Initialization Error</h2>
-                <p>Failed to start JSRogue:</p>
+                <p>Failed to start YARogue:</p>
                 <p style="color: #ffcccc;">${message}</p>
                 <p>Please check the browser console (F12) for more details.</p>
                 <p>Refresh the page to try again.</p>
