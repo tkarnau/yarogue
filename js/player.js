@@ -203,6 +203,45 @@ class Player {
         return false;
     }
     
+    // Add item to inventory with destruction option if full
+    addToInventoryWithDestruction(item, onInventoryFull) {
+        if (this.inventory.length < this.maxInventory) {
+            this.inventory.push(item);
+            this.calculateTotalStats(); // Recalculate stats when inventory changes
+            return true;
+        } else {
+            // Inventory is full, call the callback to handle destruction
+            if (onInventoryFull) {
+                onInventoryFull(item);
+            }
+            return false;
+        }
+    }
+    
+    destroyItem(item) {
+        // Don't allow destroying equipped items
+        if (this.isItemEquipped(item)) {
+            return false;
+        }
+        
+        const index = this.inventory.indexOf(item);
+        if (index > -1) {
+            this.inventory.splice(index, 1);
+            this.calculateTotalStats(); // Recalculate stats when inventory changes
+            return true;
+        }
+        return false;
+    }
+    
+    // Check if an item is currently equipped
+    isItemEquipped(item) {
+        return (item === this.weapon || 
+                item === this.armor || 
+                item === this.shield ||
+                item === this.ring ||
+                item === this.amulet);
+    }
+    
     removeFromInventory(item) {
         const index = this.inventory.indexOf(item);
         if (index > -1) {

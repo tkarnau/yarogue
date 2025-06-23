@@ -127,6 +127,8 @@ function initializeGame() {
     game.addMessage("Use WASD or arrow keys to move.");
     game.addMessage("Press I to toggle inventory, E to examine.");
     game.addMessage("Press A to attack in battle, Space to wait.");
+    game.addMessage("Drag items in inventory to reorganize, drop on trash to destroy.");
+    game.addMessage("Press S in inventory to sort items automatically.");
   } catch (error) {
     console.error("Failed to initialize game:", error);
     console.error("Error stack:", error.stack);
@@ -179,6 +181,17 @@ document.addEventListener("keydown", function (e) {
     if (game.gameState === "inventory") {
       game.closeInventory();
     }
+    
+    // Close confirmation modal with Escape
+    if (game.ui.confirmationModal && game.ui.confirmationModal.style.display === 'block') {
+      game.ui.hideConfirmationModal();
+    }
+  }
+  
+  // Enter key to confirm destruction
+  if (e.key === "Enter" && game.ui.confirmationModal && game.ui.confirmationModal.style.display === 'block') {
+    e.preventDefault();
+    game.ui.confirmDestroyItem();
   }
 
   // 'A' key for attack in battle mode
@@ -208,6 +221,19 @@ document.addEventListener("keydown", function (e) {
       const item = player.inventory[index];
       game.ui.handleItemClick(item, index);
     }
+  }
+  
+  // 'S' key for sorting inventory
+  if (e.key.toLowerCase() === "s" && game.gameState === "inventory") {
+    e.preventDefault();
+    game.ui.sortInventory();
+  }
+  
+  // Arrow keys for navigating inventory grid
+  if (game.gameState === "inventory" && (e.key === "ArrowUp" || e.key === "ArrowDown" || e.key === "ArrowLeft" || e.key === "ArrowRight")) {
+    e.preventDefault();
+    // TODO: Implement grid navigation with arrow keys
+    // This could highlight slots or move a cursor around the grid
   }
 });
 

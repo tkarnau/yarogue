@@ -545,9 +545,187 @@ class Game {
   }
 
   pickupItem(item) {
-    this.player.addToInventory(item);
-    this.items = this.items.filter((i) => i !== item);
-    this.addMessage(`You picked up ${item.name}!`);
+    if (this.player.addToInventory(item)) {
+      // Item was added successfully
+      this.items = this.items.filter((i) => i !== item);
+      this.addMessage(`You picked up ${item.name}!`);
+    } else {
+      // Inventory is full, show destruction modal
+      this.showInventoryFullModal(item);
+    }
+  }
+
+  showInventoryFullModal(itemToPickup) {
+    const player = this.player;
+    
+    // Create modal for inventory full scenario
+    const modal = document.createElement('div');
+    modal.className = 'modal';
+    modal.style.display = 'block';
+    modal.style.position = 'fixed';
+    modal.style.zIndex = '2000';
+    modal.style.left = '0';
+    modal.style.top = '0';
+    modal.style.width = '100%';
+    modal.style.height = '100%';
+    modal.style.backgroundColor = 'rgba(0, 0, 0, 0.8)';
+    
+    const modalContent = document.createElement('div');
+    modalContent.style.background = '#000';
+    modalContent.style.border = '3px solid #ff0000';
+    modalContent.style.margin = '15% auto';
+    modalContent.style.padding = '25px';
+    modalContent.style.width = '80%';
+    modalContent.style.maxWidth = '600px';
+    modalContent.style.boxShadow = '0 0 35px rgba(255, 0, 0, 0.5)';
+    
+    const title = document.createElement('h2');
+    title.textContent = 'Inventory Full!';
+    title.style.textAlign = 'center';
+    title.style.color = '#ff0000';
+    title.style.marginBottom = '20px';
+    
+    const message = document.createElement('p');
+    message.textContent = `Your inventory is full! You found ${itemToPickup.name} but cannot carry it.`;
+    message.style.color = '#ffffff';
+    message.style.textAlign = 'center';
+    message.style.marginBottom = '20px';
+    
+    const subMessage = document.createElement('p');
+    subMessage.textContent = 'Select an item to destroy to make room, or cancel to leave the item behind:';
+    subMessage.style.color = '#cccccc';
+    subMessage.style.textAlign = 'center';
+    subMessage.style.marginBottom = '20px';
+    subMessage.style.fontSize = '14px';
+    
+    const itemList = document.createElement('div');
+    itemList.style.maxHeight = '300px';
+    itemList.style.overflowY = 'auto';
+    itemList.style.marginBottom = '20px';
+    itemList.style.border = '1px solid #333';
+    itemList.style.padding = '10px';
+    
+    // Get inventory by category for better organization
+    const categories = player.getInventoryByCategory();
+    
+    Object.entries(categories).forEach(([category, items]) => {
+      if (items.length > 0) {
+        // Add category header
+        const categoryHeader = document.createElement('h4');
+        categoryHeader.textContent = category.charAt(0).toUpperCase() + category.slice(1);
+        categoryHeader.style.color = '#00ff00';
+        categoryHeader.style.borderBottom = '1px solid #00ff00';
+        categoryHeader.style.marginBottom = '10px';
+        categoryHeader.style.paddingBottom = '5px';
+        itemList.appendChild(categoryHeader);
+        
+        items.forEach((item, index) => {
+          const itemElement = document.createElement('div');
+          itemElement.style.padding = '8px';
+          itemElement.style.margin = '5px 0';
+          itemElement.style.border = '1px solid #333';
+          itemElement.style.backgroundColor = '#1a1a1a';
+          itemElement.style.cursor = 'pointer';
+          itemElement.style.display = 'flex';
+          itemElement.style.justifyContent = 'space-between';
+          itemElement.style.alignItems = 'center';
+          
+          const itemInfo = document.createElement('div');
+          itemInfo.style.flex = '1';
+          
+          const itemName = document.createElement('div');
+          itemName.textContent = item.name;
+          itemName.style.color = player.getItemRarityColor(item);
+          itemName.style.fontWeight = 'bold';
+          
+          const itemType = document.createElement('div');
+          itemType.textContent = `${item.type} (${item.rarity})`;
+          itemType.style.color = '#888';
+          itemType.style.fontSize = '12px';
+          
+          itemInfo.appendChild(itemName);
+          itemInfo.appendChild(itemType);
+          
+          // Add equipped indicator
+          if (this.ui.isItemEquipped(item)) {
+            const equippedIndicator = document.createElement('div');
+            equippedIndicator.textContent = '[EQUIPPED]';
+            equippedIndicator.style.color = '#00ff00';
+            equippedIndicator.style.fontWeight = 'bold';
+            equippedIndicator.style.fontSize = '10px';
+            itemInfo.appendChild(equippedIndicator);
+            
+            // Disable clicking for equipped items
+            itemElement.style.opacity = '0.5';
+            itemElement.style.cursor = 'not-allowed';
+          } else {
+            // Add hover effect for destroyable items
+            itemElement.addEventListener('mouseenter', () => {
+              itemElement.style.backgroundColor = '#2a2a2a';
+              itemElement.style.borderColor = '#ff0000';
+            });
+            
+            itemElement.addEventListener('mouseleave', () => {
+              itemElement.style.backgroundColor = '#1a1a1a';
+              itemElement.style.borderColor = '#333';
+            });
+            
+            // Add click handler to destroy item
+            itemElement.addEventListener('click', () => {
+              if (confirm(`Destroy ${item.name} to make room for ${itemToPickup.name}?`)) {
+                if (player.destroyItem(item)) {
+                  // Now add the new item
+                  player.addToInventory(itemToPickup);
+                  this.items = this.items.filter((i) => i !== itemToPickup);
+                  this.addMessage(`You destroyed ${item.name} and picked up ${itemToPickup.name}!`);
+                  
+                  // Update UI
+                  this.ui.updateInventoryModal();
+                  this.ui.updatePlayerStats();
+                  this.ui.updateCharacterPanel();
+                  this.ui.updateInventory();
+                  
+                  // Close modal
+                  document.body.removeChild(modal);
+                }
+              }
+            });
+          }
+          
+          itemElement.appendChild(itemInfo);
+          itemList.appendChild(itemElement);
+        });
+      }
+    });
+    
+    const buttonContainer = document.createElement('div');
+    buttonContainer.style.textAlign = 'center';
+    
+    const cancelBtn = document.createElement('button');
+    cancelBtn.textContent = 'Leave Item Behind';
+    cancelBtn.style.marginLeft = '10px';
+    cancelBtn.addEventListener('click', () => {
+      this.addMessage(`You left ${itemToPickup.name} behind.`);
+      document.body.removeChild(modal);
+    });
+    
+    buttonContainer.appendChild(cancelBtn);
+    
+    modalContent.appendChild(title);
+    modalContent.appendChild(message);
+    modalContent.appendChild(subMessage);
+    modalContent.appendChild(itemList);
+    modalContent.appendChild(buttonContainer);
+    
+    modal.appendChild(modalContent);
+    document.body.appendChild(modal);
+    
+    // Close modal when clicking outside
+    modal.addEventListener('click', (e) => {
+      if (e.target === modal) {
+        document.body.removeChild(modal);
+      }
+    });
   }
 
   openInventory() {

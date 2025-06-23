@@ -99,16 +99,6 @@
                     </div>
                 </div>
                 
-                <div class="inventory">
-                    <div class="panel-header">
-                        <h3>Inventory</h3>
-                        <button class="collapse-btn" onclick="togglePanel('inventoryList')">-</button>
-                    </div>
-                    <div id="inventoryList" class="panel-content">
-                        <p>Empty</p>
-                    </div>
-                </div>
-                
                 <div class="message-log">
                     <div class="panel-header">
                         <h3>Messages</h3>
@@ -155,10 +145,23 @@
     <div id="inventoryModal" class="modal">
         <div class="modal-content">
             <h2>Inventory</h2>
-            <div id="inventoryModalList">
-                <!-- Items will be populated here -->
+            <div class="inventory-grid-container">
+                <div class="inventory-info">
+                    <span id="inventoryCapacity">Capacity: 0/20</span>
+                    <span id="inventoryGold">Gold: 0</span>
+                </div>
+                <div id="inventoryGrid" class="inventory-grid">
+                    <!-- Grid slots will be populated here -->
+                </div>
+                <div class="inventory-controls">
+                    <button id="closeInventoryBtn">Close</button>
+                    <button id="sortInventoryBtn">Sort</button>
+                </div>
+                <div id="trashZone" class="trash-zone">
+                    <div class="trash-icon">🗑️</div>
+                    <div class="trash-text">Drop items here to destroy</div>
+                </div>
             </div>
-            <button id="closeInventoryBtn">Close</button>
         </div>
     </div>
 
@@ -180,6 +183,18 @@
                 <button id="restartSameLevelBtn">Restart Same Level</button>
                 <button id="restartNewLevelBtn">Restart New Level</button>
                 <button id="viewStatsBtn">View Final Stats</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Confirmation Modal -->
+    <div id="confirmationModal" class="confirmation-modal">
+        <div class="confirmation-content">
+            <h3>⚠️ Confirm Destruction</h3>
+            <p id="confirmationMessage">Are you sure you want to destroy this item?</p>
+            <div class="confirmation-buttons">
+                <button id="confirmDestroyBtn" class="confirm-destroy-btn">Destroy</button>
+                <button id="cancelDestroyBtn" class="cancel-btn">Cancel</button>
             </div>
         </div>
     </div>
