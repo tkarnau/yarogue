@@ -303,6 +303,21 @@ class UI {
         }
     }
     
+    // Death modal methods
+    showDeathModal() {
+        const deathModal = document.getElementById('deathModal');
+        if (deathModal) {
+            deathModal.style.display = 'block';
+        }
+    }
+    
+    hideDeathModal() {
+        const deathModal = document.getElementById('deathModal');
+        if (deathModal) {
+            deathModal.style.display = 'none';
+        }
+    }
+    
     updateInventoryModal() {
         const player = this.game.player;
         const inventoryModalList = document.getElementById('inventoryModalList');

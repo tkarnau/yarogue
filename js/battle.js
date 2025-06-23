@@ -36,6 +36,10 @@ class BattleSystem {
         if (!player.isAlive()) {
             this.addBattleMessage("You have been defeated!");
             this.endBattle();
+            // Trigger death handling
+            setTimeout(() => {
+                this.game.handlePlayerDeath();
+            }, 1000);
             return;
         }
         
@@ -79,6 +83,10 @@ class BattleSystem {
         if (!player.isAlive()) {
             this.addBattleMessage("You have been defeated!");
             this.endBattle();
+            // Trigger death handling
+            setTimeout(() => {
+                this.game.handlePlayerDeath();
+            }, 1000);
             return;
         }
         

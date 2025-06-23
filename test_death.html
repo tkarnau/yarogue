@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JSRogue - Death System Test</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            background: #000;
+            color: #fff;
+        }
+        .test-panel {
+            background: #333;
+            padding: 20px;
+            border: 2px solid #ff0000;
+            margin: 20px 0;
+            border-radius: 5px;
+        }
+        button {
+            background: #ff0000;
+            color: #fff;
+            border: none;
+            padding: 10px 20px;
+            margin: 5px;
+            cursor: pointer;
+            border-radius: 3px;
+        }
+        button:hover {
+            background: #cc0000;
+        }
+        .info {
+            background: #444;
+            padding: 15px;
+            border: 1px solid #666;
+            margin: 10px 0;
+            border-radius: 3px;
+        }
+    </style>
+</head>
+<body>
+    <h1>JSRogue - Death System Test</h1>
+    
+    <div class="test-panel">
+        <h2>Death Test Controls</h2>
+        <p>Use these buttons to test the death system:</p>
+        
+        <button onclick="testDeathFromDamage()">Kill Player with Damage</button>
+        <button onclick="testDeathFromPoison()">Kill Player with Poison</button>
+        <button onclick="testDeathFromBattle()">Start Battle (then lose)</button>
+        <button onclick="checkPlayerStatus()">Check Player Status</button>
+        <button onclick="healPlayer()">Heal Player</button>
+        
+        <div class="info">
+            <h3>Test Instructions:</h3>
+            <ul>
+                <li><strong>Kill Player with Damage:</strong> Directly reduces HP to 0</li>
+                <li><strong>Kill Player with Poison:</strong> Adds poison status effect that kills</li>
+                <li><strong>Start Battle:</strong> Initiates a battle where you can lose</li>
+                <li><strong>Check Player Status:</strong> Shows current HP and status effects</li>
+                <li><strong>Heal Player:</strong> Restores player to full health</li>
+            </ul>
+        </div>
+    </div>
+    
+    <div class="info">
+        <h3>Expected Behavior:</h3>
+        <ul>
+            <li>When player dies, a red death modal should appear</li>
+            <li>Modal should show final statistics (level, XP, gold, enemies defeated)</li>
+            <li>Three restart options should be available:
+                <ul>
+                    <li><strong>Restart Same Level:</strong> Keeps current level, new map</li>
+                    <li><strong>Restart New Level:</strong> Starts at level 1, new map</li>
+                    <li><strong>View Final Stats:</strong> Shows detailed statistics</li>
+                </ul>
+            </li>
+            <li>Player movement should be disabled when death modal is open</li>
+            <li>Escape key should not close the death modal</li>
+        </ul>
+    </div>
+
+    <script>
+        // Test functions
+        function testDeathFromDamage() {
+            if (window.game && window.game.player) {
+                console.log("Testing death from damage...");
+                window.game.player.hp = 0;
+                window.game.player.checkForDeath();
+            } else {
+                alert("Game not initialized yet!");
+            }
+        }
+        
+        function testDeathFromPoison() {
+            if (window.game && window.game.player) {
+                console.log("Testing death from poison...");
+                window.game.player.addStatusEffect({
+                    type: 'poison',
+                    intensity: 100, // High damage
+                    duration: 1
+                });
+                window.game.player.updateStatusEffects();
+            } else {
+                alert("Game not initialized yet!");
+            }
+        }
+        
+        function testDeathFromBattle() {
+            if (window.game && window.game.player) {
+                console.log("Starting battle test...");
+                // Create a strong enemy and start battle
+                const enemy = new Enemy(window.game.player.x + 1, window.game.player.y, 'dragon');
+                enemy.hp = 100;
+                enemy.attack = 50;
+                window.game.startBattle(enemy);
+            } else {
+                alert("Game not initialized yet!");
+            }
+        }
+        
+        function checkPlayerStatus() {
+            if (window.game && window.game.player) {
+                const player = window.game.player;
+                const status = `
+Player Status:
+HP: ${player.hp}/${player.maxHp}
+Level: ${player.level}
+Status Effects: ${player.statusEffects.length}
+Alive: ${player.isAlive()}
+                `;
+                alert(status);
+            } else {
+                alert("Game not initialized yet!");
+            }
+        }
+        
+        function healPlayer() {
+            if (window.game && window.game.player) {
+                console.log("Healing player...");
+                window.game.player.hp = window.game.player.maxHp;
+                window.game.player.statusEffects = [];
+                window.game.ui.updatePlayerStats();
+                alert("Player healed to full health!");
+            } else {
+                alert("Game not initialized yet!");
+            }
+        }
+        
+        // Wait for game to load
+        window.addEventListener('load', function() {
+            setTimeout(() => {
+                if (window.game) {
+                    console.log("Game loaded, death test ready!");
+                } else {
+                    console.log("Waiting for game to load...");
+                }
+            }, 2000);
+        });
+    </script>
+    
+    <!-- Load the main game -->
+    <iframe src="index.html" width="100%" height="600" style="border: 2px solid #666; margin-top: 20px;"></iframe>
+</body>
+</html> 

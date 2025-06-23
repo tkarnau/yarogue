@@ -160,6 +160,27 @@
         </div>
     </div>
 
+    <!-- Death Modal -->
+    <div id="deathModal" class="modal">
+        <div class="modal-content death-modal">
+            <h2>💀 You Have Died! 💀</h2>
+            <div class="death-info">
+                <p>Your journey has come to an end...</p>
+                <div class="death-stats">
+                    <p>Final Level: <span id="deathLevel">1</span></p>
+                    <p>Final Experience: <span id="deathXP">0</span></p>
+                    <p>Final Gold: <span id="deathGold">0</span></p>
+                    <p>Enemies Defeated: <span id="deathEnemiesDefeated">0</span></p>
+                </div>
+            </div>
+            <div class="death-actions">
+                <button id="restartSameLevelBtn">Restart Same Level</button>
+                <button id="restartNewLevelBtn">Restart New Level</button>
+                <button id="viewStatsBtn">View Final Stats</button>
+            </div>
+        </div>
+    </div>
+
     <!-- Load scripts in dependency order -->
     <script>
         console.log("Loading scripts...");

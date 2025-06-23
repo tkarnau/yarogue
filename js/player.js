@@ -419,6 +419,14 @@ class Player {
         return this.hp > 0;
     }
     
+    checkForDeath() {
+        if (!this.isAlive() && window.game && window.game.handlePlayerDeath) {
+            window.game.handlePlayerDeath();
+            return true;
+        }
+        return false;
+    }
+    
     getTotalAttack() {
         return this.totalAttack;
     }
@@ -499,7 +507,12 @@ class Player {
         switch (effect.type) {
             case 'poison':
                 const poisonDamage = effect.intensity || 1;
-                this.takeDamage(poisonDamage, 'poison');
+                const result = this.takeDamage(poisonDamage, 'poison');
+                if (result === 'death') {
+                    // Check for death and trigger handling
+                    this.checkForDeath();
+                    return `You take ${poisonDamage} poison damage and die!`;
+                }
                 return `You take ${poisonDamage} poison damage!`;
                 
             case 'regeneration':

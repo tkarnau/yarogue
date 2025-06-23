@@ -171,6 +171,11 @@ document.addEventListener("keydown", function (e) {
       return;
     }
 
+    if (game.gameState === "gameOver") {
+      // Don't allow closing death modal with Escape
+      return;
+    }
+
     if (game.gameState === "inventory") {
       game.closeInventory();
     }

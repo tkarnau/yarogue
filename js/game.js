@@ -282,6 +282,11 @@ class Game {
   }
 
   handlePlayerInput(e) {
+    // Don't handle input if game is over
+    if (this.gameState === "gameOver") {
+      return;
+    }
+    
     let dx = 0,
       dy = 0;
 
@@ -306,6 +311,11 @@ class Game {
         // Wait
         this.addMessage("You wait a moment...");
         this.updateEnemies();
+        
+        // Check for death after status effects from waiting
+        if (this.player.checkForDeath()) {
+          return; // Stop processing if player died
+        }
         break;
       case "i":
         this.openInventory();
@@ -347,6 +357,11 @@ class Game {
       const statusMessage = this.player.onTileWalked();
       if (statusMessage) {
         this.addMessage(statusMessage);
+      }
+
+      // Check for death after status effects
+      if (this.player.checkForDeath()) {
+        return; // Stop processing if player died
       }
 
       // Update camera
@@ -431,6 +446,144 @@ class Game {
   closeInventory() {
     this.gameState = "playing";
     this.ui.hideInventoryModal();
+  }
+
+  // Death handling methods
+  handlePlayerDeath() {
+    console.log("Player has died!");
+    this.gameState = "gameOver";
+    
+    // Store death statistics
+    this.deathStats = {
+      level: this.player.level,
+      experience: this.player.experience,
+      gold: this.player.gold,
+      enemiesDefeated: this.calculateEnemiesDefeated()
+    };
+    
+    // Show death modal
+    this.showDeathModal();
+    
+    // Add death message
+    this.addMessage("💀 You have been defeated! 💀");
+  }
+  
+  calculateEnemiesDefeated() {
+    // This is a simple calculation - in a real game you might track this more precisely
+    // For now, we'll estimate based on player level and experience
+    return Math.floor(this.player.experience / 50); // Rough estimate
+  }
+  
+  showDeathModal() {
+    const deathLevel = document.getElementById('deathLevel');
+    const deathXP = document.getElementById('deathXP');
+    const deathGold = document.getElementById('deathGold');
+    const deathEnemiesDefeated = document.getElementById('deathEnemiesDefeated');
+    
+    // Update death statistics
+    deathLevel.textContent = this.deathStats.level;
+    deathXP.textContent = this.deathStats.experience;
+    deathGold.textContent = this.deathStats.gold;
+    deathEnemiesDefeated.textContent = this.deathStats.enemiesDefeated;
+    
+    // Show modal using UI
+    this.ui.showDeathModal();
+    
+    // Set up event listeners for death modal buttons
+    this.setupDeathModalListeners();
+  }
+  
+  hideDeathModal() {
+    this.ui.hideDeathModal();
+  }
+  
+  setupDeathModalListeners() {
+    const restartSameLevelBtn = document.getElementById('restartSameLevelBtn');
+    const restartNewLevelBtn = document.getElementById('restartNewLevelBtn');
+    const viewStatsBtn = document.getElementById('viewStatsBtn');
+    
+    // Remove existing listeners to prevent duplicates
+    restartSameLevelBtn.onclick = null;
+    restartNewLevelBtn.onclick = null;
+    viewStatsBtn.onclick = null;
+    
+    // Add new listeners
+    restartSameLevelBtn.onclick = () => this.restartGame(false);
+    restartNewLevelBtn.onclick = () => this.restartGame(true);
+    viewStatsBtn.onclick = () => this.showFinalStats();
+  }
+  
+  restartGame(newLevel = false) {
+    console.log(`Restarting game with ${newLevel ? 'new' : 'same'} level`);
+    
+    // Hide death modal
+    this.hideDeathModal();
+    
+    // Store current level if restarting same level
+    const currentLevel = this.player.level;
+    
+    // Reset game state
+    this.gameState = "playing";
+    
+    // Clear existing game objects
+    this.enemies = [];
+    this.items = [];
+    
+    if (newLevel) {
+      // Generate new map
+      this.map.generate();
+    }
+    
+    // Find new spawn position
+    const spawnPos = this.findValidSpawnPosition();
+    
+    // Create new player
+    this.player = new Player(spawnPos.x, spawnPos.y);
+    
+    // If restarting same level, set player to that level
+    if (!newLevel && currentLevel > 1) {
+      this.player.level = currentLevel;
+      this.player.experience = (currentLevel - 1) * 100; // Set experience for that level
+      this.player.nextLevelExp = currentLevel * 100;
+      this.player.hp = this.player.maxHp; // Restore full health
+    }
+    
+    // Add starting equipment
+    this.player.addStartingEquipment();
+    this.player.calculateTotalStats();
+    
+    // Spawn new enemies and items
+    this.spawnEnemies();
+    this.spawnItems();
+    
+    // Update UI
+    this.ui.updatePlayerStats();
+    this.ui.updateInventory();
+    this.ui.updateHeader();
+    
+    // Update camera
+    this.updateCamera();
+    
+    // Add restart message
+    this.addMessage("Game restarted!");
+    if (newLevel) {
+      this.addMessage("A new adventure begins...");
+    } else {
+      this.addMessage("You return to face the same challenges...");
+    }
+  }
+  
+  showFinalStats() {
+    // For now, just show an alert with detailed stats
+    // In the future, this could open a detailed stats modal
+    const stats = `
+Final Statistics:
+Level: ${this.deathStats.level}
+Experience: ${this.deathStats.experience}
+Gold: ${this.deathStats.gold}
+Enemies Defeated: ${this.deathStats.enemiesDefeated}
+    `;
+    alert(stats);
   }
 
   examineTile() {
