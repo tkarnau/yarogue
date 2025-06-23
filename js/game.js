@@ -504,38 +504,15 @@ class Game {
                 
                 if (mapX >= 0 && mapX < this.mapWidth && mapY >= 0 && mapY < this.mapHeight) {
                     const tile = this.map.getTile(mapX, mapY);
+                    const biome = this.map.getBiome(mapX, mapY);
                     const screenX = x * this.tileSize;
                     const screenY = y * this.tileSize;
                     
+                    this.renderTile(tile, biome, screenX, screenY, mapX, mapY);
+                    
                     if (tile === '#') {
-                        // Wall - draw as dark stone blocks
-                        this.ctx.fillStyle = '#2a2a2a';
-                        this.ctx.fillRect(screenX, screenY, this.tileSize, this.tileSize);
-                        
-                        // Add stone texture
-                        this.ctx.fillStyle = '#3a3a3a';
-                        this.ctx.fillRect(screenX + 2, screenY + 2, this.tileSize - 4, this.tileSize - 4);
-                        
-                        // Add highlights
-                        this.ctx.fillStyle = '#4a4a4a';
-                        this.ctx.fillRect(screenX + 1, screenY + 1, 2, 2);
-                        this.ctx.fillRect(screenX + this.tileSize - 3, screenY + 1, 2, 2);
-                        
                         wallTilesRendered++;
-                    } else if (tile === '.') {
-                        // Floor - draw as stone tiles
-                        this.ctx.fillStyle = '#1a1a1a';
-                        this.ctx.fillRect(screenX, screenY, this.tileSize, this.tileSize);
-                        
-                        // Add tile pattern
-                        this.ctx.fillStyle = '#252525';
-                        this.ctx.fillRect(screenX + 1, screenY + 1, this.tileSize - 2, this.tileSize - 2);
-                        
-                        // Add subtle grid lines
-                        this.ctx.strokeStyle = '#333';
-                        this.ctx.lineWidth = 0.5;
-                        this.ctx.strokeRect(screenX + 0.5, screenY + 0.5, this.tileSize - 1, this.tileSize - 1);
-                        
+                    } else if (tile === '.' || tile === 'vegetation' || tile === 'steam' || tile === 'mud' || tile === 'lava' || tile === 'water' || tile === 'crystal') {
                         floorTilesRendered++;
                     }
                 }
@@ -543,6 +520,212 @@ class Game {
         }
         
         console.log(`Map rendered: ${floorTilesRendered} floor tiles, ${wallTilesRendered} wall tiles`);
+    }
+    
+    renderTile(tile, biome, screenX, screenY, mapX, mapY) {
+        switch (tile) {
+            case '#':
+                this.renderWall(screenX, screenY, biome);
+                break;
+            case '.':
+                this.renderFloor(screenX, screenY, biome);
+                break;
+            case 'lava':
+                this.renderLava(screenX, screenY);
+                break;
+            case 'steam':
+                this.renderSteam(screenX, screenY);
+                break;
+            case 'vegetation':
+                this.renderVegetation(screenX, screenY);
+                break;
+            case 'water':
+                this.renderWater(screenX, screenY);
+                break;
+            case 'mud':
+                this.renderMud(screenX, screenY);
+                break;
+            case 'crystal':
+                this.renderCrystal(screenX, screenY);
+                break;
+            default:
+                this.renderFloor(screenX, screenY, biome);
+        }
+    }
+    
+    renderWall(screenX, screenY, biome) {
+        let baseColor, textureColor, highlightColor;
+        
+        switch (biome) {
+            case 'heated':
+                baseColor = '#4a2a2a';
+                textureColor = '#5a3a3a';
+                highlightColor = '#6a4a4a';
+                break;
+            case 'jungle':
+                baseColor = '#2a4a2a';
+                textureColor = '#3a5a3a';
+                highlightColor = '#4a6a4a';
+                break;
+            case 'crystal':
+                baseColor = '#2a2a4a';
+                textureColor = '#3a3a5a';
+                highlightColor = '#4a4a6a';
+                break;
+            case 'swamp':
+                baseColor = '#2a4a4a';
+                textureColor = '#3a5a5a';
+                highlightColor = '#4a6a6a';
+                break;
+            default: // stone
+                baseColor = '#2a2a2a';
+                textureColor = '#3a3a3a';
+                highlightColor = '#4a4a4a';
+        }
+        
+        // Wall - draw as dark stone blocks
+        this.ctx.fillStyle = baseColor;
+        this.ctx.fillRect(screenX, screenY, this.tileSize, this.tileSize);
+        
+        // Add stone texture
+        this.ctx.fillStyle = textureColor;
+        this.ctx.fillRect(screenX + 2, screenY + 2, this.tileSize - 4, this.tileSize - 4);
+        
+        // Add highlights
+        this.ctx.fillStyle = highlightColor;
+        this.ctx.fillRect(screenX + 1, screenY + 1, 2, 2);
+        this.ctx.fillRect(screenX + this.tileSize - 3, screenY + 1, 2, 2);
+    }
+    
+    renderFloor(screenX, screenY, biome) {
+        let baseColor, patternColor;
+        
+        switch (biome) {
+            case 'heated':
+                baseColor = '#3a1a1a';
+                patternColor = '#4a2a2a';
+                break;
+            case 'jungle':
+                baseColor = '#1a3a1a';
+                patternColor = '#2a4a2a';
+                break;
+            case 'crystal':
+                baseColor = '#1a1a3a';
+                patternColor = '#2a2a4a';
+                break;
+            case 'swamp':
+                baseColor = '#1a3a3a';
+                patternColor = '#2a4a4a';
+                break;
+            default: // stone
+                baseColor = '#1a1a1a';
+                patternColor = '#252525';
+        }
+        
+        // Floor - draw as stone tiles
+        this.ctx.fillStyle = baseColor;
+        this.ctx.fillRect(screenX, screenY, this.tileSize, this.tileSize);
+        
+        // Add tile pattern
+        this.ctx.fillStyle = patternColor;
+        this.ctx.fillRect(screenX + 1, screenY + 1, this.tileSize - 2, this.tileSize - 2);
+        
+        // Add subtle grid lines
+        this.ctx.strokeStyle = '#333';
+        this.ctx.lineWidth = 0.5;
+        this.ctx.strokeRect(screenX + 0.5, screenY + 0.5, this.tileSize - 1, this.tileSize - 1);
+    }
+    
+    renderLava(screenX, screenY) {
+        // Animated lava effect
+        const time = Date.now() * 0.005;
+        const brightness = Math.sin(time + screenX * 0.1 + screenY * 0.1) * 0.3 + 0.7;
+        
+        this.ctx.fillStyle = `rgba(255, ${Math.floor(100 * brightness)}, 0, 0.8)`;
+        this.ctx.fillRect(screenX, screenY, this.tileSize, this.tileSize);
+        
+        // Add lava bubbles
+        this.ctx.fillStyle = `rgba(255, ${Math.floor(150 * brightness)}, 50, 0.6)`;
+        this.ctx.beginPath();
+        this.ctx.arc(screenX + this.tileSize/2, screenY + this.tileSize/2, 3, 0, Math.PI * 2);
+        this.ctx.fill();
+    }
+    
+    renderSteam(screenX, screenY) {
+        // Steam effect
+        this.ctx.fillStyle = 'rgba(200, 200, 200, 0.3)';
+        this.ctx.fillRect(screenX, screenY, this.tileSize, this.tileSize);
+        
+        // Add steam particles
+        this.ctx.fillStyle = 'rgba(255, 255, 255, 0.5)';
+        for (let i = 0; i < 3; i++) {
+            const x = screenX + Math.random() * this.tileSize;
+            const y = screenY + Math.random() * this.tileSize;
+            this.ctx.beginPath();
+            this.ctx.arc(x, y, 1, 0, Math.PI * 2);
+            this.ctx.fill();
+        }
+    }
+    
+    renderVegetation(screenX, screenY) {
+        // Base floor
+        this.renderFloor(screenX, screenY, 'jungle');
+        
+        // Add vegetation
+        this.ctx.fillStyle = '#2d5a2d';
+        this.ctx.fillRect(screenX + 2, screenY + 2, this.tileSize - 4, this.tileSize - 4);
+        
+        // Add grass details
+        this.ctx.fillStyle = '#4a7a4a';
+        for (let i = 0; i < 4; i++) {
+            const x = screenX + 3 + (i * 4);
+            const y = screenY + this.tileSize - 6;
+            this.ctx.fillRect(x, y, 2, 4);
+        }
+    }
+    
+    renderWater(screenX, screenY) {
+        // Water effect
+        this.ctx.fillStyle = 'rgba(0, 100, 200, 0.7)';
+        this.ctx.fillRect(screenX, screenY, this.tileSize, this.tileSize);
+        
+        // Add water ripples
+        this.ctx.fillStyle = 'rgba(0, 150, 255, 0.4)';
+        this.ctx.beginPath();
+        this.ctx.arc(screenX + this.tileSize/2, screenY + this.tileSize/2, 6, 0, Math.PI * 2);
+        this.ctx.fill();
+    }
+    
+    renderMud(screenX, screenY) {
+        // Mud effect
+        this.ctx.fillStyle = '#5d4e37';
+        this.ctx.fillRect(screenX, screenY, this.tileSize, this.tileSize);
+        
+        // Add mud texture
+        this.ctx.fillStyle = '#6d5e47';
+        this.ctx.fillRect(screenX + 2, screenY + 2, this.tileSize - 4, this.tileSize - 4);
+        
+        // Add mud bubbles
+        this.ctx.fillStyle = '#4d3e27';
+        this.ctx.beginPath();
+        this.ctx.arc(screenX + this.tileSize/3, screenY + this.tileSize/3, 2, 0, Math.PI * 2);
+        this.ctx.fill();
+    }
+    
+    renderCrystal(screenX, screenY) {
+        // Crystal effect
+        this.ctx.fillStyle = 'rgba(100, 100, 255, 0.8)';
+        this.ctx.fillRect(screenX, screenY, this.tileSize, this.tileSize);
+        
+        // Add crystal facets
+        this.ctx.fillStyle = 'rgba(150, 150, 255, 0.9)';
+        this.ctx.beginPath();
+        this.ctx.moveTo(screenX + this.tileSize/2, screenY);
+        this.ctx.lineTo(screenX + this.tileSize - 2, screenY + this.tileSize/2);
+        this.ctx.lineTo(screenX + this.tileSize/2, screenY + this.tileSize);
+        this.ctx.lineTo(screenX + 2, screenY + this.tileSize/2);
+        this.ctx.closePath();
+        this.ctx.fill();
     }
     
     renderItems() {
@@ -758,46 +941,90 @@ class Game {
         const centerX = x + this.tileSize / 2;
         const centerY = y + this.tileSize / 2;
         
-        // Draw player as a heroic figure
+        // Draw player as a heroic figure - larger and more detailed
         this.ctx.fillStyle = this.player.color;
         
-        // Body
-        this.ctx.fillRect(centerX - 3, centerY - 3, 6, 6);
+        // Main body - larger
+        this.ctx.fillRect(centerX - 4, centerY - 3, 8, 7);
         
-        // Head
-        this.ctx.fillRect(centerX - 2, centerY - 5, 4, 3);
+        // Head - larger
+        this.ctx.fillRect(centerX - 3, centerY - 6, 6, 4);
         
-        // Eyes
+        // Eyes - more prominent
         this.ctx.fillStyle = '#000';
-        this.ctx.fillRect(centerX - 1, centerY - 4, 1, 1);
+        this.ctx.fillRect(centerX - 2, centerY - 5, 1, 1);
+        this.ctx.fillRect(centerX + 1, centerY - 5, 1, 1);
+        
+        // Add a nose
         this.ctx.fillRect(centerX, centerY - 4, 1, 1);
         
-        // Equipment indicators
+        // Equipment indicators - more detailed
         if (this.player.weapon) {
+            // Sword - larger and more detailed
             this.ctx.fillStyle = '#ccc';
-            this.ctx.fillRect(centerX + 2, centerY - 1, 3, 2); // Sword
+            this.ctx.fillRect(centerX + 3, centerY - 1, 4, 3); // Blade
+            this.ctx.fillStyle = '#8b4513';
+            this.ctx.fillRect(centerX + 2, centerY, 1, 2); // Handle
+            this.ctx.fillStyle = '#daa520';
+            this.ctx.fillRect(centerX + 1, centerY - 1, 2, 1); // Crossguard
         }
         
         if (this.player.shield) {
+            // Shield - larger and more detailed
             this.ctx.fillStyle = '#8b4513';
-            this.ctx.fillRect(centerX - 5, centerY - 1, 2, 2); // Shield
+            this.ctx.beginPath();
+            this.ctx.arc(centerX - 6, centerY, 3, 0, Math.PI * 2);
+            this.ctx.fill();
+            // Shield boss
+            this.ctx.fillStyle = '#daa520';
+            this.ctx.beginPath();
+            this.ctx.arc(centerX - 6, centerY, 1.5, 0, Math.PI * 2);
+            this.ctx.fill();
         }
         
-        // Add a subtle glow effect
+        // Add armor details
+        if (this.player.armor) {
+            this.ctx.fillStyle = '#4a4a4a';
+            this.ctx.fillRect(centerX - 3, centerY - 2, 6, 5);
+            // Armor highlights
+            this.ctx.fillStyle = '#6a6a6a';
+            this.ctx.fillRect(centerX - 2, centerY - 1, 4, 3);
+        }
+        
+        // Add cape/cloak effect
+        this.ctx.fillStyle = '#8b0000';
+        this.ctx.fillRect(centerX - 2, centerY + 2, 4, 3);
+        
+        // Add a subtle glow effect - more prominent
         this.ctx.shadowColor = this.player.color;
-        this.ctx.shadowBlur = 5;
-        this.ctx.fillRect(centerX - 3, centerY - 3, 6, 6);
+        this.ctx.shadowBlur = 8;
+        this.ctx.fillRect(centerX - 4, centerY - 3, 8, 7);
         this.ctx.shadowBlur = 0;
         
-        // Health bar
+        // Health bar - larger and more prominent
         const healthPercent = this.player.hp / this.player.maxHp;
-        const barWidth = this.tileSize - 4;
-        const barHeight = 3;
+        const barWidth = this.tileSize - 2;
+        const barHeight = 4;
         
+        // Health bar background
         this.ctx.fillStyle = '#333';
-        this.ctx.fillRect(x + 2, y - 8, barWidth, barHeight);
+        this.ctx.fillRect(x + 1, y - 10, barWidth, barHeight);
+        
+        // Health bar border
+        this.ctx.strokeStyle = '#666';
+        this.ctx.lineWidth = 1;
+        this.ctx.strokeRect(x + 1, y - 10, barWidth, barHeight);
+        
+        // Health bar fill
         this.ctx.fillStyle = healthPercent > 0.5 ? '#00ff00' : healthPercent > 0.25 ? '#ffff00' : '#ff0000';
-        this.ctx.fillRect(x + 2, y - 8, barWidth * healthPercent, barHeight);
+        this.ctx.fillRect(x + 1, y - 10, barWidth * healthPercent, barHeight);
+        
+        // Add level indicator
+        this.ctx.fillStyle = '#fff';
+        this.ctx.font = '10px monospace';
+        this.ctx.textAlign = 'center';
+        this.ctx.fillText(`L${this.player.level}`, centerX, y - 12);
+        this.ctx.textAlign = 'left';
     }
     
     renderLighting() {

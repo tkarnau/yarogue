@@ -3,6 +3,7 @@ class GameMap {
         this.width = width;
         this.height = height;
         this.tiles = [];
+        this.biomes = [];
         this.rooms = [];
         
         this.init();
@@ -12,8 +13,10 @@ class GameMap {
         // Initialize map with walls
         for (let y = 0; y < this.height; y++) {
             this.tiles[y] = [];
+            this.biomes[y] = [];
             for (let x = 0; x < this.width; x++) {
                 this.tiles[y][x] = '#';
+                this.biomes[y][x] = 'stone';
             }
         }
     }
@@ -27,6 +30,9 @@ class GameMap {
         
         // Apply cellular automata for natural cave-like appearance
         this.applyCellularAutomata();
+        
+        // Generate biomes
+        this.generateBiomes();
         
         // Ensure the map is fully connected
         this.ensureConnectivity();
@@ -284,10 +290,17 @@ class GameMap {
     }
     
     getTile(x, y) {
-        if (x < 0 || x >= this.width || y < 0 || y >= this.height) {
-            return '#';
+        if (x >= 0 && x < this.width && y >= 0 && y < this.height) {
+            return this.tiles[y][x];
         }
-        return this.tiles[y][x];
+        return '#';
+    }
+    
+    getBiome(x, y) {
+        if (x >= 0 && x < this.width && y >= 0 && y < this.height) {
+            return this.biomes[y][x];
+        }
+        return 'stone';
     }
     
     setTile(x, y, tile) {
@@ -296,8 +309,15 @@ class GameMap {
         }
     }
     
+    setBiome(x, y, biome) {
+        if (x >= 0 && x < this.width && y >= 0 && y < this.height) {
+            this.biomes[y][x] = biome;
+        }
+    }
+    
     isWalkable(x, y) {
-        return this.getTile(x, y) === '.';
+        const tile = this.getTile(x, y);
+        return tile === '.' || tile === 'vegetation' || tile === 'steam' || tile === 'mud';
     }
     
     getRandomFloorTile() {
@@ -327,6 +347,84 @@ class GameMap {
             x: Math.floor(room.x + room.width / 2),
             y: Math.floor(room.y + room.height / 2)
         };
+    }
+    
+    generateBiomes() {
+        // Create biome regions
+        const biomeTypes = ['stone', 'heated', 'jungle', 'crystal', 'swamp'];
+        const numBiomes = 3 + Math.floor(Math.random() * 3); // 3-5 biomes
+        
+        for (let i = 0; i < numBiomes; i++) {
+            const biomeType = biomeTypes[Math.floor(Math.random() * biomeTypes.length)];
+            this.createBiomeRegion(biomeType);
+        }
+        
+        // Add some special features to biomes
+        this.addBiomeFeatures();
+    }
+    
+    createBiomeRegion(biomeType) {
+        // Create a circular or rectangular biome region
+        const centerX = Math.floor(Math.random() * this.width);
+        const centerY = Math.floor(Math.random() * this.height);
+        const radius = 8 + Math.floor(Math.random() * 12); // 8-20 tile radius
+        
+        for (let y = 0; y < this.height; y++) {
+            for (let x = 0; x < this.width; x++) {
+                const distance = Math.sqrt((x - centerX) ** 2 + (y - centerY) ** 2);
+                if (distance <= radius && this.tiles[y][x] === '.') {
+                    this.biomes[y][x] = biomeType;
+                }
+            }
+        }
+    }
+    
+    addBiomeFeatures() {
+        // Add special features to different biomes
+        for (let y = 0; y < this.height; y++) {
+            for (let x = 0; x < this.width; x++) {
+                if (this.tiles[y][x] === '.') {
+                    const biome = this.biomes[y][x];
+                    
+                    // Add special features based on biome
+                    switch (biome) {
+                        case 'heated':
+                            // Add lava pools and steam vents
+                            if (Math.random() < 0.02) {
+                                this.tiles[y][x] = 'lava';
+                            } else if (Math.random() < 0.03) {
+                                this.tiles[y][x] = 'steam';
+                            }
+                            break;
+                            
+                        case 'jungle':
+                            // Add vegetation and water
+                            if (Math.random() < 0.04) {
+                                this.tiles[y][x] = 'vegetation';
+                            } else if (Math.random() < 0.02) {
+                                this.tiles[y][x] = 'water';
+                            }
+                            break;
+                            
+                        case 'crystal':
+                            // Add crystal formations
+                            if (Math.random() < 0.03) {
+                                this.tiles[y][x] = 'crystal';
+                            }
+                            break;
+                            
+                        case 'swamp':
+                            // Add mud and water
+                            if (Math.random() < 0.05) {
+                                this.tiles[y][x] = 'mud';
+                            } else if (Math.random() < 0.03) {
+                                this.tiles[y][x] = 'water';
+                            }
+                            break;
+                    }
+                }
+            }
+        }
     }
 }
 
