@@ -44,6 +44,7 @@ class Game {
     this.map = null;
     this.battleSystem = null;
     this.ui = null;
+    this.audioSystem = null;
 
     this.gameState = "playing"; // 'playing', 'battle', 'inventory', 'gameOver'
     this.currentEnemy = null;
@@ -74,6 +75,9 @@ class Game {
 
       console.log("Creating UI...");
       this.ui = new UI(this);
+
+      console.log("Creating AudioSystem...");
+      this.audioSystem = new AudioSystem();
 
       console.log("Generating map...");
       // Generate initial map
@@ -389,6 +393,11 @@ class Game {
       this.player.x = newX;
       this.player.y = newY;
 
+      // Play movement sound
+      if (this.audioSystem) {
+        this.audioSystem.playMoveSound();
+      }
+
       // Handle status effects and regeneration
       const statusMessage = this.player.onTileWalked();
       if (statusMessage) {
@@ -427,6 +436,11 @@ class Game {
     this.gameState = "battle";
     this.battleSystem.startBattle(enemy);
     this.ui.showBattleModal(enemy);
+    
+    // Start battle music
+    if (this.audioSystem) {
+      this.audioSystem.playBattleMusic();
+    }
   }
 
   endBattle() {
@@ -438,6 +452,12 @@ class Game {
       this.enemies = this.enemies.filter((e) => e !== this.currentEnemy);
       this.enemiesDefeatedThisFloor++;
       this.player.gainExperience(this.currentEnemy.experienceValue);
+      
+      // Play hit sound for enemy defeat
+      if (this.audioSystem) {
+        this.audioSystem.playHitSound();
+      }
+      
       this.addMessage(`You defeated the ${this.currentEnemy.name}!`);
 
       // Chance to drop item
@@ -469,6 +489,12 @@ class Game {
       if (this.enemiesDefeatedThisFloor >= this.totalEnemiesThisFloor) {
         this.spawnFloorExit();
       }
+    }
+
+    // Stop battle music and resume dungeon music
+    if (this.audioSystem) {
+      this.audioSystem.stopMusic();
+      this.audioSystem.playDungeonMusic();
     }
 
     this.currentEnemy = null;
@@ -518,6 +544,11 @@ class Game {
   }
 
   descendToNextFloor() {
+    // Play stairs sound
+    if (this.audioSystem) {
+      this.audioSystem.playStairsSound();
+    }
+    
     this.currentFloor++;
     this.floorExit = null;
     this.enemiesDefeatedThisFloor = 0;
@@ -539,6 +570,11 @@ class Game {
     this.ui.updateHeader();
     this.ui.updatePlayerStats();
     
+    // Start dungeon music for new floor
+    if (this.audioSystem) {
+      this.audioSystem.playThematicMusic(this.currentFloor);
+    }
+    
     // Add floor transition message
     this.addMessage(`You descend to floor ${this.currentFloor}...`);
     this.addMessage(`The air grows thicker with danger...`);
@@ -548,6 +584,12 @@ class Game {
     if (this.player.addToInventory(item)) {
       // Item was added successfully
       this.items = this.items.filter((i) => i !== item);
+      
+      // Play pickup sound
+      if (this.audioSystem) {
+        this.audioSystem.playPickupSound();
+      }
+      
       this.addMessage(`You picked up ${item.name}!`);
     } else {
       // Inventory is full, show destruction modal
@@ -743,6 +785,12 @@ class Game {
     console.log("Player has died!");
     this.gameState = "gameOver";
     
+    // Play death sound and stop music
+    if (this.audioSystem) {
+      this.audioSystem.playDeathSound();
+      this.audioSystem.stopMusic();
+    }
+    
     // Store death statistics
     this.deathStats = {
       level: this.player.level,
@@ -864,6 +912,11 @@ class Game {
     
     // Update camera
     this.updateCamera();
+    
+    // Start dungeon music for new game
+    if (this.audioSystem) {
+      this.audioSystem.playDungeonMusic();
+    }
     
     // Add restart message
     this.addMessage("Game restarted!");
@@ -1718,6 +1771,23 @@ Enemies Defeated: ${this.deathStats.enemiesDefeated}
   gameLoop() {
     this.render();
     this.ui.update();
+    
+    // Play ambient sounds occasionally
+    if (this.audioSystem && this.gameState === "playing" && Math.random() < 0.001) {
+      // 0.1% chance per frame to play ambient sound
+      if (Math.random() < 0.5) {
+        this.audioSystem.playAmbientDrip();
+      } else {
+        this.audioSystem.playWindSound();
+      }
+    }
+    
+    // Cycle music tracks occasionally for variety
+    if (this.audioSystem && this.gameState === "playing" && Math.random() < 0.0001) {
+      // 0.01% chance per frame to cycle dungeon music
+      this.audioSystem.cycleDungeonTrack();
+    }
+    
     requestAnimationFrame(() => this.gameLoop());
   }
 }

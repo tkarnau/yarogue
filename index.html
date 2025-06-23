@@ -17,6 +17,15 @@
                 <span id="health">HP: 20/20</span>
                 <span id="gold">Gold: 0</span>
             </div>
+            <div class="audio-controls">
+                <button id="toggleAudioBtn" title="Toggle Audio">🔊</button>
+                <div class="volume-controls">
+                    <label for="musicVolume">Music:</label>
+                    <input type="range" id="musicVolume" min="0" max="100" value="30" title="Music Volume">
+                    <label for="sfxVolume">SFX:</label>
+                    <input type="range" id="sfxVolume" min="0" max="100" value="50" title="Sound Effects Volume">
+                </div>
+            </div>
         </div>
         
         <div class="main-content">
@@ -251,6 +260,7 @@
             .then(() => loadScript('js/player.js'))
             .then(() => loadScript('js/battle.js'))
             .then(() => loadScript('js/ui.js'))
+            .then(() => loadScript('js/audio.js'))
             .then(() => loadScript('js/game.js'))
             .then(() => loadScript('js/main.js'))
             .then(() => {

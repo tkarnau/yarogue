@@ -50,6 +50,11 @@ class BattleSystem {
         // Apply damage
         const result = enemy.takeDamage(damage);
         
+        // Play attack sound
+        if (this.game.audioSystem) {
+            this.game.audioSystem.playAttackSound();
+        }
+        
         this.addBattleMessage(`You attack the ${enemy.name} for ${damage} damage!`);
         
         if (result === 'death') {
@@ -76,6 +81,12 @@ class BattleSystem {
         } else {
             // Normal attack
             const result = enemy.attackPlayer(player);
+            
+            // Play enemy attack sound
+            if (this.game.audioSystem) {
+                this.game.audioSystem.playAttackSound();
+            }
+            
             this.addBattleMessage(result);
         }
         

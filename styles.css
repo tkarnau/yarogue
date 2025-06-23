@@ -43,6 +43,75 @@ body {
     font-size: 16px;
 }
 
+.audio-controls {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    font-size: 12px;
+}
+
+.audio-controls button {
+    background: #000;
+    color: #00ff00;
+    border: 2px solid #00ff00;
+    padding: 8px 12px;
+    font-family: 'Press Start 2P', monospace;
+    font-size: 16px;
+    cursor: pointer;
+    transition: all 0.2s;
+    border-radius: 4px;
+}
+
+.audio-controls button:hover {
+    background: #00ff00;
+    color: #000;
+    box-shadow: 0 0 10px rgba(0, 255, 0, 0.5);
+}
+
+.audio-controls button.muted {
+    color: #666;
+    border-color: #666;
+}
+
+.volume-controls {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.volume-controls label {
+    font-size: 10px;
+    color: #888;
+}
+
+.volume-controls input[type="range"] {
+    width: 60px;
+    height: 4px;
+    background: #333;
+    outline: none;
+    border-radius: 2px;
+    -webkit-appearance: none;
+}
+
+.volume-controls input[type="range"]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 12px;
+    height: 12px;
+    background: #00ff00;
+    border-radius: 50%;
+    cursor: pointer;
+}
+
+.volume-controls input[type="range"]::-moz-range-thumb {
+    width: 12px;
+    height: 12px;
+    background: #00ff00;
+    border-radius: 50%;
+    cursor: pointer;
+    border: none;
+}
+
 .main-content {
     display: flex;
     flex: 1;

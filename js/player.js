@@ -413,6 +413,11 @@ class Player {
         
         this.calculateTotalStats(); // Recalculate stats after level up
         
+        // Play level up sound
+        if (window.game && window.game.audioSystem) {
+            window.game.audioSystem.playLevelUpSound();
+        }
+        
         return `You reached level ${this.level}!`;
     }
     

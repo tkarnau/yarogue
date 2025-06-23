@@ -129,6 +129,14 @@ function initializeGame() {
     game.addMessage("Press A to attack in battle, Space to wait.");
     game.addMessage("Drag items in inventory to reorganize, drop on trash to destroy.");
     game.addMessage("Press S in inventory to sort items automatically.");
+    
+    // Start dungeon music
+    if (game.audioSystem) {
+      game.audioSystem.playDungeonMusic();
+    }
+    
+    // Set up audio controls
+    setupAudioControls();
   } catch (error) {
     console.error("Failed to initialize game:", error);
     console.error("Error stack:", error.stack);
@@ -160,6 +168,46 @@ function showError(message) {
     `;
 
   document.body.appendChild(errorDiv);
+}
+
+function setupAudioControls() {
+  const toggleAudioBtn = document.getElementById('toggleAudioBtn');
+  const musicVolumeSlider = document.getElementById('musicVolume');
+  const sfxVolumeSlider = document.getElementById('sfxVolume');
+  
+  if (!game || !game.audioSystem) return;
+  
+  // Toggle audio button
+  if (toggleAudioBtn) {
+    toggleAudioBtn.addEventListener('click', () => {
+      const isEnabled = game.audioSystem.toggleAudio();
+      toggleAudioBtn.textContent = isEnabled ? '🔊' : '🔇';
+      toggleAudioBtn.classList.toggle('muted', !isEnabled);
+      
+      if (isEnabled) {
+        game.addMessage("Audio enabled");
+        game.audioSystem.playDungeonMusic();
+      } else {
+        game.addMessage("Audio disabled");
+      }
+    });
+  }
+  
+  // Music volume slider
+  if (musicVolumeSlider) {
+    musicVolumeSlider.addEventListener('input', (e) => {
+      const volume = e.target.value / 100;
+      game.audioSystem.setMusicVolume(volume);
+    });
+  }
+  
+  // SFX volume slider
+  if (sfxVolumeSlider) {
+    sfxVolumeSlider.addEventListener('input', (e) => {
+      const volume = e.target.value / 100;
+      game.audioSystem.setSFXVolume(volume);
+    });
+  }
 }
 
 // Add keyboard shortcuts for modals
