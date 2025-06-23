@@ -1,6 +1,35 @@
 // Global game instance
 let game;
 
+// Panel collapse state storage
+const panelStates = {
+    characterPanel: true,
+    statusEffectsList: true,
+    inventoryList: true,
+    messageLog: true
+};
+
+// Toggle panel function
+function togglePanel(panelId) {
+    const panel = document.getElementById(panelId);
+    const btn = panel.previousElementSibling.querySelector('.collapse-btn');
+    
+    if (panel.classList.contains('collapsed')) {
+        // Expand panel
+        panel.classList.remove('collapsed');
+        btn.textContent = '-';
+        panelStates[panelId] = true;
+    } else {
+        // Collapse panel
+        panel.classList.add('collapsed');
+        btn.textContent = '+';
+        panelStates[panelId] = false;
+    }
+}
+
+// Make togglePanel globally accessible
+window.togglePanel = togglePanel;
+
 // Initialize the game when the page loads
 document.addEventListener("DOMContentLoaded", function () {
   console.log("JSRogue - DOM loaded, starting initialization...");

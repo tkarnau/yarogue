@@ -319,6 +319,56 @@ button:active {
     font-weight: bold;
 }
 
+/* Collapsible Panel Styles */
+.panel-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+    border-bottom: 2px solid #00ff00;
+    padding-bottom: 8px;
+}
+
+.panel-header h3 {
+    margin: 0;
+    border: none;
+    padding: 0;
+    text-align: left;
+}
+
+.collapse-btn {
+    background: #000;
+    color: #00ff00;
+    border: 1px solid #00ff00;
+    padding: 4px 8px;
+    font-family: 'Press Start 2P', monospace;
+    font-size: 12px;
+    cursor: pointer;
+    transition: all 0.2s;
+    min-width: 24px;
+    height: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.collapse-btn:hover {
+    background: #00ff00;
+    color: #000;
+}
+
+.panel-content {
+    transition: max-height 0.3s ease-out, opacity 0.3s ease-out;
+    overflow: hidden;
+}
+
+.panel-content.collapsed {
+    max-height: 0;
+    opacity: 0;
+    padding: 0;
+    margin: 0;
+}
+
 /* Inventory Category Styles */
 .inventory-category {
     font-size: 12px;

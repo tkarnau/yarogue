@@ -40,8 +40,11 @@
                 </div>
                 
                 <div class="character-panel">
-                    <h3>Character Details</h3>
-                    <div id="characterPanel">
+                    <div class="panel-header">
+                        <h3>Character Details</h3>
+                        <button class="collapse-btn" onclick="togglePanel('characterPanel')">-</button>
+                    </div>
+                    <div id="characterPanel" class="panel-content">
                         <div class="equipped-items">
                             <h4>Equipped Items</h4>
                             <div id="equippedItems">
@@ -85,22 +88,31 @@
                 </div>
                 
                 <div class="status-effects">
-                    <h3>Status Effects</h3>
-                    <div id="statusEffectsList">
+                    <div class="panel-header">
+                        <h3>Status Effects</h3>
+                        <button class="collapse-btn" onclick="togglePanel('statusEffectsList')">-</button>
+                    </div>
+                    <div id="statusEffectsList" class="panel-content">
                         <p>None</p>
                     </div>
                 </div>
                 
                 <div class="inventory">
-                    <h3>Inventory</h3>
-                    <div id="inventoryList">
+                    <div class="panel-header">
+                        <h3>Inventory</h3>
+                        <button class="collapse-btn" onclick="togglePanel('inventoryList')">-</button>
+                    </div>
+                    <div id="inventoryList" class="panel-content">
                         <p>Empty</p>
                     </div>
                 </div>
                 
                 <div class="message-log">
-                    <h3>Messages</h3>
-                    <div id="messageLog">
+                    <div class="panel-header">
+                        <h3>Messages</h3>
+                        <button class="collapse-btn" onclick="togglePanel('messageLog')">-</button>
+                    </div>
+                    <div id="messageLog" class="panel-content">
                         <p>Welcome to JSRogue! Use WASD to move.</p>
                     </div>
                 </div>
