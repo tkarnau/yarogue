@@ -13,9 +13,22 @@ class Game {
             throw new Error('Could not get 2D context from canvas');
         }
         
-        this.tileSize = 24;
+        this.tileSize = 24; // Increased from 20 for better visibility
         this.mapWidth = 50;
         this.mapHeight = 38;
+        
+        // Calculate viewport dimensions based on canvas size
+        this.viewportWidth = Math.floor(this.canvas.width / this.tileSize);
+        this.viewportHeight = Math.floor(this.canvas.height / this.tileSize);
+        
+        // Ensure viewport doesn't exceed map size
+        this.viewportWidth = Math.min(this.viewportWidth, this.mapWidth);
+        this.viewportHeight = Math.min(this.viewportHeight, this.mapHeight);
+        
+        console.log(`Viewport calculated: ${this.viewportWidth}x${this.viewportHeight} tiles`);
+        console.log(`Canvas size: ${this.canvas.width}x${this.canvas.height} pixels`);
+        console.log(`Tile size: ${this.tileSize} pixels`);
+        
         this.cameraX = 0;
         this.cameraY = 0;
         
@@ -100,12 +113,17 @@ class Game {
             const centerX = Math.floor(room.x + room.width / 2);
             const centerY = Math.floor(room.y + room.height / 2);
             
-            if (this.map.isWalkable(centerX, centerY)) {
-                return { x: centerX, y: centerY };
+            // Ensure spawn position is within map bounds
+            const clampedX = Math.max(0, Math.min(centerX, this.mapWidth - 1));
+            const clampedY = Math.max(0, Math.min(centerY, this.mapHeight - 1));
+            
+            if (this.map.isWalkable(clampedX, clampedY)) {
+                console.log(`Spawning player in room center: ${clampedX}, ${clampedY}`);
+                return { x: clampedX, y: clampedY };
             }
         }
         
-        // If no room or room center is invalid, find any floor tile
+        // If no room or room center is invalid, find any floor tile within map bounds
         const floorTiles = [];
         for (let y = 0; y < this.mapHeight; y++) {
             for (let x = 0; x < this.mapWidth; x++) {
@@ -117,12 +135,16 @@ class Game {
         
         if (floorTiles.length > 0) {
             // Choose a random floor tile
-            return floorTiles[Math.floor(Math.random() * floorTiles.length)];
+            const spawnPos = floorTiles[Math.floor(Math.random() * floorTiles.length)];
+            console.log(`Spawning player on random floor tile: ${spawnPos.x}, ${spawnPos.y}`);
+            return spawnPos;
         }
         
         // Fallback to center of map
-        console.warn('No valid spawn position found, using map center');
-        return { x: Math.floor(this.mapWidth / 2), y: Math.floor(this.mapHeight / 2) };
+        const fallbackX = Math.floor(this.mapWidth / 2);
+        const fallbackY = Math.floor(this.mapHeight / 2);
+        console.warn(`No valid spawn position found, using map center: ${fallbackX}, ${fallbackY}`);
+        return { x: fallbackX, y: fallbackY };
     }
     
     spawnEnemies() {
@@ -394,9 +416,44 @@ class Game {
     }
     
     updateCamera() {
+        // Calculate the center of the viewport
+        const viewportCenterX = Math.floor(this.viewportWidth / 2);
+        const viewportCenterY = Math.floor(this.viewportHeight / 2);
+        
         // Center camera on player
-        this.cameraX = Math.max(0, Math.min(this.player.x - 25, this.mapWidth - 50));
-        this.cameraY = Math.max(0, Math.min(this.player.y - 19, this.mapHeight - 38));
+        let targetCameraX = this.player.x - viewportCenterX;
+        let targetCameraY = this.player.y - viewportCenterY;
+        
+        // Clamp camera to map boundaries
+        this.cameraX = Math.max(0, Math.min(targetCameraX, this.mapWidth - this.viewportWidth));
+        this.cameraY = Math.max(0, Math.min(targetCameraY, this.mapHeight - this.viewportHeight));
+        
+        // Ensure camera doesn't go negative (shouldn't happen with the above clamping, but safety check)
+        this.cameraX = Math.max(0, this.cameraX);
+        this.cameraY = Math.max(0, this.cameraY);
+        
+        // Validate camera bounds
+        this.validateCameraBounds();
+    }
+    
+    validateCameraBounds() {
+        // Safety checks to ensure camera is always within valid bounds
+        if (this.cameraX < 0) {
+            console.warn(`Camera X was negative (${this.cameraX}), clamping to 0`);
+            this.cameraX = 0;
+        }
+        if (this.cameraY < 0) {
+            console.warn(`Camera Y was negative (${this.cameraY}), clamping to 0`);
+            this.cameraY = 0;
+        }
+        if (this.cameraX + this.viewportWidth > this.mapWidth) {
+            console.warn(`Camera X would exceed map width, clamping to ${this.mapWidth - this.viewportWidth}`);
+            this.cameraX = this.mapWidth - this.viewportWidth;
+        }
+        if (this.cameraY + this.viewportHeight > this.mapHeight) {
+            console.warn(`Camera Y would exceed map height, clamping to ${this.mapHeight - this.viewportHeight}`);
+            this.cameraY = this.mapHeight - this.viewportHeight;
+        }
     }
     
     addMessage(message) {
@@ -440,8 +497,8 @@ class Game {
         let floorTilesRendered = 0;
         let wallTilesRendered = 0;
         
-        for (let y = 0; y < 38; y++) {
-            for (let x = 0; x < 50; x++) {
+        for (let y = 0; y < this.viewportHeight; y++) {
+            for (let x = 0; x < this.viewportWidth; x++) {
                 const mapX = x + this.cameraX;
                 const mapY = y + this.cameraY;
                 
