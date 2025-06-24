@@ -209,6 +209,9 @@ class Game {
     }
     
     console.log(`Spawned ${this.totalEnemiesThisFloor} enemies for floor ${this.currentFloor}`);
+    
+    // Update header to show enemies left
+    this.ui.updateHeader();
   }
 
   findValidEnemySpawnPosition() {
@@ -602,6 +605,9 @@ class Game {
       this.enemies = this.enemies.filter((e) => e !== this.currentEnemy);
       this.enemiesDefeatedThisFloor++;
       this.player.gainExperience(this.currentEnemy.experienceValue);
+      
+      // Update header to show enemies left
+      this.ui.updateHeader();
       
       // Play hit sound for enemy defeat
       if (this.audioSystem) {
@@ -1919,9 +1925,13 @@ Enemies Defeated: ${this.deathStats.enemiesDefeated}
   }
 
   gameLoop() {
+    // Update game state
+    this.update();
+
+    // Render the game
     this.render();
     this.ui.update();
-    
+
     // Play ambient sounds occasionally
     if (this.audioSystem && this.gameState === "playing" && Math.random() < 0.001) {
       // 0.1% chance per frame to play ambient sound
@@ -1938,6 +1948,7 @@ Enemies Defeated: ${this.deathStats.enemiesDefeated}
       this.audioSystem.cycleDungeonTrack();
     }
     
+    // Continue the game loop
     requestAnimationFrame(() => this.gameLoop());
   }
 }

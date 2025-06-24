@@ -175,11 +175,24 @@ class UI {
         const floorSpan = document.getElementById('floor');
         const healthSpan = document.getElementById('health');
         const goldSpan = document.getElementById('gold');
+        const enemiesLeftSpan = document.getElementById('enemiesLeft');
         
         if (levelSpan) levelSpan.textContent = `Level: ${player.level}`;
         if (floorSpan) floorSpan.textContent = `Floor: ${this.game.currentFloor}`;
         if (healthSpan) healthSpan.textContent = `HP: ${player.hp}/${player.totalMaxHp || player.maxHp}`;
         if (goldSpan) goldSpan.textContent = `Gold: ${player.gold}`;
+        if (enemiesLeftSpan) {
+            const enemiesLeft = this.game.enemies.length;
+            enemiesLeftSpan.textContent = `Enemies: ${enemiesLeft}`;
+            // Color code based on remaining enemies
+            if (enemiesLeft === 0) {
+                enemiesLeftSpan.style.color = '#00ff00'; // Green when all enemies defeated
+            } else if (enemiesLeft <= 3) {
+                enemiesLeftSpan.style.color = '#ffff00'; // Yellow when few enemies left
+            } else {
+                enemiesLeftSpan.style.color = '#ff0000'; // Red when many enemies left
+            }
+        }
     }
     
     updateInventory() {

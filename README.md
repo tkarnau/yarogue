@@ -55,24 +55,28 @@ A modern web-based roguelike game inspired by classic games like NetHack and Rog
 YARogue is fully optimized for mobile devices with the following features:
 
 ### Touch Controls
+
 - **D-pad Navigation**: Virtual directional pad for movement (up, down, left, right)
 - **Action Buttons**: Quick access to inventory, examine, and wait actions
 - **Canvas Swipe**: Swipe on the game area to move in that direction
 - **Canvas Tap**: Tap on the game area to examine the current tile
 
 ### Mobile-Optimized UI
+
 - **Responsive Design**: Automatically adapts to different screen sizes
 - **Touch-Friendly Buttons**: Large, easy-to-tap buttons with visual feedback
 - **Mobile Layout**: Reorganized layout for better mobile viewing
 - **Touch Gestures**: Optimized touch interactions throughout the interface
 
 ### Mobile-Specific Features
+
 - **Auto-Detection**: Automatically detects mobile devices and enables touch controls
 - **Prevent Zoom**: Prevents accidental zooming during gameplay
 - **Touch Feedback**: Visual feedback for all touch interactions
 - **Landscape Support**: Optimized layout for landscape orientation
 
 ### Mobile Controls Guide
+
 - **Movement**: Use the D-pad buttons or swipe on the game canvas
 - **Inventory**: Tap the 📦 button or swipe up on the game area
 - **Examine**: Tap the 👁 button or tap on the game canvas
@@ -111,6 +115,7 @@ YARogue is fully optimized for mobile devices with the following features:
 ## How to Play
 
 ### Desktop Controls
+
 - **Movement**: WASD or Arrow Keys
 - **Inventory**: I key
 - **Examine**: E key
@@ -118,6 +123,7 @@ YARogue is fully optimized for mobile devices with the following features:
 - **Battle Actions**: A to attack, I to use item, F to flee
 
 ### Mobile Controls
+
 - **Movement**: D-pad buttons or swipe gestures
 - **Inventory**: 📦 button
 - **Examine**: 👁 button or tap canvas

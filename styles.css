@@ -1251,6 +1251,10 @@ button:active {
     #gameCanvas {
         max-width: 100%;
         height: auto;
+        /* Make canvas much larger on mobile */
+        width: 100vw !important;
+        height: 60vh !important;
+        object-fit: contain;
     }
     
     .mobile-controls {
@@ -1596,6 +1600,11 @@ button:active {
         flex: 1;
         order: 2;
         width: auto;
+    }
+    
+    #gameCanvas {
+        width: 70vw !important;
+        height: 80vh !important;
     }
     
     .mobile-controls {
