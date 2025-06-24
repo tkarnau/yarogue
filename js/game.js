@@ -19,9 +19,9 @@ class Game {
     this.mapWidth = 50;
     this.mapHeight = 38;
 
-    // Calculate optimal tile size to fit 25 tiles tall within canvas bounds
-    const maxTileSizeY = Math.floor(this.canvas.height / 25);
-    this.tileSize = maxTileSizeY; // Use height-based tile size to ensure 25 tiles tall
+    // Calculate optimal tile size to fit 15 tiles tall within canvas bounds
+    const maxTileSizeY = Math.floor(this.canvas.height / 15);
+    this.tileSize = maxTileSizeY; // Use height-based tile size to ensure 15 tiles tall
     
     // Safety check: ensure tile size is valid
     if (!this.tileSize || this.tileSize <= 0 || !isFinite(this.tileSize)) {
@@ -29,8 +29,8 @@ class Game {
       this.tileSize = 24;
     }
     
-    // Calculate viewport: 25 tiles tall, width fills the canvas
-    this.viewportHeight = 25;
+    // Calculate viewport: 15 tiles tall, width fills the canvas
+    this.viewportHeight = 15;
     this.viewportWidth = Math.floor(this.canvas.width / this.tileSize);
     
     // Ensure viewport doesn't exceed map size
