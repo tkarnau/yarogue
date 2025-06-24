@@ -127,6 +127,9 @@ class Game {
       // Canvas touch handling for movement
       this.setupCanvasTouchControls();
 
+      // Mobile action buttons
+      this.setupMobileActionButtons();
+
       console.log("Starting game loop...");
       // Start game loop
       this.gameLoop();
@@ -1923,6 +1926,56 @@ Enemies Defeated: ${this.deathStats.enemiesDefeated}
     
     // Continue the game loop
     requestAnimationFrame(() => this.gameLoop());
+  }
+
+  setupMobileActionButtons() {
+    // Inventory button
+    const inventoryBtn = document.getElementById('mobileInventoryBtn');
+    if (inventoryBtn) {
+      inventoryBtn.addEventListener('click', () => {
+        this.openInventory();
+      });
+      inventoryBtn.addEventListener('touchstart', (e) => {
+        e.preventDefault();
+        this.openInventory();
+      });
+    }
+
+    // Examine button
+    const examineBtn = document.getElementById('mobileExamineBtn');
+    if (examineBtn) {
+      examineBtn.addEventListener('click', () => {
+        this.examineTile();
+      });
+      examineBtn.addEventListener('touchstart', (e) => {
+        e.preventDefault();
+        this.examineTile();
+      });
+    }
+
+    // Wait button
+    const waitBtn = document.getElementById('mobileWaitBtn');
+    if (waitBtn) {
+      waitBtn.addEventListener('click', () => {
+        this.addMessage("You wait a moment...");
+        this.updateEnemies();
+        
+        // Check for death after status effects from waiting
+        if (this.player.checkForDeath()) {
+          return; // Stop processing if player died
+        }
+      });
+      waitBtn.addEventListener('touchstart', (e) => {
+        e.preventDefault();
+        this.addMessage("You wait a moment...");
+        this.updateEnemies();
+        
+        // Check for death after status effects from waiting
+        if (this.player.checkForDeath()) {
+          return; // Stop processing if player died
+        }
+      });
+    }
   }
 }
 
