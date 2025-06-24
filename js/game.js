@@ -1927,9 +1927,6 @@ Enemies Defeated: ${this.deathStats.enemiesDefeated}
   update() {
     // Only update game state if we're in playing mode
     if (this.gameState === "playing") {
-      // Update enemies (AI movement, etc.)
-      this.updateEnemies();
-      
       // Update camera position to follow player
       this.updateCamera();
     }
