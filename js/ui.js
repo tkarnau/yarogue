@@ -702,6 +702,10 @@ class UI {
         const sortBtn = document.getElementById('sortInventoryBtn');
         if (sortBtn) {
             sortBtn.onclick = () => this.sortInventory();
+            sortBtn.addEventListener('touchstart', (e) => {
+                e.preventDefault();
+                this.sortInventory();
+            });
         }
     }
     
@@ -1054,12 +1058,20 @@ class UI {
             confirmBtn.onclick = () => {
                 this.confirmDestroyItem();
             };
+            confirmBtn.addEventListener('touchstart', (e) => {
+                e.preventDefault();
+                this.confirmDestroyItem();
+            });
         }
         
         if (cancelBtn) {
             cancelBtn.onclick = () => {
                 this.hideConfirmationModal();
             };
+            cancelBtn.addEventListener('touchstart', (e) => {
+                e.preventDefault();
+                this.hideConfirmationModal();
+            });
         }
         
         // Close modal when clicking outside

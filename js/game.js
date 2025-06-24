@@ -307,12 +307,24 @@ class Game {
     document.getElementById("attackBtn").addEventListener("click", () => {
       this.battleSystem.playerAttack();
     });
+    document.getElementById("attackBtn").addEventListener("touchstart", (e) => {
+      e.preventDefault();
+      this.battleSystem.playerAttack();
+    });
 
     document.getElementById("useItemBtn").addEventListener("click", () => {
       this.battleSystem.useItem();
     });
+    document.getElementById("useItemBtn").addEventListener("touchstart", (e) => {
+      e.preventDefault();
+      this.battleSystem.useItem();
+    });
 
     document.getElementById("fleeBtn").addEventListener("click", () => {
+      this.battleSystem.flee();
+    });
+    document.getElementById("fleeBtn").addEventListener("touchstart", (e) => {
+      e.preventDefault();
       this.battleSystem.flee();
     });
 
@@ -320,6 +332,12 @@ class Game {
     document
       .getElementById("closeInventoryBtn")
       .addEventListener("click", () => {
+        this.closeInventory();
+      });
+    document
+      .getElementById("closeInventoryBtn")
+      .addEventListener("touchstart", (e) => {
+        e.preventDefault();
         this.closeInventory();
       });
   }
@@ -1004,10 +1022,34 @@ class Game {
     restartNewLevelBtn.onclick = null;
     viewStatsBtn.onclick = null;
     
+    // Remove existing touch listeners to prevent duplicates
+    restartSameLevelBtn.removeEventListener('touchstart', restartSameLevelBtn._touchHandler);
+    restartNewLevelBtn.removeEventListener('touchstart', restartNewLevelBtn._touchHandler);
+    viewStatsBtn.removeEventListener('touchstart', viewStatsBtn._touchHandler);
+    
     // Add new listeners
     restartSameLevelBtn.onclick = () => this.restartGame(false);
     restartNewLevelBtn.onclick = () => this.restartGame(true);
     viewStatsBtn.onclick = () => this.showFinalStats();
+    
+    // Add touch event listeners
+    restartSameLevelBtn._touchHandler = (e) => {
+      e.preventDefault();
+      this.restartGame(false);
+    };
+    restartSameLevelBtn.addEventListener('touchstart', restartSameLevelBtn._touchHandler);
+    
+    restartNewLevelBtn._touchHandler = (e) => {
+      e.preventDefault();
+      this.restartGame(true);
+    };
+    restartNewLevelBtn.addEventListener('touchstart', restartNewLevelBtn._touchHandler);
+    
+    viewStatsBtn._touchHandler = (e) => {
+      e.preventDefault();
+      this.showFinalStats();
+    };
+    viewStatsBtn.addEventListener('touchstart', viewStatsBtn._touchHandler);
   }
   
   restartGame(newLevel = false) {
