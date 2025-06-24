@@ -124,7 +124,7 @@ body {
 .main-content {
     display: flex;
     flex: 1;
-    gap: 25px;
+    gap: 15px;
 }
 
 .game-area {
@@ -132,6 +132,7 @@ body {
     display: flex;
     flex-direction: column;
     align-items: center;
+    min-width: 0; /* Allow flex item to shrink */
 }
 
 #gameCanvas {
@@ -154,302 +155,20 @@ body {
 }
 
 .sidebar {
-    width: 350px;
+    width: 250px;
     display: flex;
     flex-direction: column;
-    gap: 20px;
+    gap: 15px;
+    flex-shrink: 0; /* Prevent sidebar from shrinking */
 }
 
 .player-stats, .inventory, .message-log, .status-effects, .character-panel {
     border: 2px solid #00ff00;
-    padding: 15px;
+    padding: 10px;
     background: rgba(0, 0, 0, 0.8);
 }
 
 .player-stats h3, .inventory h3, .message-log h3, .status-effects h3, .character-panel h3 {
-    font-size: 18px;
-    margin-bottom: 15px;
-    text-align: center;
-    border-bottom: 2px solid #00ff00;
-    padding-bottom: 8px;
-}
-
-#playerStats p, #inventoryList p, #messageLog p, #statusEffectsList p, #characterPanel p {
-    font-size: 14px;
-    margin: 8px 0;
-    line-height: 1.5;
-}
-
-.message-log {
-    flex: 1;
-    overflow-y: auto;
-    max-height: 250px;
-}
-
-#messageLog {
-    font-size: 12px;
-    line-height: 1.4;
-}
-
-/* Modal Styles */
-.modal {
-    display: none;
-    position: fixed;
-    z-index: 1000;
-    left: 0;
-    top: 0;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(0, 0, 0, 0.8);
-}
-
-.modal-content {
-    background: #000;
-    border: 3px solid #00ff00;
-    margin: 8% auto;
-    padding: 25px;
-    width: 85%;
-    max-width: 700px;
-    box-shadow: 0 0 35px rgba(0, 255, 0, 0.5);
-}
-
-.modal-content h2 {
-    text-align: center;
-    margin-bottom: 25px;
-    font-size: 24px;
-}
-
-.battle-participants {
-    display: flex;
-    justify-content: space-between;
-    margin-bottom: 25px;
-}
-
-.player-battle, .enemy-battle {
-    flex: 1;
-    text-align: center;
-    padding: 15px;
-    border: 2px solid #00ff00;
-    margin: 0 15px;
-}
-
-.player-battle h3, .enemy-battle h3 {
-    font-size: 16px;
-    margin-bottom: 15px;
-}
-
-.player-battle p, .enemy-battle p {
-    font-size: 14px;
-    margin: 8px 0;
-}
-
-#battleLog {
-    border: 2px solid #00ff00;
-    padding: 15px;
-    margin-bottom: 25px;
-    max-height: 200px;
-    overflow-y: auto;
-    background: rgba(0, 0, 0, 0.5);
-}
-
-#battleLog p {
-    font-size: 14px;
-    margin: 5px 0;
-}
-
-.battle-actions {
-    display: flex;
-    justify-content: center;
-    gap: 15px;
-}
-
-button {
-    background: #000;
-    color: #00ff00;
-    border: 2px solid #00ff00;
-    padding: 12px 24px;
-    font-family: 'Press Start 2P', monospace;
-    font-size: 14px;
-    cursor: pointer;
-    transition: all 0.2s;
-}
-
-button:hover {
-    background: #00ff00;
-    color: #000;
-    box-shadow: 0 0 15px rgba(0, 255, 0, 0.5);
-}
-
-button:active {
-    transform: scale(0.95);
-}
-
-/* Destroy button specific styles */
-.destroy-btn {
-    background: #800000 !important;
-    border-color: #ff0000 !important;
-    color: #ffffff !important;
-    font-size: 10px !important;
-    padding: 3px 8px !important;
-    transition: all 0.2s !important;
-}
-
-.destroy-btn:hover {
-    background: #ff0000 !important;
-    color: #ffffff !important;
-    box-shadow: 0 0 15px rgba(255, 0, 0, 0.5) !important;
-}
-
-.destroy-btn:active {
-    transform: scale(0.95) !important;
-}
-
-#inventoryModalList {
-    max-height: 400px;
-    overflow-y: auto;
-    margin-bottom: 25px;
-}
-
-.inventory-item {
-    width: 100%;
-    height: 100%;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    text-align: center;
-    font-size: 10px;
-    color: #ffffff;
-    cursor: grab;
-    transition: all 0.2s;
-    position: relative;
-}
-
-.inventory-item:active {
-    cursor: grabbing;
-}
-
-.inventory-item.dragging {
-    opacity: 0.7;
-    transform: scale(0.9);
-    z-index: 1000;
-}
-
-/* Rarity-based glow effects for inventory items */
-.inventory-slot.rarity-common .inventory-item {
-    filter: drop-shadow(0 0 2px rgba(255, 255, 255, 0.3));
-}
-
-.inventory-slot.rarity-uncommon .inventory-item {
-    filter: drop-shadow(0 0 3px rgba(0, 255, 0, 0.4));
-}
-
-.inventory-slot.rarity-rare .inventory-item {
-    filter: drop-shadow(0 0 4px rgba(0, 128, 255, 0.5));
-}
-
-.inventory-slot.rarity-epic .inventory-item {
-    filter: drop-shadow(0 0 5px rgba(128, 0, 255, 0.6));
-}
-
-.inventory-slot.rarity-legendary .inventory-item {
-    filter: drop-shadow(0 0 6px rgba(255, 128, 0, 0.7));
-}
-
-.inventory-item-icon {
-    font-size: 20px;
-    margin-bottom: 2px;
-    line-height: 1;
-}
-
-.inventory-item-name {
-    font-size: 8px;
-    line-height: 1.1;
-    max-width: 100%;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-    padding: 0 2px;
-}
-
-.inventory-item-stats {
-    font-size: 7px;
-    color: #888;
-    line-height: 1;
-    margin-top: 1px;
-}
-
-.inventory-item-equipped {
-    position: absolute;
-    top: 2px;
-    right: 2px;
-    background: #00ff00;
-    color: #000;
-    font-size: 8px;
-    padding: 1px 3px;
-    border-radius: 2px;
-    font-weight: bold;
-}
-
-.inventory-item-quantity {
-    position: absolute;
-    bottom: 2px;
-    right: 2px;
-    background: #000;
-    color: #00ff00;
-    font-size: 8px;
-    padding: 1px 3px;
-    border-radius: 2px;
-    font-weight: bold;
-    border: 1px solid #00ff00;
-}
-
-.inventory-controls {
-    display: flex;
-    justify-content: center;
-    gap: 15px;
-}
-
-.inventory-controls button {
-    min-width: 100px;
-}
-
-/* Tooltip styles for inventory items */
-.inventory-tooltip {
-    position: absolute;
-    background: #000;
-    border: 2px solid #00ff00;
-    padding: 10px;
-    color: #00ff00;
-    font-size: 12px;
-    max-width: 250px;
-    z-index: 1001;
-    pointer-events: none;
-    box-shadow: 0 0 10px rgba(0, 255, 0, 0.5);
-    border-radius: 5px;
-    word-wrap: break-word;
-    white-space: normal;
-}
-
-.inventory-tooltip h4 {
-    margin: 0 0 5px 0;
-    color: #ffffff;
-    border-bottom: 1px solid #00ff00;
-    padding-bottom: 3px;
-}
-
-.inventory-tooltip p {
-    margin: 3px 0;
-    font-size: 11px;
-    line-height: 1.3;
-}
-
-/* Drag preview */
-.drag-preview {
-    position: fixed;
-    pointer-events: none;
-    z-index: 10000;
-    background: rgba(0, 0, 0, 0.8);
     border: 2px solid #00ff00;
     padding: 5px;
     border-radius: 5px;
