@@ -15,7 +15,11 @@ class Game {
       throw new Error("Could not get 2D context from canvas");
     }
 
-    this.tileSize = 24; // Increased from 20 for better visibility
+    // Calculate optimal tile size to fill the canvas with 25x25 viewport
+    const maxTileSizeX = Math.floor(this.canvas.width / 25);
+    const maxTileSizeY = Math.floor(this.canvas.height / 25);
+    this.tileSize = Math.min(maxTileSizeX, maxTileSizeY); // Use the smaller dimension to ensure everything fits
+    
     this.mapWidth = 50;
     this.mapHeight = 38;
 
