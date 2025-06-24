@@ -153,89 +153,6 @@ body {
     margin: 8px 0;
 }
 
-/* Mobile Controls */
-.mobile-controls {
-    display: none;
-    width: 100%;
-    max-width: 400px;
-    margin-top: 20px;
-}
-
-.mobile-dpad {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 5px;
-    margin-bottom: 20px;
-}
-
-.dpad-row {
-    display: flex;
-    gap: 5px;
-}
-
-.dpad-btn {
-    width: 60px;
-    height: 60px;
-    background: rgba(0, 0, 0, 0.8);
-    border: 2px solid #00ff00;
-    color: #00ff00;
-    font-size: 24px;
-    cursor: pointer;
-    transition: all 0.2s;
-    border-radius: 8px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    touch-action: manipulation;
-}
-
-.dpad-btn:hover,
-.dpad-btn:active {
-    background: #00ff00;
-    color: #000;
-    box-shadow: 0 0 15px rgba(0, 255, 0, 0.7);
-    transform: scale(1.05);
-}
-
-.dpad-btn:active {
-    transform: scale(0.95);
-}
-
-.mobile-action-buttons {
-    display: flex;
-    justify-content: center;
-    gap: 15px;
-}
-
-.action-btn {
-    width: 70px;
-    height: 70px;
-    background: rgba(0, 0, 0, 0.8);
-    border: 2px solid #00ff00;
-    color: #00ff00;
-    font-size: 28px;
-    cursor: pointer;
-    transition: all 0.2s;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    touch-action: manipulation;
-}
-
-.action-btn:hover,
-.action-btn:active {
-    background: #00ff00;
-    color: #000;
-    box-shadow: 0 0 20px rgba(0, 255, 0, 0.8);
-    transform: scale(1.1);
-}
-
-.action-btn:active {
-    transform: scale(0.9);
-}
-
 .sidebar {
     width: 350px;
     display: flex;
@@ -1232,145 +1149,405 @@ button:active {
     color: #000 !important;
 }
 
-/* Mobile Responsive Design */
-@media (max-width: 1024px) {
-    .main-content {
-        flex-direction: column;
-        gap: 15px;
-    }
-    
-    .sidebar {
-        width: 100%;
-        order: 2;
-    }
-    
-    .game-area {
-        order: 1;
-    }
-    
-    #gameCanvas {
-        max-width: 100%;
-        height: auto;
-        /* Make canvas much larger on mobile */
-        width: 100vw !important;
-        height: 60vh !important;
-        object-fit: contain;
-    }
-    
-    .mobile-controls {
-        display: block;
-    }
-    
-    .controls {
-        display: none;
-    }
-    
-    .header {
-        flex-direction: column;
-        gap: 15px;
-        text-align: center;
-    }
-    
-    .header h1 {
-        font-size: 24px;
-    }
-    
-    .game-info {
-        justify-content: center;
-        gap: 15px;
-    }
-    
-    .audio-controls {
-        justify-content: center;
-    }
+/* Collapsible Panel Styles */
+.panel-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+    border-bottom: 2px solid #00ff00;
+    padding-bottom: 8px;
 }
 
+.panel-header h3 {
+    margin: 0;
+    border: none;
+    padding: 0;
+    text-align: left;
+}
+
+.collapse-btn {
+    background: #000;
+    color: #00ff00;
+    border: 1px solid #00ff00;
+    padding: 4px 8px;
+    font-family: 'Press Start 2P', monospace;
+    font-size: 12px;
+    cursor: pointer;
+    transition: all 0.2s;
+    min-width: 24px;
+    height: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.collapse-btn:hover {
+    background: #00ff00;
+    color: #000;
+}
+
+.panel-content {
+    transition: max-height 0.3s ease-out, opacity 0.3s ease-out;
+    overflow: hidden;
+}
+
+.panel-content.collapsed {
+    max-height: 0;
+    opacity: 0;
+    padding: 0;
+    margin: 0;
+}
+
+/* Inventory Category Styles */
+.inventory-category {
+    font-size: 12px;
+    margin-bottom: 8px;
+}
+
+.inventory-item {
+    transition: background-color 0.2s;
+}
+
+.inventory-item:hover {
+    background-color: rgba(0, 255, 0, 0.1);
+}
+
+/* Death Modal Specific Styles */
+.death-modal {
+    border-color: #ff0000;
+    box-shadow: 0 0 35px rgba(255, 0, 0, 0.5);
+    text-align: center;
+}
+
+.death-modal h2 {
+    color: #ff0000;
+    font-size: 28px;
+    margin-bottom: 30px;
+    text-shadow: 0 0 10px rgba(255, 0, 0, 0.5);
+}
+
+.death-info {
+    margin-bottom: 30px;
+}
+
+.death-info p {
+    font-size: 16px;
+    margin: 10px 0;
+    color: #ccc;
+}
+
+.death-stats {
+    background: rgba(255, 0, 0, 0.1);
+    border: 2px solid #ff0000;
+    padding: 20px;
+    margin: 20px 0;
+    border-radius: 5px;
+}
+
+.death-stats p {
+    font-size: 14px;
+    margin: 8px 0;
+    color: #fff;
+}
+
+.death-stats span {
+    color: #ff6666;
+    font-weight: bold;
+}
+
+.death-actions {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    flex-wrap: wrap;
+}
+
+.death-actions button {
+    background: #000;
+    color: #ff0000;
+    border: 2px solid #ff0000;
+    padding: 15px 25px;
+    font-family: 'Press Start 2P', monospace;
+    font-size: 12px;
+    cursor: pointer;
+    transition: all 0.2s;
+    min-width: 150px;
+}
+
+.death-actions button:hover {
+    background: #ff0000;
+    color: #000;
+    box-shadow: 0 0 15px rgba(255, 0, 0, 0.5);
+}
+
+.death-actions button:active {
+    transform: scale(0.95);
+}
+
+/* Grid-based Inventory Styles */
+.inventory-grid-container {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.inventory-info {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px;
+    background: rgba(0, 0, 0, 0.3);
+    border: 1px solid #00ff00;
+    border-radius: 5px;
+}
+
+.inventory-info span {
+    color: #00ff00;
+    font-size: 14px;
+    font-weight: bold;
+}
+
+.inventory-grid {
+    display: grid;
+    grid-template-columns: repeat(8, 1fr);
+    gap: 5px;
+    padding: 15px;
+    background: rgba(0, 0, 0, 0.5);
+    border: 2px solid #00ff00;
+    border-radius: 8px;
+    min-height: 400px;
+    max-height: 500px;
+    overflow-y: auto;
+}
+
+.inventory-slot {
+    width: 60px;
+    height: 60px;
+    border: 2px solid #333;
+    background: rgba(0, 0, 0, 0.7);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.2s;
+    position: relative;
+    user-select: none;
+}
+
+.inventory-slot:hover {
+    border-color: #00ff00;
+    background: rgba(0, 255, 0, 0.1);
+}
+
+.inventory-slot.empty {
+    border-style: dashed;
+    border-color: #555;
+}
+
+.inventory-slot.empty:hover {
+    border-color: #00ff00;
+    background: rgba(0, 255, 0, 0.05);
+}
+
+.inventory-slot.drag-over {
+    border-color: #ffff00;
+    background: rgba(255, 255, 0, 0.2);
+    transform: scale(1.05);
+}
+
+.inventory-slot.dragging {
+    opacity: 0.5;
+    transform: scale(0.95);
+}
+
+/* Rarity-based borders for inventory slots */
+.inventory-slot.rarity-common {
+    border-color: #ffffff;
+    box-shadow: 0 0 5px rgba(255, 255, 255, 0.3);
+    animation: glow-common 2s ease-in-out infinite alternate;
+}
+
+.inventory-slot.rarity-uncommon {
+    border-color: #00ff00;
+    box-shadow: 0 0 5px rgba(0, 255, 0, 0.3);
+    animation: glow-uncommon 2s ease-in-out infinite alternate;
+}
+
+.inventory-slot.rarity-rare {
+    border-color: #0080ff;
+    box-shadow: 0 0 5px rgba(0, 128, 255, 0.3);
+    animation: glow-rare 2s ease-in-out infinite alternate;
+}
+
+.inventory-slot.rarity-epic {
+    border-color: #8000ff;
+    box-shadow: 0 0 5px rgba(128, 0, 255, 0.3);
+    animation: glow-epic 2s ease-in-out infinite alternate;
+}
+
+.inventory-slot.rarity-legendary {
+    border-color: #ff8000;
+    box-shadow: 0 0 5px rgba(255, 128, 0, 0.3);
+    animation: glow-legendary 2s ease-in-out infinite alternate;
+}
+
+/* Rarity glow animations */
+@keyframes glow-common {
+    from { box-shadow: 0 0 5px rgba(255, 255, 255, 0.3); }
+    to { box-shadow: 0 0 8px rgba(255, 255, 255, 0.5); }
+}
+
+@keyframes glow-uncommon {
+    from { box-shadow: 0 0 5px rgba(0, 255, 0, 0.3); }
+    to { box-shadow: 0 0 8px rgba(0, 255, 0, 0.5); }
+}
+
+@keyframes glow-rare {
+    from { box-shadow: 0 0 5px rgba(0, 128, 255, 0.3); }
+    to { box-shadow: 0 0 8px rgba(0, 128, 255, 0.5); }
+}
+
+@keyframes glow-epic {
+    from { box-shadow: 0 0 5px rgba(128, 0, 255, 0.3); }
+    to { box-shadow: 0 0 8px rgba(128, 0, 255, 0.5); }
+}
+
+@keyframes glow-legendary {
+    from { box-shadow: 0 0 5px rgba(255, 128, 0, 0.3); }
+    to { box-shadow: 0 0 8px rgba(255, 128, 0, 0.5); }
+}
+
+.inventory-item {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    font-size: 10px;
+    color: #ffffff;
+    cursor: grab;
+    transition: all 0.2s;
+    position: relative;
+}
+
+.inventory-item:active {
+    cursor: grabbing;
+}
+
+.inventory-item.dragging {
+    opacity: 0.7;
+    transform: scale(0.9);
+    z-index: 1000;
+}
+
+.inventory-item-icon {
+    font-size: 20px;
+    margin-bottom: 2px;
+    line-height: 1;
+}
+
+.inventory-item-name {
+    font-size: 8px;
+    line-height: 1.1;
+    max-width: 100%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    padding: 0 2px;
+}
+
+.inventory-item-stats {
+    font-size: 7px;
+    color: #888;
+    line-height: 1;
+    margin-top: 1px;
+}
+
+.inventory-item-equipped {
+    position: absolute;
+    top: 2px;
+    right: 2px;
+    background: #00ff00;
+    color: #000;
+    font-size: 8px;
+    padding: 1px 3px;
+    border-radius: 2px;
+    font-weight: bold;
+}
+
+.inventory-item-quantity {
+    position: absolute;
+    bottom: 2px;
+    right: 2px;
+    background: #000;
+    color: #00ff00;
+    font-size: 8px;
+    padding: 1px 3px;
+    border-radius: 2px;
+    font-weight: bold;
+    border: 1px solid #00ff00;
+}
+
+.inventory-controls {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+}
+
+.inventory-controls button {
+    min-width: 100px;
+}
+
+/* Tooltip styles for inventory items */
+.inventory-tooltip {
+    position: absolute;
+    background: #000;
+    border: 2px solid #00ff00;
+    padding: 10px;
+    color: #00ff00;
+    font-size: 12px;
+    max-width: 250px;
+    z-index: 1001;
+    pointer-events: none;
+    box-shadow: 0 0 10px rgba(0, 255, 0, 0.5);
+    border-radius: 5px;
+    word-wrap: break-word;
+    white-space: normal;
+}
+
+.inventory-tooltip h4 {
+    margin: 0 0 5px 0;
+    color: #ffffff;
+    border-bottom: 1px solid #00ff00;
+    padding-bottom: 3px;
+}
+
+.inventory-tooltip p {
+    margin: 3px 0;
+    font-size: 11px;
+    line-height: 1.3;
+}
+
+/* Drag preview */
+.drag-preview {
+    position: fixed;
+    pointer-events: none;
+    z-index: 10000;
+    background: rgba(0, 0, 0, 0.8);
+    border: 2px solid #00ff00;
+    padding: 5px;
+    border-radius: 5px;
+    font-size: 12px;
+    color: #00ff00;
+    max-width: 150px;
+}
+
+/* Responsive grid */
 @media (max-width: 768px) {
-    .game-container {
-        padding: 10px;
-    }
-    
-    .header {
-        padding: 10px;
-        margin-bottom: 10px;
-    }
-    
-    .header h1 {
-        font-size: 20px;
-    }
-    
-    .game-info {
-        font-size: 12px;
-        gap: 10px;
-    }
-    
-    .game-info span {
-        white-space: nowrap;
-    }
-    
-    .sidebar {
-        gap: 15px;
-    }
-    
-    .player-stats, .inventory, .message-log, .status-effects, .character-panel {
-        padding: 10px;
-    }
-    
-    .player-stats h3, .inventory h3, .message-log h3, .status-effects h3, .character-panel h3 {
-        font-size: 14px;
-        margin-bottom: 10px;
-    }
-    
-    #playerStats p, #inventoryList p, #messageLog p, #statusEffectsList p, #characterPanel p {
-        font-size: 10px;
-        margin: 5px 0;
-    }
-    
-    .mobile-controls {
-        margin-top: 15px;
-    }
-    
-    .dpad-btn {
-        width: 50px;
-        height: 50px;
-        font-size: 20px;
-    }
-    
-    .action-btn {
-        width: 60px;
-        height: 60px;
-        font-size: 24px;
-    }
-    
-    .modal-content {
-        margin: 5% auto;
-        padding: 15px;
-        width: 95%;
-    }
-    
-    .modal-content h2 {
-        font-size: 18px;
-    }
-    
-    .battle-participants {
-        flex-direction: column;
-        gap: 15px;
-    }
-    
-    .player-battle, .enemy-battle {
-        width: 100%;
-    }
-    
-    .battle-actions {
-        flex-direction: column;
-        gap: 10px;
-    }
-    
-    .battle-actions button {
-        width: 100%;
-        padding: 12px;
-    }
-    
     .inventory-grid {
         grid-template-columns: repeat(6, 1fr);
         gap: 3px;
@@ -1389,115 +1566,9 @@ button:active {
     .inventory-item-name {
         font-size: 7px;
     }
-    
-    .trash-zone {
-        width: 60px;
-        height: 60px;
-        bottom: 15px;
-        right: 15px;
-    }
-    
-    .trash-icon {
-        font-size: 18px;
-    }
-    
-    .trash-text {
-        font-size: 6px;
-    }
 }
 
 @media (max-width: 480px) {
-    .game-container {
-        padding: 5px;
-    }
-    
-    .header {
-        padding: 8px;
-        margin-bottom: 8px;
-    }
-    
-    .header h1 {
-        font-size: 16px;
-    }
-    
-    .game-info {
-        font-size: 10px;
-        gap: 8px;
-        flex-direction: column;
-        align-items: center;
-    }
-    
-    .audio-controls {
-        font-size: 10px;
-        gap: 10px;
-    }
-    
-    .volume-controls {
-        flex-direction: column;
-        gap: 5px;
-    }
-    
-    .volume-controls input[type="range"] {
-        width: 50px;
-    }
-    
-    .main-content {
-        gap: 10px;
-    }
-    
-    .sidebar {
-        gap: 10px;
-    }
-    
-    .player-stats, .inventory, .message-log, .status-effects, .character-panel {
-        padding: 8px;
-    }
-    
-    .player-stats h3, .inventory h3, .message-log h3, .status-effects h3, .character-panel h3 {
-        font-size: 12px;
-        margin-bottom: 8px;
-    }
-    
-    #playerStats p, #inventoryList p, #messageLog p, #statusEffectsList p, #characterPanel p {
-        font-size: 8px;
-        margin: 4px 0;
-    }
-    
-    .mobile-controls {
-        margin-top: 10px;
-    }
-    
-    .dpad-btn {
-        width: 45px;
-        height: 45px;
-        font-size: 18px;
-    }
-    
-    .action-btn {
-        width: 55px;
-        height: 55px;
-        font-size: 22px;
-    }
-    
-    .mobile-action-buttons {
-        gap: 10px;
-    }
-    
-    .modal-content {
-        margin: 2% auto;
-        padding: 10px;
-        width: 98%;
-    }
-    
-    .modal-content h2 {
-        font-size: 16px;
-    }
-    
-    .battle-actions button {
-        padding: 10px;
-        font-size: 12px;
-    }
-    
     .inventory-grid {
         grid-template-columns: repeat(4, 1fr);
         gap: 2px;
@@ -1508,122 +1579,4417 @@ button:active {
         width: 45px;
         height: 45px;
     }
+}
+
+/* Trash Zone Styles */
+.trash-zone {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    width: 80px;
+    height: 80px;
+    border: 3px dashed #ff0000;
+    border-radius: 50%;
+    background: rgba(255, 0, 0, 0.1);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.3s;
+    z-index: 1002;
+}
+
+.trash-zone:hover {
+    background: rgba(255, 0, 0, 0.2);
+    border-color: #ff6666;
+    transform: scale(1.1);
+}
+
+.trash-zone.drag-over {
+    background: rgba(255, 0, 0, 0.3);
+    border-color: #ffffff;
+    border-style: solid;
+    transform: scale(1.2);
+    box-shadow: 0 0 20px rgba(255, 0, 0, 0.5);
+}
+
+.trash-icon {
+    font-size: 24px;
+    margin-bottom: 5px;
+}
+
+.trash-text {
+    font-size: 8px;
+    color: #ff0000;
+    text-align: center;
+    font-weight: bold;
+    line-height: 1.2;
+}
+
+/* Confirmation Modal Styles */
+.confirmation-modal {
+    display: none;
+    position: fixed;
+    z-index: 2000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.8);
+}
+
+.confirmation-content {
+    background: #000;
+    border: 3px solid #ff0000;
+    margin: 20% auto;
+    padding: 25px;
+    width: 90%;
+    max-width: 400px;
+    box-shadow: 0 0 35px rgba(255, 0, 0, 0.5);
+    text-align: center;
+}
+
+.confirmation-content h3 {
+    color: #ff0000;
+    margin-bottom: 15px;
+}
+
+.confirmation-content p {
+    color: #ffffff;
+    margin-bottom: 20px;
+    line-height: 1.4;
+}
+
+.confirmation-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+}
+
+.confirmation-buttons button {
+    min-width: 80px;
+}
+
+.confirm-destroy-btn {
+    background: #800000 !important;
+    border-color: #ff0000 !important;
+    color: #ffffff !important;
+}
+
+.confirm-destroy-btn:hover {
+    background: #ff0000 !important;
+    color: #ffffff !important;
+}
+
+.cancel-btn {
+    background: #000 !important;
+    border-color: #00ff00 !important;
+    color: #00ff00 !important;
+}
+
+.cancel-btn:hover {
+    background: #00ff00 !important;
+    color: #000 !important;
+}
+
+/* Collapsible Panel Styles */
+.panel-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+    border-bottom: 2px solid #00ff00;
+    padding-bottom: 8px;
+}
+
+.panel-header h3 {
+    margin: 0;
+    border: none;
+    padding: 0;
+    text-align: left;
+}
+
+.collapse-btn {
+    background: #000;
+    color: #00ff00;
+    border: 1px solid #00ff00;
+    padding: 4px 8px;
+    font-family: 'Press Start 2P', monospace;
+    font-size: 12px;
+    cursor: pointer;
+    transition: all 0.2s;
+    min-width: 24px;
+    height: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.collapse-btn:hover {
+    background: #00ff00;
+    color: #000;
+}
+
+.panel-content {
+    transition: max-height 0.3s ease-out, opacity 0.3s ease-out;
+    overflow: hidden;
+}
+
+.panel-content.collapsed {
+    max-height: 0;
+    opacity: 0;
+    padding: 0;
+    margin: 0;
+}
+
+/* Inventory Category Styles */
+.inventory-category {
+    font-size: 12px;
+    margin-bottom: 8px;
+}
+
+.inventory-item {
+    transition: background-color 0.2s;
+}
+
+.inventory-item:hover {
+    background-color: rgba(0, 255, 0, 0.1);
+}
+
+/* Death Modal Specific Styles */
+.death-modal {
+    border-color: #ff0000;
+    box-shadow: 0 0 35px rgba(255, 0, 0, 0.5);
+    text-align: center;
+}
+
+.death-modal h2 {
+    color: #ff0000;
+    font-size: 28px;
+    margin-bottom: 30px;
+    text-shadow: 0 0 10px rgba(255, 0, 0, 0.5);
+}
+
+.death-info {
+    margin-bottom: 30px;
+}
+
+.death-info p {
+    font-size: 16px;
+    margin: 10px 0;
+    color: #ccc;
+}
+
+.death-stats {
+    background: rgba(255, 0, 0, 0.1);
+    border: 2px solid #ff0000;
+    padding: 20px;
+    margin: 20px 0;
+    border-radius: 5px;
+}
+
+.death-stats p {
+    font-size: 14px;
+    margin: 8px 0;
+    color: #fff;
+}
+
+.death-stats span {
+    color: #ff6666;
+    font-weight: bold;
+}
+
+.death-actions {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    flex-wrap: wrap;
+}
+
+.death-actions button {
+    background: #000;
+    color: #ff0000;
+    border: 2px solid #ff0000;
+    padding: 15px 25px;
+    font-family: 'Press Start 2P', monospace;
+    font-size: 12px;
+    cursor: pointer;
+    transition: all 0.2s;
+    min-width: 150px;
+}
+
+.death-actions button:hover {
+    background: #ff0000;
+    color: #000;
+    box-shadow: 0 0 15px rgba(255, 0, 0, 0.5);
+}
+
+.death-actions button:active {
+    transform: scale(0.95);
+}
+
+/* Grid-based Inventory Styles */
+.inventory-grid-container {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.inventory-info {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px;
+    background: rgba(0, 0, 0, 0.3);
+    border: 1px solid #00ff00;
+    border-radius: 5px;
+}
+
+.inventory-info span {
+    color: #00ff00;
+    font-size: 14px;
+    font-weight: bold;
+}
+
+.inventory-grid {
+    display: grid;
+    grid-template-columns: repeat(8, 1fr);
+    gap: 5px;
+    padding: 15px;
+    background: rgba(0, 0, 0, 0.5);
+    border: 2px solid #00ff00;
+    border-radius: 8px;
+    min-height: 400px;
+    max-height: 500px;
+    overflow-y: auto;
+}
+
+.inventory-slot {
+    width: 60px;
+    height: 60px;
+    border: 2px solid #333;
+    background: rgba(0, 0, 0, 0.7);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.2s;
+    position: relative;
+    user-select: none;
+}
+
+.inventory-slot:hover {
+    border-color: #00ff00;
+    background: rgba(0, 255, 0, 0.1);
+}
+
+.inventory-slot.empty {
+    border-style: dashed;
+    border-color: #555;
+}
+
+.inventory-slot.empty:hover {
+    border-color: #00ff00;
+    background: rgba(0, 255, 0, 0.05);
+}
+
+.inventory-slot.drag-over {
+    border-color: #ffff00;
+    background: rgba(255, 255, 0, 0.2);
+    transform: scale(1.05);
+}
+
+.inventory-slot.dragging {
+    opacity: 0.5;
+    transform: scale(0.95);
+}
+
+/* Rarity-based borders for inventory slots */
+.inventory-slot.rarity-common {
+    border-color: #ffffff;
+    box-shadow: 0 0 5px rgba(255, 255, 255, 0.3);
+    animation: glow-common 2s ease-in-out infinite alternate;
+}
+
+.inventory-slot.rarity-uncommon {
+    border-color: #00ff00;
+    box-shadow: 0 0 5px rgba(0, 255, 0, 0.3);
+    animation: glow-uncommon 2s ease-in-out infinite alternate;
+}
+
+.inventory-slot.rarity-rare {
+    border-color: #0080ff;
+    box-shadow: 0 0 5px rgba(0, 128, 255, 0.3);
+    animation: glow-rare 2s ease-in-out infinite alternate;
+}
+
+.inventory-slot.rarity-epic {
+    border-color: #8000ff;
+    box-shadow: 0 0 5px rgba(128, 0, 255, 0.3);
+    animation: glow-epic 2s ease-in-out infinite alternate;
+}
+
+.inventory-slot.rarity-legendary {
+    border-color: #ff8000;
+    box-shadow: 0 0 5px rgba(255, 128, 0, 0.3);
+    animation: glow-legendary 2s ease-in-out infinite alternate;
+}
+
+/* Rarity glow animations */
+@keyframes glow-common {
+    from { box-shadow: 0 0 5px rgba(255, 255, 255, 0.3); }
+    to { box-shadow: 0 0 8px rgba(255, 255, 255, 0.5); }
+}
+
+@keyframes glow-uncommon {
+    from { box-shadow: 0 0 5px rgba(0, 255, 0, 0.3); }
+    to { box-shadow: 0 0 8px rgba(0, 255, 0, 0.5); }
+}
+
+@keyframes glow-rare {
+    from { box-shadow: 0 0 5px rgba(0, 128, 255, 0.3); }
+    to { box-shadow: 0 0 8px rgba(0, 128, 255, 0.5); }
+}
+
+@keyframes glow-epic {
+    from { box-shadow: 0 0 5px rgba(128, 0, 255, 0.3); }
+    to { box-shadow: 0 0 8px rgba(128, 0, 255, 0.5); }
+}
+
+@keyframes glow-legendary {
+    from { box-shadow: 0 0 5px rgba(255, 128, 0, 0.3); }
+    to { box-shadow: 0 0 8px rgba(255, 128, 0, 0.5); }
+}
+
+.inventory-item {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    font-size: 10px;
+    color: #ffffff;
+    cursor: grab;
+    transition: all 0.2s;
+    position: relative;
+}
+
+.inventory-item:active {
+    cursor: grabbing;
+}
+
+.inventory-item.dragging {
+    opacity: 0.7;
+    transform: scale(0.9);
+    z-index: 1000;
+}
+
+.inventory-item-icon {
+    font-size: 20px;
+    margin-bottom: 2px;
+    line-height: 1;
+}
+
+.inventory-item-name {
+    font-size: 8px;
+    line-height: 1.1;
+    max-width: 100%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    padding: 0 2px;
+}
+
+.inventory-item-stats {
+    font-size: 7px;
+    color: #888;
+    line-height: 1;
+    margin-top: 1px;
+}
+
+.inventory-item-equipped {
+    position: absolute;
+    top: 2px;
+    right: 2px;
+    background: #00ff00;
+    color: #000;
+    font-size: 8px;
+    padding: 1px 3px;
+    border-radius: 2px;
+    font-weight: bold;
+}
+
+.inventory-item-quantity {
+    position: absolute;
+    bottom: 2px;
+    right: 2px;
+    background: #000;
+    color: #00ff00;
+    font-size: 8px;
+    padding: 1px 3px;
+    border-radius: 2px;
+    font-weight: bold;
+    border: 1px solid #00ff00;
+}
+
+.inventory-controls {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+}
+
+.inventory-controls button {
+    min-width: 100px;
+}
+
+/* Tooltip styles for inventory items */
+.inventory-tooltip {
+    position: absolute;
+    background: #000;
+    border: 2px solid #00ff00;
+    padding: 10px;
+    color: #00ff00;
+    font-size: 12px;
+    max-width: 250px;
+    z-index: 1001;
+    pointer-events: none;
+    box-shadow: 0 0 10px rgba(0, 255, 0, 0.5);
+    border-radius: 5px;
+    word-wrap: break-word;
+    white-space: normal;
+}
+
+.inventory-tooltip h4 {
+    margin: 0 0 5px 0;
+    color: #ffffff;
+    border-bottom: 1px solid #00ff00;
+    padding-bottom: 3px;
+}
+
+.inventory-tooltip p {
+    margin: 3px 0;
+    font-size: 11px;
+    line-height: 1.3;
+}
+
+/* Drag preview */
+.drag-preview {
+    position: fixed;
+    pointer-events: none;
+    z-index: 10000;
+    background: rgba(0, 0, 0, 0.8);
+    border: 2px solid #00ff00;
+    padding: 5px;
+    border-radius: 5px;
+    font-size: 12px;
+    color: #00ff00;
+    max-width: 150px;
+}
+
+/* Responsive grid */
+@media (max-width: 768px) {
+    .inventory-grid {
+        grid-template-columns: repeat(6, 1fr);
+        gap: 3px;
+        padding: 10px;
+    }
+    
+    .inventory-slot {
+        width: 50px;
+        height: 50px;
+    }
     
     .inventory-item-icon {
-        font-size: 14px;
+        font-size: 16px;
     }
     
     .inventory-item-name {
-        font-size: 6px;
+        font-size: 7px;
     }
-    
-    .inventory-controls button {
-        min-width: 80px;
-        font-size: 10px;
+}
+
+@media (max-width: 480px) {
+    .inventory-grid {
+        grid-template-columns: repeat(4, 1fr);
+        gap: 2px;
         padding: 8px;
     }
     
-    .trash-zone {
-        width: 50px;
-        height: 50px;
-        bottom: 10px;
-        right: 10px;
-    }
-    
-    .trash-icon {
-        font-size: 16px;
-    }
-    
-    .trash-text {
-        font-size: 5px;
-    }
-    
-    .confirmation-content {
-        margin: 10% auto;
-        padding: 15px;
-        width: 95%;
-    }
-    
-    .confirmation-content h3 {
-        font-size: 14px;
-    }
-    
-    .confirmation-content p {
-        font-size: 10px;
-    }
-    
-    .confirmation-buttons {
-        flex-direction: column;
-        gap: 10px;
-    }
-    
-    .confirmation-buttons button {
-        width: 100%;
-        min-width: auto;
+    .inventory-slot {
+        width: 45px;
+        height: 45px;
     }
 }
 
-/* Touch-specific optimizations */
-@media (hover: none) and (pointer: coarse) {
-    .dpad-btn:hover,
-    .action-btn:hover,
-    button:hover {
-        background: rgba(0, 0, 0, 0.8);
-        color: #00ff00;
-        box-shadow: none;
-        transform: none;
-    }
-    
-    .dpad-btn:active,
-    .action-btn:active,
-    button:active {
-        background: #00ff00;
-        color: #000;
-        box-shadow: 0 0 15px rgba(0, 255, 0, 0.7);
-        transform: scale(0.95);
-    }
+/* Trash Zone Styles */
+.trash-zone {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    width: 80px;
+    height: 80px;
+    border: 3px dashed #ff0000;
+    border-radius: 50%;
+    background: rgba(255, 0, 0, 0.1);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.3s;
+    z-index: 1002;
 }
 
-/* Landscape orientation adjustments */
-@media (max-width: 768px) and (orientation: landscape) {
-    .main-content {
-        flex-direction: row;
-        gap: 10px;
+.trash-zone:hover {
+    background: rgba(255, 0, 0, 0.2);
+    border-color: #ff6666;
+    transform: scale(1.1);
+}
+
+.trash-zone.drag-over {
+    background: rgba(255, 0, 0, 0.3);
+    border-color: #ffffff;
+    border-style: solid;
+    transform: scale(1.2);
+    box-shadow: 0 0 20px rgba(255, 0, 0, 0.5);
+}
+
+.trash-icon {
+    font-size: 24px;
+    margin-bottom: 5px;
+}
+
+.trash-text {
+    font-size: 8px;
+    color: #ff0000;
+    text-align: center;
+    font-weight: bold;
+    line-height: 1.2;
+}
+
+/* Confirmation Modal Styles */
+.confirmation-modal {
+    display: none;
+    position: fixed;
+    z-index: 2000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.8);
+}
+
+.confirmation-content {
+    background: #000;
+    border: 3px solid #ff0000;
+    margin: 20% auto;
+    padding: 25px;
+    width: 90%;
+    max-width: 400px;
+    box-shadow: 0 0 35px rgba(255, 0, 0, 0.5);
+    text-align: center;
+}
+
+.confirmation-content h3 {
+    color: #ff0000;
+    margin-bottom: 15px;
+}
+
+.confirmation-content p {
+    color: #ffffff;
+    margin-bottom: 20px;
+    line-height: 1.4;
+}
+
+.confirmation-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+}
+
+.confirmation-buttons button {
+    min-width: 80px;
+}
+
+.confirm-destroy-btn {
+    background: #800000 !important;
+    border-color: #ff0000 !important;
+    color: #ffffff !important;
+}
+
+.confirm-destroy-btn:hover {
+    background: #ff0000 !important;
+    color: #ffffff !important;
+}
+
+.cancel-btn {
+    background: #000 !important;
+    border-color: #00ff00 !important;
+    color: #00ff00 !important;
+}
+
+.cancel-btn:hover {
+    background: #00ff00 !important;
+    color: #000 !important;
+}
+
+/* Collapsible Panel Styles */
+.panel-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+    border-bottom: 2px solid #00ff00;
+    padding-bottom: 8px;
+}
+
+.panel-header h3 {
+    margin: 0;
+    border: none;
+    padding: 0;
+    text-align: left;
+}
+
+.collapse-btn {
+    background: #000;
+    color: #00ff00;
+    border: 1px solid #00ff00;
+    padding: 4px 8px;
+    font-family: 'Press Start 2P', monospace;
+    font-size: 12px;
+    cursor: pointer;
+    transition: all 0.2s;
+    min-width: 24px;
+    height: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.collapse-btn:hover {
+    background: #00ff00;
+    color: #000;
+}
+
+.panel-content {
+    transition: max-height 0.3s ease-out, opacity 0.3s ease-out;
+    overflow: hidden;
+}
+
+.panel-content.collapsed {
+    max-height: 0;
+    opacity: 0;
+    padding: 0;
+    margin: 0;
+}
+
+/* Inventory Category Styles */
+.inventory-category {
+    font-size: 12px;
+    margin-bottom: 8px;
+}
+
+.inventory-item {
+    transition: background-color 0.2s;
+}
+
+.inventory-item:hover {
+    background-color: rgba(0, 255, 0, 0.1);
+}
+
+/* Death Modal Specific Styles */
+.death-modal {
+    border-color: #ff0000;
+    box-shadow: 0 0 35px rgba(255, 0, 0, 0.5);
+    text-align: center;
+}
+
+.death-modal h2 {
+    color: #ff0000;
+    font-size: 28px;
+    margin-bottom: 30px;
+    text-shadow: 0 0 10px rgba(255, 0, 0, 0.5);
+}
+
+.death-info {
+    margin-bottom: 30px;
+}
+
+.death-info p {
+    font-size: 16px;
+    margin: 10px 0;
+    color: #ccc;
+}
+
+.death-stats {
+    background: rgba(255, 0, 0, 0.1);
+    border: 2px solid #ff0000;
+    padding: 20px;
+    margin: 20px 0;
+    border-radius: 5px;
+}
+
+.death-stats p {
+    font-size: 14px;
+    margin: 8px 0;
+    color: #fff;
+}
+
+.death-stats span {
+    color: #ff6666;
+    font-weight: bold;
+}
+
+.death-actions {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    flex-wrap: wrap;
+}
+
+.death-actions button {
+    background: #000;
+    color: #ff0000;
+    border: 2px solid #ff0000;
+    padding: 15px 25px;
+    font-family: 'Press Start 2P', monospace;
+    font-size: 12px;
+    cursor: pointer;
+    transition: all 0.2s;
+    min-width: 150px;
+}
+
+.death-actions button:hover {
+    background: #ff0000;
+    color: #000;
+    box-shadow: 0 0 15px rgba(255, 0, 0, 0.5);
+}
+
+.death-actions button:active {
+    transform: scale(0.95);
+}
+
+/* Grid-based Inventory Styles */
+.inventory-grid-container {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.inventory-info {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px;
+    background: rgba(0, 0, 0, 0.3);
+    border: 1px solid #00ff00;
+    border-radius: 5px;
+}
+
+.inventory-info span {
+    color: #00ff00;
+    font-size: 14px;
+    font-weight: bold;
+}
+
+.inventory-grid {
+    display: grid;
+    grid-template-columns: repeat(8, 1fr);
+    gap: 5px;
+    padding: 15px;
+    background: rgba(0, 0, 0, 0.5);
+    border: 2px solid #00ff00;
+    border-radius: 8px;
+    min-height: 400px;
+    max-height: 500px;
+    overflow-y: auto;
+}
+
+.inventory-slot {
+    width: 60px;
+    height: 60px;
+    border: 2px solid #333;
+    background: rgba(0, 0, 0, 0.7);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.2s;
+    position: relative;
+    user-select: none;
+}
+
+.inventory-slot:hover {
+    border-color: #00ff00;
+    background: rgba(0, 255, 0, 0.1);
+}
+
+.inventory-slot.empty {
+    border-style: dashed;
+    border-color: #555;
+}
+
+.inventory-slot.empty:hover {
+    border-color: #00ff00;
+    background: rgba(0, 255, 0, 0.05);
+}
+
+.inventory-slot.drag-over {
+    border-color: #ffff00;
+    background: rgba(255, 255, 0, 0.2);
+    transform: scale(1.05);
+}
+
+.inventory-slot.dragging {
+    opacity: 0.5;
+    transform: scale(0.95);
+}
+
+/* Rarity-based borders for inventory slots */
+.inventory-slot.rarity-common {
+    border-color: #ffffff;
+    box-shadow: 0 0 5px rgba(255, 255, 255, 0.3);
+    animation: glow-common 2s ease-in-out infinite alternate;
+}
+
+.inventory-slot.rarity-uncommon {
+    border-color: #00ff00;
+    box-shadow: 0 0 5px rgba(0, 255, 0, 0.3);
+    animation: glow-uncommon 2s ease-in-out infinite alternate;
+}
+
+.inventory-slot.rarity-rare {
+    border-color: #0080ff;
+    box-shadow: 0 0 5px rgba(0, 128, 255, 0.3);
+    animation: glow-rare 2s ease-in-out infinite alternate;
+}
+
+.inventory-slot.rarity-epic {
+    border-color: #8000ff;
+    box-shadow: 0 0 5px rgba(128, 0, 255, 0.3);
+    animation: glow-epic 2s ease-in-out infinite alternate;
+}
+
+.inventory-slot.rarity-legendary {
+    border-color: #ff8000;
+    box-shadow: 0 0 5px rgba(255, 128, 0, 0.3);
+    animation: glow-legendary 2s ease-in-out infinite alternate;
+}
+
+/* Rarity glow animations */
+@keyframes glow-common {
+    from { box-shadow: 0 0 5px rgba(255, 255, 255, 0.3); }
+    to { box-shadow: 0 0 8px rgba(255, 255, 255, 0.5); }
+}
+
+@keyframes glow-uncommon {
+    from { box-shadow: 0 0 5px rgba(0, 255, 0, 0.3); }
+    to { box-shadow: 0 0 8px rgba(0, 255, 0, 0.5); }
+}
+
+@keyframes glow-rare {
+    from { box-shadow: 0 0 5px rgba(0, 128, 255, 0.3); }
+    to { box-shadow: 0 0 8px rgba(0, 128, 255, 0.5); }
+}
+
+@keyframes glow-epic {
+    from { box-shadow: 0 0 5px rgba(128, 0, 255, 0.3); }
+    to { box-shadow: 0 0 8px rgba(128, 0, 255, 0.5); }
+}
+
+@keyframes glow-legendary {
+    from { box-shadow: 0 0 5px rgba(255, 128, 0, 0.3); }
+    to { box-shadow: 0 0 8px rgba(255, 128, 0, 0.5); }
+}
+
+.inventory-item {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    font-size: 10px;
+    color: #ffffff;
+    cursor: grab;
+    transition: all 0.2s;
+    position: relative;
+}
+
+.inventory-item:active {
+    cursor: grabbing;
+}
+
+.inventory-item.dragging {
+    opacity: 0.7;
+    transform: scale(0.9);
+    z-index: 1000;
+}
+
+.inventory-item-icon {
+    font-size: 20px;
+    margin-bottom: 2px;
+    line-height: 1;
+}
+
+.inventory-item-name {
+    font-size: 8px;
+    line-height: 1.1;
+    max-width: 100%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    padding: 0 2px;
+}
+
+.inventory-item-stats {
+    font-size: 7px;
+    color: #888;
+    line-height: 1;
+    margin-top: 1px;
+}
+
+.inventory-item-equipped {
+    position: absolute;
+    top: 2px;
+    right: 2px;
+    background: #00ff00;
+    color: #000;
+    font-size: 8px;
+    padding: 1px 3px;
+    border-radius: 2px;
+    font-weight: bold;
+}
+
+.inventory-item-quantity {
+    position: absolute;
+    bottom: 2px;
+    right: 2px;
+    background: #000;
+    color: #00ff00;
+    font-size: 8px;
+    padding: 1px 3px;
+    border-radius: 2px;
+    font-weight: bold;
+    border: 1px solid #00ff00;
+}
+
+.inventory-controls {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+}
+
+.inventory-controls button {
+    min-width: 100px;
+}
+
+/* Tooltip styles for inventory items */
+.inventory-tooltip {
+    position: absolute;
+    background: #000;
+    border: 2px solid #00ff00;
+    padding: 10px;
+    color: #00ff00;
+    font-size: 12px;
+    max-width: 250px;
+    z-index: 1001;
+    pointer-events: none;
+    box-shadow: 0 0 10px rgba(0, 255, 0, 0.5);
+    border-radius: 5px;
+    word-wrap: break-word;
+    white-space: normal;
+}
+
+.inventory-tooltip h4 {
+    margin: 0 0 5px 0;
+    color: #ffffff;
+    border-bottom: 1px solid #00ff00;
+    padding-bottom: 3px;
+}
+
+.inventory-tooltip p {
+    margin: 3px 0;
+    font-size: 11px;
+    line-height: 1.3;
+}
+
+/* Drag preview */
+.drag-preview {
+    position: fixed;
+    pointer-events: none;
+    z-index: 10000;
+    background: rgba(0, 0, 0, 0.8);
+    border: 2px solid #00ff00;
+    padding: 5px;
+    border-radius: 5px;
+    font-size: 12px;
+    color: #00ff00;
+    max-width: 150px;
+}
+
+/* Responsive grid */
+@media (max-width: 768px) {
+    .inventory-grid {
+        grid-template-columns: repeat(6, 1fr);
+        gap: 3px;
+        padding: 10px;
     }
     
-    .game-area {
-        flex: 2;
-        order: 1;
+    .inventory-slot {
+        width: 50px;
+        height: 50px;
     }
     
-    .sidebar {
-        flex: 1;
-        order: 2;
-        width: auto;
-    }
-    
-    #gameCanvas {
-        width: 70vw !important;
-        height: 80vh !important;
-    }
-    
-    .mobile-controls {
-        margin-top: 10px;
-    }
-    
-    .dpad-btn {
-        width: 40px;
-        height: 40px;
+    .inventory-item-icon {
         font-size: 16px;
     }
     
-    .action-btn {
-        width: 50px;
-        height: 50px;
-        font-size: 20px;
+    .inventory-item-name {
+        font-size: 7px;
+    }
+}
+
+@media (max-width: 480px) {
+    .inventory-grid {
+        grid-template-columns: repeat(4, 1fr);
+        gap: 2px;
+        padding: 8px;
     }
     
-    .mobile-action-buttons {
-        gap: 8px;
+    .inventory-slot {
+        width: 45px;
+        height: 45px;
     }
-} 
+}
+
+/* Trash Zone Styles */
+.trash-zone {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    width: 80px;
+    height: 80px;
+    border: 3px dashed #ff0000;
+    border-radius: 50%;
+    background: rgba(255, 0, 0, 0.1);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.3s;
+    z-index: 1002;
+}
+
+.trash-zone:hover {
+    background: rgba(255, 0, 0, 0.2);
+    border-color: #ff6666;
+    transform: scale(1.1);
+}
+
+.trash-zone.drag-over {
+    background: rgba(255, 0, 0, 0.3);
+    border-color: #ffffff;
+    border-style: solid;
+    transform: scale(1.2);
+    box-shadow: 0 0 20px rgba(255, 0, 0, 0.5);
+}
+
+.trash-icon {
+    font-size: 24px;
+    margin-bottom: 5px;
+}
+
+.trash-text {
+    font-size: 8px;
+    color: #ff0000;
+    text-align: center;
+    font-weight: bold;
+    line-height: 1.2;
+}
+
+/* Confirmation Modal Styles */
+.confirmation-modal {
+    display: none;
+    position: fixed;
+    z-index: 2000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.8);
+}
+
+.confirmation-content {
+    background: #000;
+    border: 3px solid #ff0000;
+    margin: 20% auto;
+    padding: 25px;
+    width: 90%;
+    max-width: 400px;
+    box-shadow: 0 0 35px rgba(255, 0, 0, 0.5);
+    text-align: center;
+}
+
+.confirmation-content h3 {
+    color: #ff0000;
+    margin-bottom: 15px;
+}
+
+.confirmation-content p {
+    color: #ffffff;
+    margin-bottom: 20px;
+    line-height: 1.4;
+}
+
+.confirmation-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+}
+
+.confirmation-buttons button {
+    min-width: 80px;
+}
+
+.confirm-destroy-btn {
+    background: #800000 !important;
+    border-color: #ff0000 !important;
+    color: #ffffff !important;
+}
+
+.confirm-destroy-btn:hover {
+    background: #ff0000 !important;
+    color: #ffffff !important;
+}
+
+.cancel-btn {
+    background: #000 !important;
+    border-color: #00ff00 !important;
+    color: #00ff00 !important;
+}
+
+.cancel-btn:hover {
+    background: #00ff00 !important;
+    color: #000 !important;
+}
+
+/* Collapsible Panel Styles */
+.panel-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+    border-bottom: 2px solid #00ff00;
+    padding-bottom: 8px;
+}
+
+.panel-header h3 {
+    margin: 0;
+    border: none;
+    padding: 0;
+    text-align: left;
+}
+
+.collapse-btn {
+    background: #000;
+    color: #00ff00;
+    border: 1px solid #00ff00;
+    padding: 4px 8px;
+    font-family: 'Press Start 2P', monospace;
+    font-size: 12px;
+    cursor: pointer;
+    transition: all 0.2s;
+    min-width: 24px;
+    height: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.collapse-btn:hover {
+    background: #00ff00;
+    color: #000;
+}
+
+.panel-content {
+    transition: max-height 0.3s ease-out, opacity 0.3s ease-out;
+    overflow: hidden;
+}
+
+.panel-content.collapsed {
+    max-height: 0;
+    opacity: 0;
+    padding: 0;
+    margin: 0;
+}
+
+/* Inventory Category Styles */
+.inventory-category {
+    font-size: 12px;
+    margin-bottom: 8px;
+}
+
+.inventory-item {
+    transition: background-color 0.2s;
+}
+
+.inventory-item:hover {
+    background-color: rgba(0, 255, 0, 0.1);
+}
+
+/* Death Modal Specific Styles */
+.death-modal {
+    border-color: #ff0000;
+    box-shadow: 0 0 35px rgba(255, 0, 0, 0.5);
+    text-align: center;
+}
+
+.death-modal h2 {
+    color: #ff0000;
+    font-size: 28px;
+    margin-bottom: 30px;
+    text-shadow: 0 0 10px rgba(255, 0, 0, 0.5);
+}
+
+.death-info {
+    margin-bottom: 30px;
+}
+
+.death-info p {
+    font-size: 16px;
+    margin: 10px 0;
+    color: #ccc;
+}
+
+.death-stats {
+    background: rgba(255, 0, 0, 0.1);
+    border: 2px solid #ff0000;
+    padding: 20px;
+    margin: 20px 0;
+    border-radius: 5px;
+}
+
+.death-stats p {
+    font-size: 14px;
+    margin: 8px 0;
+    color: #fff;
+}
+
+.death-stats span {
+    color: #ff6666;
+    font-weight: bold;
+}
+
+.death-actions {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    flex-wrap: wrap;
+}
+
+.death-actions button {
+    background: #000;
+    color: #ff0000;
+    border: 2px solid #ff0000;
+    padding: 15px 25px;
+    font-family: 'Press Start 2P', monospace;
+    font-size: 12px;
+    cursor: pointer;
+    transition: all 0.2s;
+    min-width: 150px;
+}
+
+.death-actions button:hover {
+    background: #ff0000;
+    color: #000;
+    box-shadow: 0 0 15px rgba(255, 0, 0, 0.5);
+}
+
+.death-actions button:active {
+    transform: scale(0.95);
+}
+
+/* Grid-based Inventory Styles */
+.inventory-grid-container {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.inventory-info {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px;
+    background: rgba(0, 0, 0, 0.3);
+    border: 1px solid #00ff00;
+    border-radius: 5px;
+}
+
+.inventory-info span {
+    color: #00ff00;
+    font-size: 14px;
+    font-weight: bold;
+}
+
+.inventory-grid {
+    display: grid;
+    grid-template-columns: repeat(8, 1fr);
+    gap: 5px;
+    padding: 15px;
+    background: rgba(0, 0, 0, 0.5);
+    border: 2px solid #00ff00;
+    border-radius: 8px;
+    min-height: 400px;
+    max-height: 500px;
+    overflow-y: auto;
+}
+
+.inventory-slot {
+    width: 60px;
+    height: 60px;
+    border: 2px solid #333;
+    background: rgba(0, 0, 0, 0.7);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.2s;
+    position: relative;
+    user-select: none;
+}
+
+.inventory-slot:hover {
+    border-color: #00ff00;
+    background: rgba(0, 255, 0, 0.1);
+}
+
+.inventory-slot.empty {
+    border-style: dashed;
+    border-color: #555;
+}
+
+.inventory-slot.empty:hover {
+    border-color: #00ff00;
+    background: rgba(0, 255, 0, 0.05);
+}
+
+.inventory-slot.drag-over {
+    border-color: #ffff00;
+    background: rgba(255, 255, 0, 0.2);
+    transform: scale(1.05);
+}
+
+.inventory-slot.dragging {
+    opacity: 0.5;
+    transform: scale(0.95);
+}
+
+/* Rarity-based borders for inventory slots */
+.inventory-slot.rarity-common {
+    border-color: #ffffff;
+    box-shadow: 0 0 5px rgba(255, 255, 255, 0.3);
+    animation: glow-common 2s ease-in-out infinite alternate;
+}
+
+.inventory-slot.rarity-uncommon {
+    border-color: #00ff00;
+    box-shadow: 0 0 5px rgba(0, 255, 0, 0.3);
+    animation: glow-uncommon 2s ease-in-out infinite alternate;
+}
+
+.inventory-slot.rarity-rare {
+    border-color: #0080ff;
+    box-shadow: 0 0 5px rgba(0, 128, 255, 0.3);
+    animation: glow-rare 2s ease-in-out infinite alternate;
+}
+
+.inventory-slot.rarity-epic {
+    border-color: #8000ff;
+    box-shadow: 0 0 5px rgba(128, 0, 255, 0.3);
+    animation: glow-epic 2s ease-in-out infinite alternate;
+}
+
+.inventory-slot.rarity-legendary {
+    border-color: #ff8000;
+    box-shadow: 0 0 5px rgba(255, 128, 0, 0.3);
+    animation: glow-legendary 2s ease-in-out infinite alternate;
+}
+
+/* Rarity glow animations */
+@keyframes glow-common {
+    from { box-shadow: 0 0 5px rgba(255, 255, 255, 0.3); }
+    to { box-shadow: 0 0 8px rgba(255, 255, 255, 0.5); }
+}
+
+@keyframes glow-uncommon {
+    from { box-shadow: 0 0 5px rgba(0, 255, 0, 0.3); }
+    to { box-shadow: 0 0 8px rgba(0, 255, 0, 0.5); }
+}
+
+@keyframes glow-rare {
+    from { box-shadow: 0 0 5px rgba(0, 128, 255, 0.3); }
+    to { box-shadow: 0 0 8px rgba(0, 128, 255, 0.5); }
+}
+
+@keyframes glow-epic {
+    from { box-shadow: 0 0 5px rgba(128, 0, 255, 0.3); }
+    to { box-shadow: 0 0 8px rgba(128, 0, 255, 0.5); }
+}
+
+@keyframes glow-legendary {
+    from { box-shadow: 0 0 5px rgba(255, 128, 0, 0.3); }
+    to { box-shadow: 0 0 8px rgba(255, 128, 0, 0.5); }
+}
+
+.inventory-item {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    font-size: 10px;
+    color: #ffffff;
+    cursor: grab;
+    transition: all 0.2s;
+    position: relative;
+}
+
+.inventory-item:active {
+    cursor: grabbing;
+}
+
+.inventory-item.dragging {
+    opacity: 0.7;
+    transform: scale(0.9);
+    z-index: 1000;
+}
+
+.inventory-item-icon {
+    font-size: 20px;
+    margin-bottom: 2px;
+    line-height: 1;
+}
+
+.inventory-item-name {
+    font-size: 8px;
+    line-height: 1.1;
+    max-width: 100%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    padding: 0 2px;
+}
+
+.inventory-item-stats {
+    font-size: 7px;
+    color: #888;
+    line-height: 1;
+    margin-top: 1px;
+}
+
+.inventory-item-equipped {
+    position: absolute;
+    top: 2px;
+    right: 2px;
+    background: #00ff00;
+    color: #000;
+    font-size: 8px;
+    padding: 1px 3px;
+    border-radius: 2px;
+    font-weight: bold;
+}
+
+.inventory-item-quantity {
+    position: absolute;
+    bottom: 2px;
+    right: 2px;
+    background: #000;
+    color: #00ff00;
+    font-size: 8px;
+    padding: 1px 3px;
+    border-radius: 2px;
+    font-weight: bold;
+    border: 1px solid #00ff00;
+}
+
+.inventory-controls {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+}
+
+.inventory-controls button {
+    min-width: 100px;
+}
+
+/* Tooltip styles for inventory items */
+.inventory-tooltip {
+    position: absolute;
+    background: #000;
+    border: 2px solid #00ff00;
+    padding: 10px;
+    color: #00ff00;
+    font-size: 12px;
+    max-width: 250px;
+    z-index: 1001;
+    pointer-events: none;
+    box-shadow: 0 0 10px rgba(0, 255, 0, 0.5);
+    border-radius: 5px;
+    word-wrap: break-word;
+    white-space: normal;
+}
+
+.inventory-tooltip h4 {
+    margin: 0 0 5px 0;
+    color: #ffffff;
+    border-bottom: 1px solid #00ff00;
+    padding-bottom: 3px;
+}
+
+.inventory-tooltip p {
+    margin: 3px 0;
+    font-size: 11px;
+    line-height: 1.3;
+}
+
+/* Drag preview */
+.drag-preview {
+    position: fixed;
+    pointer-events: none;
+    z-index: 10000;
+    background: rgba(0, 0, 0, 0.8);
+    border: 2px solid #00ff00;
+    padding: 5px;
+    border-radius: 5px;
+    font-size: 12px;
+    color: #00ff00;
+    max-width: 150px;
+}
+
+/* Responsive grid */
+@media (max-width: 768px) {
+    .inventory-grid {
+        grid-template-columns: repeat(6, 1fr);
+        gap: 3px;
+        padding: 10px;
+    }
+    
+    .inventory-slot {
+        width: 50px;
+        height: 50px;
+    }
+    
+    .inventory-item-icon {
+        font-size: 16px;
+    }
+    
+    .inventory-item-name {
+        font-size: 7px;
+    }
+}
+
+@media (max-width: 480px) {
+    .inventory-grid {
+        grid-template-columns: repeat(4, 1fr);
+        gap: 2px;
+        padding: 8px;
+    }
+    
+    .inventory-slot {
+        width: 45px;
+        height: 45px;
+    }
+}
+
+/* Trash Zone Styles */
+.trash-zone {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    width: 80px;
+    height: 80px;
+    border: 3px dashed #ff0000;
+    border-radius: 50%;
+    background: rgba(255, 0, 0, 0.1);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.3s;
+    z-index: 1002;
+}
+
+.trash-zone:hover {
+    background: rgba(255, 0, 0, 0.2);
+    border-color: #ff6666;
+    transform: scale(1.1);
+}
+
+.trash-zone.drag-over {
+    background: rgba(255, 0, 0, 0.3);
+    border-color: #ffffff;
+    border-style: solid;
+    transform: scale(1.2);
+    box-shadow: 0 0 20px rgba(255, 0, 0, 0.5);
+}
+
+.trash-icon {
+    font-size: 24px;
+    margin-bottom: 5px;
+}
+
+.trash-text {
+    font-size: 8px;
+    color: #ff0000;
+    text-align: center;
+    font-weight: bold;
+    line-height: 1.2;
+}
+
+/* Confirmation Modal Styles */
+.confirmation-modal {
+    display: none;
+    position: fixed;
+    z-index: 2000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.8);
+}
+
+.confirmation-content {
+    background: #000;
+    border: 3px solid #ff0000;
+    margin: 20% auto;
+    padding: 25px;
+    width: 90%;
+    max-width: 400px;
+    box-shadow: 0 0 35px rgba(255, 0, 0, 0.5);
+    text-align: center;
+}
+
+.confirmation-content h3 {
+    color: #ff0000;
+    margin-bottom: 15px;
+}
+
+.confirmation-content p {
+    color: #ffffff;
+    margin-bottom: 20px;
+    line-height: 1.4;
+}
+
+.confirmation-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+}
+
+.confirmation-buttons button {
+    min-width: 80px;
+}
+
+.confirm-destroy-btn {
+    background: #800000 !important;
+    border-color: #ff0000 !important;
+    color: #ffffff !important;
+}
+
+.confirm-destroy-btn:hover {
+    background: #ff0000 !important;
+    color: #ffffff !important;
+}
+
+.cancel-btn {
+    background: #000 !important;
+    border-color: #00ff00 !important;
+    color: #00ff00 !important;
+}
+
+.cancel-btn:hover {
+    background: #00ff00 !important;
+    color: #000 !important;
+}
+
+/* Collapsible Panel Styles */
+.panel-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+    border-bottom: 2px solid #00ff00;
+    padding-bottom: 8px;
+}
+
+.panel-header h3 {
+    margin: 0;
+    border: none;
+    padding: 0;
+    text-align: left;
+}
+
+.collapse-btn {
+    background: #000;
+    color: #00ff00;
+    border: 1px solid #00ff00;
+    padding: 4px 8px;
+    font-family: 'Press Start 2P', monospace;
+    font-size: 12px;
+    cursor: pointer;
+    transition: all 0.2s;
+    min-width: 24px;
+    height: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.collapse-btn:hover {
+    background: #00ff00;
+    color: #000;
+}
+
+.panel-content {
+    transition: max-height 0.3s ease-out, opacity 0.3s ease-out;
+    overflow: hidden;
+}
+
+.panel-content.collapsed {
+    max-height: 0;
+    opacity: 0;
+    padding: 0;
+    margin: 0;
+}
+
+/* Inventory Category Styles */
+.inventory-category {
+    font-size: 12px;
+    margin-bottom: 8px;
+}
+
+.inventory-item {
+    transition: background-color 0.2s;
+}
+
+.inventory-item:hover {
+    background-color: rgba(0, 255, 0, 0.1);
+}
+
+/* Death Modal Specific Styles */
+.death-modal {
+    border-color: #ff0000;
+    box-shadow: 0 0 35px rgba(255, 0, 0, 0.5);
+    text-align: center;
+}
+
+.death-modal h2 {
+    color: #ff0000;
+    font-size: 28px;
+    margin-bottom: 30px;
+    text-shadow: 0 0 10px rgba(255, 0, 0, 0.5);
+}
+
+.death-info {
+    margin-bottom: 30px;
+}
+
+.death-info p {
+    font-size: 16px;
+    margin: 10px 0;
+    color: #ccc;
+}
+
+.death-stats {
+    background: rgba(255, 0, 0, 0.1);
+    border: 2px solid #ff0000;
+    padding: 20px;
+    margin: 20px 0;
+    border-radius: 5px;
+}
+
+.death-stats p {
+    font-size: 14px;
+    margin: 8px 0;
+    color: #fff;
+}
+
+.death-stats span {
+    color: #ff6666;
+    font-weight: bold;
+}
+
+.death-actions {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    flex-wrap: wrap;
+}
+
+.death-actions button {
+    background: #000;
+    color: #ff0000;
+    border: 2px solid #ff0000;
+    padding: 15px 25px;
+    font-family: 'Press Start 2P', monospace;
+    font-size: 12px;
+    cursor: pointer;
+    transition: all 0.2s;
+    min-width: 150px;
+}
+
+.death-actions button:hover {
+    background: #ff0000;
+    color: #000;
+    box-shadow: 0 0 15px rgba(255, 0, 0, 0.5);
+}
+
+.death-actions button:active {
+    transform: scale(0.95);
+}
+
+/* Grid-based Inventory Styles */
+.inventory-grid-container {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.inventory-info {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px;
+    background: rgba(0, 0, 0, 0.3);
+    border: 1px solid #00ff00;
+    border-radius: 5px;
+}
+
+.inventory-info span {
+    color: #00ff00;
+    font-size: 14px;
+    font-weight: bold;
+}
+
+.inventory-grid {
+    display: grid;
+    grid-template-columns: repeat(8, 1fr);
+    gap: 5px;
+    padding: 15px;
+    background: rgba(0, 0, 0, 0.5);
+    border: 2px solid #00ff00;
+    border-radius: 8px;
+    min-height: 400px;
+    max-height: 500px;
+    overflow-y: auto;
+}
+
+.inventory-slot {
+    width: 60px;
+    height: 60px;
+    border: 2px solid #333;
+    background: rgba(0, 0, 0, 0.7);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.2s;
+    position: relative;
+    user-select: none;
+}
+
+.inventory-slot:hover {
+    border-color: #00ff00;
+    background: rgba(0, 255, 0, 0.1);
+}
+
+.inventory-slot.empty {
+    border-style: dashed;
+    border-color: #555;
+}
+
+.inventory-slot.empty:hover {
+    border-color: #00ff00;
+    background: rgba(0, 255, 0, 0.05);
+}
+
+.inventory-slot.drag-over {
+    border-color: #ffff00;
+    background: rgba(255, 255, 0, 0.2);
+    transform: scale(1.05);
+}
+
+.inventory-slot.dragging {
+    opacity: 0.5;
+    transform: scale(0.95);
+}
+
+/* Rarity-based borders for inventory slots */
+.inventory-slot.rarity-common {
+    border-color: #ffffff;
+    box-shadow: 0 0 5px rgba(255, 255, 255, 0.3);
+    animation: glow-common 2s ease-in-out infinite alternate;
+}
+
+.inventory-slot.rarity-uncommon {
+    border-color: #00ff00;
+    box-shadow: 0 0 5px rgba(0, 255, 0, 0.3);
+    animation: glow-uncommon 2s ease-in-out infinite alternate;
+}
+
+.inventory-slot.rarity-rare {
+    border-color: #0080ff;
+    box-shadow: 0 0 5px rgba(0, 128, 255, 0.3);
+    animation: glow-rare 2s ease-in-out infinite alternate;
+}
+
+.inventory-slot.rarity-epic {
+    border-color: #8000ff;
+    box-shadow: 0 0 5px rgba(128, 0, 255, 0.3);
+    animation: glow-epic 2s ease-in-out infinite alternate;
+}
+
+.inventory-slot.rarity-legendary {
+    border-color: #ff8000;
+    box-shadow: 0 0 5px rgba(255, 128, 0, 0.3);
+    animation: glow-legendary 2s ease-in-out infinite alternate;
+}
+
+/* Rarity glow animations */
+@keyframes glow-common {
+    from { box-shadow: 0 0 5px rgba(255, 255, 255, 0.3); }
+    to { box-shadow: 0 0 8px rgba(255, 255, 255, 0.5); }
+}
+
+@keyframes glow-uncommon {
+    from { box-shadow: 0 0 5px rgba(0, 255, 0, 0.3); }
+    to { box-shadow: 0 0 8px rgba(0, 255, 0, 0.5); }
+}
+
+@keyframes glow-rare {
+    from { box-shadow: 0 0 5px rgba(0, 128, 255, 0.3); }
+    to { box-shadow: 0 0 8px rgba(0, 128, 255, 0.5); }
+}
+
+@keyframes glow-epic {
+    from { box-shadow: 0 0 5px rgba(128, 0, 255, 0.3); }
+    to { box-shadow: 0 0 8px rgba(128, 0, 255, 0.5); }
+}
+
+@keyframes glow-legendary {
+    from { box-shadow: 0 0 5px rgba(255, 128, 0, 0.3); }
+    to { box-shadow: 0 0 8px rgba(255, 128, 0, 0.5); }
+}
+
+.inventory-item {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    font-size: 10px;
+    color: #ffffff;
+    cursor: grab;
+    transition: all 0.2s;
+    position: relative;
+}
+
+.inventory-item:active {
+    cursor: grabbing;
+}
+
+.inventory-item.dragging {
+    opacity: 0.7;
+    transform: scale(0.9);
+    z-index: 1000;
+}
+
+.inventory-item-icon {
+    font-size: 20px;
+    margin-bottom: 2px;
+    line-height: 1;
+}
+
+.inventory-item-name {
+    font-size: 8px;
+    line-height: 1.1;
+    max-width: 100%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    padding: 0 2px;
+}
+
+.inventory-item-stats {
+    font-size: 7px;
+    color: #888;
+    line-height: 1;
+    margin-top: 1px;
+}
+
+.inventory-item-equipped {
+    position: absolute;
+    top: 2px;
+    right: 2px;
+    background: #00ff00;
+    color: #000;
+    font-size: 8px;
+    padding: 1px 3px;
+    border-radius: 2px;
+    font-weight: bold;
+}
+
+.inventory-item-quantity {
+    position: absolute;
+    bottom: 2px;
+    right: 2px;
+    background: #000;
+    color: #00ff00;
+    font-size: 8px;
+    padding: 1px 3px;
+    border-radius: 2px;
+    font-weight: bold;
+    border: 1px solid #00ff00;
+}
+
+.inventory-controls {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+}
+
+.inventory-controls button {
+    min-width: 100px;
+}
+
+/* Tooltip styles for inventory items */
+.inventory-tooltip {
+    position: absolute;
+    background: #000;
+    border: 2px solid #00ff00;
+    padding: 10px;
+    color: #00ff00;
+    font-size: 12px;
+    max-width: 250px;
+    z-index: 1001;
+    pointer-events: none;
+    box-shadow: 0 0 10px rgba(0, 255, 0, 0.5);
+    border-radius: 5px;
+    word-wrap: break-word;
+    white-space: normal;
+}
+
+.inventory-tooltip h4 {
+    margin: 0 0 5px 0;
+    color: #ffffff;
+    border-bottom: 1px solid #00ff00;
+    padding-bottom: 3px;
+}
+
+.inventory-tooltip p {
+    margin: 3px 0;
+    font-size: 11px;
+    line-height: 1.3;
+}
+
+/* Drag preview */
+.drag-preview {
+    position: fixed;
+    pointer-events: none;
+    z-index: 10000;
+    background: rgba(0, 0, 0, 0.8);
+    border: 2px solid #00ff00;
+    padding: 5px;
+    border-radius: 5px;
+    font-size: 12px;
+    color: #00ff00;
+    max-width: 150px;
+}
+
+/* Responsive grid */
+@media (max-width: 768px) {
+    .inventory-grid {
+        grid-template-columns: repeat(6, 1fr);
+        gap: 3px;
+        padding: 10px;
+    }
+    
+    .inventory-slot {
+        width: 50px;
+        height: 50px;
+    }
+    
+    .inventory-item-icon {
+        font-size: 16px;
+    }
+    
+    .inventory-item-name {
+        font-size: 7px;
+    }
+}
+
+@media (max-width: 480px) {
+    .inventory-grid {
+        grid-template-columns: repeat(4, 1fr);
+        gap: 2px;
+        padding: 8px;
+    }
+    
+    .inventory-slot {
+        width: 45px;
+        height: 45px;
+    }
+}
+
+/* Trash Zone Styles */
+.trash-zone {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    width: 80px;
+    height: 80px;
+    border: 3px dashed #ff0000;
+    border-radius: 50%;
+    background: rgba(255, 0, 0, 0.1);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.3s;
+    z-index: 1002;
+}
+
+.trash-zone:hover {
+    background: rgba(255, 0, 0, 0.2);
+    border-color: #ff6666;
+    transform: scale(1.1);
+}
+
+.trash-zone.drag-over {
+    background: rgba(255, 0, 0, 0.3);
+    border-color: #ffffff;
+    border-style: solid;
+    transform: scale(1.2);
+    box-shadow: 0 0 20px rgba(255, 0, 0, 0.5);
+}
+
+.trash-icon {
+    font-size: 24px;
+    margin-bottom: 5px;
+}
+
+.trash-text {
+    font-size: 8px;
+    color: #ff0000;
+    text-align: center;
+    font-weight: bold;
+    line-height: 1.2;
+}
+
+/* Confirmation Modal Styles */
+.confirmation-modal {
+    display: none;
+    position: fixed;
+    z-index: 2000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.8);
+}
+
+.confirmation-content {
+    background: #000;
+    border: 3px solid #ff0000;
+    margin: 20% auto;
+    padding: 25px;
+    width: 90%;
+    max-width: 400px;
+    box-shadow: 0 0 35px rgba(255, 0, 0, 0.5);
+    text-align: center;
+}
+
+.confirmation-content h3 {
+    color: #ff0000;
+    margin-bottom: 15px;
+}
+
+.confirmation-content p {
+    color: #ffffff;
+    margin-bottom: 20px;
+    line-height: 1.4;
+}
+
+.confirmation-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+}
+
+.confirmation-buttons button {
+    min-width: 80px;
+}
+
+.confirm-destroy-btn {
+    background: #800000 !important;
+    border-color: #ff0000 !important;
+    color: #ffffff !important;
+}
+
+.confirm-destroy-btn:hover {
+    background: #ff0000 !important;
+    color: #ffffff !important;
+}
+
+.cancel-btn {
+    background: #000 !important;
+    border-color: #00ff00 !important;
+    color: #00ff00 !important;
+}
+
+.cancel-btn:hover {
+    background: #00ff00 !important;
+    color: #000 !important;
+}
+
+/* Collapsible Panel Styles */
+.panel-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+    border-bottom: 2px solid #00ff00;
+    padding-bottom: 8px;
+}
+
+.panel-header h3 {
+    margin: 0;
+    border: none;
+    padding: 0;
+    text-align: left;
+}
+
+.collapse-btn {
+    background: #000;
+    color: #00ff00;
+    border: 1px solid #00ff00;
+    padding: 4px 8px;
+    font-family: 'Press Start 2P', monospace;
+    font-size: 12px;
+    cursor: pointer;
+    transition: all 0.2s;
+    min-width: 24px;
+    height: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.collapse-btn:hover {
+    background: #00ff00;
+    color: #000;
+}
+
+.panel-content {
+    transition: max-height 0.3s ease-out, opacity 0.3s ease-out;
+    overflow: hidden;
+}
+
+.panel-content.collapsed {
+    max-height: 0;
+    opacity: 0;
+    padding: 0;
+    margin: 0;
+}
+
+/* Inventory Category Styles */
+.inventory-category {
+    font-size: 12px;
+    margin-bottom: 8px;
+}
+
+.inventory-item {
+    transition: background-color 0.2s;
+}
+
+.inventory-item:hover {
+    background-color: rgba(0, 255, 0, 0.1);
+}
+
+/* Death Modal Specific Styles */
+.death-modal {
+    border-color: #ff0000;
+    box-shadow: 0 0 35px rgba(255, 0, 0, 0.5);
+    text-align: center;
+}
+
+.death-modal h2 {
+    color: #ff0000;
+    font-size: 28px;
+    margin-bottom: 30px;
+    text-shadow: 0 0 10px rgba(255, 0, 0, 0.5);
+}
+
+.death-info {
+    margin-bottom: 30px;
+}
+
+.death-info p {
+    font-size: 16px;
+    margin: 10px 0;
+    color: #ccc;
+}
+
+.death-stats {
+    background: rgba(255, 0, 0, 0.1);
+    border: 2px solid #ff0000;
+    padding: 20px;
+    margin: 20px 0;
+    border-radius: 5px;
+}
+
+.death-stats p {
+    font-size: 14px;
+    margin: 8px 0;
+    color: #fff;
+}
+
+.death-stats span {
+    color: #ff6666;
+    font-weight: bold;
+}
+
+.death-actions {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    flex-wrap: wrap;
+}
+
+.death-actions button {
+    background: #000;
+    color: #ff0000;
+    border: 2px solid #ff0000;
+    padding: 15px 25px;
+    font-family: 'Press Start 2P', monospace;
+    font-size: 12px;
+    cursor: pointer;
+    transition: all 0.2s;
+    min-width: 150px;
+}
+
+.death-actions button:hover {
+    background: #ff0000;
+    color: #000;
+    box-shadow: 0 0 15px rgba(255, 0, 0, 0.5);
+}
+
+.death-actions button:active {
+    transform: scale(0.95);
+}
+
+/* Grid-based Inventory Styles */
+.inventory-grid-container {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.inventory-info {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px;
+    background: rgba(0, 0, 0, 0.3);
+    border: 1px solid #00ff00;
+    border-radius: 5px;
+}
+
+.inventory-info span {
+    color: #00ff00;
+    font-size: 14px;
+    font-weight: bold;
+}
+
+.inventory-grid {
+    display: grid;
+    grid-template-columns: repeat(8, 1fr);
+    gap: 5px;
+    padding: 15px;
+    background: rgba(0, 0, 0, 0.5);
+    border: 2px solid #00ff00;
+    border-radius: 8px;
+    min-height: 400px;
+    max-height: 500px;
+    overflow-y: auto;
+}
+
+.inventory-slot {
+    width: 60px;
+    height: 60px;
+    border: 2px solid #333;
+    background: rgba(0, 0, 0, 0.7);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.2s;
+    position: relative;
+    user-select: none;
+}
+
+.inventory-slot:hover {
+    border-color: #00ff00;
+    background: rgba(0, 255, 0, 0.1);
+}
+
+.inventory-slot.empty {
+    border-style: dashed;
+    border-color: #555;
+}
+
+.inventory-slot.empty:hover {
+    border-color: #00ff00;
+    background: rgba(0, 255, 0, 0.05);
+}
+
+.inventory-slot.drag-over {
+    border-color: #ffff00;
+    background: rgba(255, 255, 0, 0.2);
+    transform: scale(1.05);
+}
+
+.inventory-slot.dragging {
+    opacity: 0.5;
+    transform: scale(0.95);
+}
+
+/* Rarity-based borders for inventory slots */
+.inventory-slot.rarity-common {
+    border-color: #ffffff;
+    box-shadow: 0 0 5px rgba(255, 255, 255, 0.3);
+    animation: glow-common 2s ease-in-out infinite alternate;
+}
+
+.inventory-slot.rarity-uncommon {
+    border-color: #00ff00;
+    box-shadow: 0 0 5px rgba(0, 255, 0, 0.3);
+    animation: glow-uncommon 2s ease-in-out infinite alternate;
+}
+
+.inventory-slot.rarity-rare {
+    border-color: #0080ff;
+    box-shadow: 0 0 5px rgba(0, 128, 255, 0.3);
+    animation: glow-rare 2s ease-in-out infinite alternate;
+}
+
+.inventory-slot.rarity-epic {
+    border-color: #8000ff;
+    box-shadow: 0 0 5px rgba(128, 0, 255, 0.3);
+    animation: glow-epic 2s ease-in-out infinite alternate;
+}
+
+.inventory-slot.rarity-legendary {
+    border-color: #ff8000;
+    box-shadow: 0 0 5px rgba(255, 128, 0, 0.3);
+    animation: glow-legendary 2s ease-in-out infinite alternate;
+}
+
+/* Rarity glow animations */
+@keyframes glow-common {
+    from { box-shadow: 0 0 5px rgba(255, 255, 255, 0.3); }
+    to { box-shadow: 0 0 8px rgba(255, 255, 255, 0.5); }
+}
+
+@keyframes glow-uncommon {
+    from { box-shadow: 0 0 5px rgba(0, 255, 0, 0.3); }
+    to { box-shadow: 0 0 8px rgba(0, 255, 0, 0.5); }
+}
+
+@keyframes glow-rare {
+    from { box-shadow: 0 0 5px rgba(0, 128, 255, 0.3); }
+    to { box-shadow: 0 0 8px rgba(0, 128, 255, 0.5); }
+}
+
+@keyframes glow-epic {
+    from { box-shadow: 0 0 5px rgba(128, 0, 255, 0.3); }
+    to { box-shadow: 0 0 8px rgba(128, 0, 255, 0.5); }
+}
+
+@keyframes glow-legendary {
+    from { box-shadow: 0 0 5px rgba(255, 128, 0, 0.3); }
+    to { box-shadow: 0 0 8px rgba(255, 128, 0, 0.5); }
+}
+
+.inventory-item {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    font-size: 10px;
+    color: #ffffff;
+    cursor: grab;
+    transition: all 0.2s;
+    position: relative;
+}
+
+.inventory-item:active {
+    cursor: grabbing;
+}
+
+.inventory-item.dragging {
+    opacity: 0.7;
+    transform: scale(0.9);
+    z-index: 1000;
+}
+
+.inventory-item-icon {
+    font-size: 20px;
+    margin-bottom: 2px;
+    line-height: 1;
+}
+
+.inventory-item-name {
+    font-size: 8px;
+    line-height: 1.1;
+    max-width: 100%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    padding: 0 2px;
+}
+
+.inventory-item-stats {
+    font-size: 7px;
+    color: #888;
+    line-height: 1;
+    margin-top: 1px;
+}
+
+.inventory-item-equipped {
+    position: absolute;
+    top: 2px;
+    right: 2px;
+    background: #00ff00;
+    color: #000;
+    font-size: 8px;
+    padding: 1px 3px;
+    border-radius: 2px;
+    font-weight: bold;
+}
+
+.inventory-item-quantity {
+    position: absolute;
+    bottom: 2px;
+    right: 2px;
+    background: #000;
+    color: #00ff00;
+    font-size: 8px;
+    padding: 1px 3px;
+    border-radius: 2px;
+    font-weight: bold;
+    border: 1px solid #00ff00;
+}
+
+.inventory-controls {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+}
+
+.inventory-controls button {
+    min-width: 100px;
+}
+
+/* Tooltip styles for inventory items */
+.inventory-tooltip {
+    position: absolute;
+    background: #000;
+    border: 2px solid #00ff00;
+    padding: 10px;
+    color: #00ff00;
+    font-size: 12px;
+    max-width: 250px;
+    z-index: 1001;
+    pointer-events: none;
+    box-shadow: 0 0 10px rgba(0, 255, 0, 0.5);
+    border-radius: 5px;
+    word-wrap: break-word;
+    white-space: normal;
+}
+
+.inventory-tooltip h4 {
+    margin: 0 0 5px 0;
+    color: #ffffff;
+    border-bottom: 1px solid #00ff00;
+    padding-bottom: 3px;
+}
+
+.inventory-tooltip p {
+    margin: 3px 0;
+    font-size: 11px;
+    line-height: 1.3;
+}
+
+/* Drag preview */
+.drag-preview {
+    position: fixed;
+    pointer-events: none;
+    z-index: 10000;
+    background: rgba(0, 0, 0, 0.8);
+    border: 2px solid #00ff00;
+    padding: 5px;
+    border-radius: 5px;
+    font-size: 12px;
+    color: #00ff00;
+    max-width: 150px;
+}
+
+/* Responsive grid */
+@media (max-width: 768px) {
+    .inventory-grid {
+        grid-template-columns: repeat(6, 1fr);
+        gap: 3px;
+        padding: 10px;
+    }
+    
+    .inventory-slot {
+        width: 50px;
+        height: 50px;
+    }
+    
+    .inventory-item-icon {
+        font-size: 16px;
+    }
+    
+    .inventory-item-name {
+        font-size: 7px;
+    }
+}
+
+@media (max-width: 480px) {
+    .inventory-grid {
+        grid-template-columns: repeat(4, 1fr);
+        gap: 2px;
+        padding: 8px;
+    }
+    
+    .inventory-slot {
+        width: 45px;
+        height: 45px;
+    }
+}
+
+/* Trash Zone Styles */
+.trash-zone {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    width: 80px;
+    height: 80px;
+    border: 3px dashed #ff0000;
+    border-radius: 50%;
+    background: rgba(255, 0, 0, 0.1);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.3s;
+    z-index: 1002;
+}
+
+.trash-zone:hover {
+    background: rgba(255, 0, 0, 0.2);
+    border-color: #ff6666;
+    transform: scale(1.1);
+}
+
+.trash-zone.drag-over {
+    background: rgba(255, 0, 0, 0.3);
+    border-color: #ffffff;
+    border-style: solid;
+    transform: scale(1.2);
+    box-shadow: 0 0 20px rgba(255, 0, 0, 0.5);
+}
+
+.trash-icon {
+    font-size: 24px;
+    margin-bottom: 5px;
+}
+
+.trash-text {
+    font-size: 8px;
+    color: #ff0000;
+    text-align: center;
+    font-weight: bold;
+    line-height: 1.2;
+}
+
+/* Confirmation Modal Styles */
+.confirmation-modal {
+    display: none;
+    position: fixed;
+    z-index: 2000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.8);
+}
+
+.confirmation-content {
+    background: #000;
+    border: 3px solid #ff0000;
+    margin: 20% auto;
+    padding: 25px;
+    width: 90%;
+    max-width: 400px;
+    box-shadow: 0 0 35px rgba(255, 0, 0, 0.5);
+    text-align: center;
+}
+
+.confirmation-content h3 {
+    color: #ff0000;
+    margin-bottom: 15px;
+}
+
+.confirmation-content p {
+    color: #ffffff;
+    margin-bottom: 20px;
+    line-height: 1.4;
+}
+
+.confirmation-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+}
+
+.confirmation-buttons button {
+    min-width: 80px;
+}
+
+.confirm-destroy-btn {
+    background: #800000 !important;
+    border-color: #ff0000 !important;
+    color: #ffffff !important;
+}
+
+.confirm-destroy-btn:hover {
+    background: #ff0000 !important;
+    color: #ffffff !important;
+}
+
+.cancel-btn {
+    background: #000 !important;
+    border-color: #00ff00 !important;
+    color: #00ff00 !important;
+}
+
+.cancel-btn:hover {
+    background: #00ff00 !important;
+    color: #000 !important;
+}
+
+/* Collapsible Panel Styles */
+.panel-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+    border-bottom: 2px solid #00ff00;
+    padding-bottom: 8px;
+}
+
+.panel-header h3 {
+    margin: 0;
+    border: none;
+    padding: 0;
+    text-align: left;
+}
+
+.collapse-btn {
+    background: #000;
+    color: #00ff00;
+    border: 1px solid #00ff00;
+    padding: 4px 8px;
+    font-family: 'Press Start 2P', monospace;
+    font-size: 12px;
+    cursor: pointer;
+    transition: all 0.2s;
+    min-width: 24px;
+    height: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.collapse-btn:hover {
+    background: #00ff00;
+    color: #000;
+}
+
+.panel-content {
+    transition: max-height 0.3s ease-out, opacity 0.3s ease-out;
+    overflow: hidden;
+}
+
+.panel-content.collapsed {
+    max-height: 0;
+    opacity: 0;
+    padding: 0;
+    margin: 0;
+}
+
+/* Inventory Category Styles */
+.inventory-category {
+    font-size: 12px;
+    margin-bottom: 8px;
+}
+
+.inventory-item {
+    transition: background-color 0.2s;
+}
+
+.inventory-item:hover {
+    background-color: rgba(0, 255, 0, 0.1);
+}
+
+/* Death Modal Specific Styles */
+.death-modal {
+    border-color: #ff0000;
+    box-shadow: 0 0 35px rgba(255, 0, 0, 0.5);
+    text-align: center;
+}
+
+.death-modal h2 {
+    color: #ff0000;
+    font-size: 28px;
+    margin-bottom: 30px;
+    text-shadow: 0 0 10px rgba(255, 0, 0, 0.5);
+}
+
+.death-info {
+    margin-bottom: 30px;
+}
+
+.death-info p {
+    font-size: 16px;
+    margin: 10px 0;
+    color: #ccc;
+}
+
+.death-stats {
+    background: rgba(255, 0, 0, 0.1);
+    border: 2px solid #ff0000;
+    padding: 20px;
+    margin: 20px 0;
+    border-radius: 5px;
+}
+
+.death-stats p {
+    font-size: 14px;
+    margin: 8px 0;
+    color: #fff;
+}
+
+.death-stats span {
+    color: #ff6666;
+    font-weight: bold;
+}
+
+.death-actions {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    flex-wrap: wrap;
+}
+
+.death-actions button {
+    background: #000;
+    color: #ff0000;
+    border: 2px solid #ff0000;
+    padding: 15px 25px;
+    font-family: 'Press Start 2P', monospace;
+    font-size: 12px;
+    cursor: pointer;
+    transition: all 0.2s;
+    min-width: 150px;
+}
+
+.death-actions button:hover {
+    background: #ff0000;
+    color: #000;
+    box-shadow: 0 0 15px rgba(255, 0, 0, 0.5);
+}
+
+.death-actions button:active {
+    transform: scale(0.95);
+}
+
+/* Grid-based Inventory Styles */
+.inventory-grid-container {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.inventory-info {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px;
+    background: rgba(0, 0, 0, 0.3);
+    border: 1px solid #00ff00;
+    border-radius: 5px;
+}
+
+.inventory-info span {
+    color: #00ff00;
+    font-size: 14px;
+    font-weight: bold;
+}
+
+.inventory-grid {
+    display: grid;
+    grid-template-columns: repeat(8, 1fr);
+    gap: 5px;
+    padding: 15px;
+    background: rgba(0, 0, 0, 0.5);
+    border: 2px solid #00ff00;
+    border-radius: 8px;
+    min-height: 400px;
+    max-height: 500px;
+    overflow-y: auto;
+}
+
+.inventory-slot {
+    width: 60px;
+    height: 60px;
+    border: 2px solid #333;
+    background: rgba(0, 0, 0, 0.7);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.2s;
+    position: relative;
+    user-select: none;
+}
+
+.inventory-slot:hover {
+    border-color: #00ff00;
+    background: rgba(0, 255, 0, 0.1);
+}
+
+.inventory-slot.empty {
+    border-style: dashed;
+    border-color: #555;
+}
+
+.inventory-slot.empty:hover {
+    border-color: #00ff00;
+    background: rgba(0, 255, 0, 0.05);
+}
+
+.inventory-slot.drag-over {
+    border-color: #ffff00;
+    background: rgba(255, 255, 0, 0.2);
+    transform: scale(1.05);
+}
+
+.inventory-slot.dragging {
+    opacity: 0.5;
+    transform: scale(0.95);
+}
+
+/* Rarity-based borders for inventory slots */
+.inventory-slot.rarity-common {
+    border-color: #ffffff;
+    box-shadow: 0 0 5px rgba(255, 255, 255, 0.3);
+    animation: glow-common 2s ease-in-out infinite alternate;
+}
+
+.inventory-slot.rarity-uncommon {
+    border-color: #00ff00;
+    box-shadow: 0 0 5px rgba(0, 255, 0, 0.3);
+    animation: glow-uncommon 2s ease-in-out infinite alternate;
+}
+
+.inventory-slot.rarity-rare {
+    border-color: #0080ff;
+    box-shadow: 0 0 5px rgba(0, 128, 255, 0.3);
+    animation: glow-rare 2s ease-in-out infinite alternate;
+}
+
+.inventory-slot.rarity-epic {
+    border-color: #8000ff;
+    box-shadow: 0 0 5px rgba(128, 0, 255, 0.3);
+    animation: glow-epic 2s ease-in-out infinite alternate;
+}
+
+.inventory-slot.rarity-legendary {
+    border-color: #ff8000;
+    box-shadow: 0 0 5px rgba(255, 128, 0, 0.3);
+    animation: glow-legendary 2s ease-in-out infinite alternate;
+}
+
+/* Rarity glow animations */
+@keyframes glow-common {
+    from { box-shadow: 0 0 5px rgba(255, 255, 255, 0.3); }
+    to { box-shadow: 0 0 8px rgba(255, 255, 255, 0.5); }
+}
+
+@keyframes glow-uncommon {
+    from { box-shadow: 0 0 5px rgba(0, 255, 0, 0.3); }
+    to { box-shadow: 0 0 8px rgba(0, 255, 0, 0.5); }
+}
+
+@keyframes glow-rare {
+    from { box-shadow: 0 0 5px rgba(0, 128, 255, 0.3); }
+    to { box-shadow: 0 0 8px rgba(0, 128, 255, 0.5); }
+}
+
+@keyframes glow-epic {
+    from { box-shadow: 0 0 5px rgba(128, 0, 255, 0.3); }
+    to { box-shadow: 0 0 8px rgba(128, 0, 255, 0.5); }
+}
+
+@keyframes glow-legendary {
+    from { box-shadow: 0 0 5px rgba(255, 128, 0, 0.3); }
+    to { box-shadow: 0 0 8px rgba(255, 128, 0, 0.5); }
+}
+
+.inventory-item {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    font-size: 10px;
+    color: #ffffff;
+    cursor: grab;
+    transition: all 0.2s;
+    position: relative;
+}
+
+.inventory-item:active {
+    cursor: grabbing;
+}
+
+.inventory-item.dragging {
+    opacity: 0.7;
+    transform: scale(0.9);
+    z-index: 1000;
+}
+
+.inventory-item-icon {
+    font-size: 20px;
+    margin-bottom: 2px;
+    line-height: 1;
+}
+
+.inventory-item-name {
+    font-size: 8px;
+    line-height: 1.1;
+    max-width: 100%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    padding: 0 2px;
+}
+
+.inventory-item-stats {
+    font-size: 7px;
+    color: #888;
+    line-height: 1;
+    margin-top: 1px;
+}
+
+.inventory-item-equipped {
+    position: absolute;
+    top: 2px;
+    right: 2px;
+    background: #00ff00;
+    color: #000;
+    font-size: 8px;
+    padding: 1px 3px;
+    border-radius: 2px;
+    font-weight: bold;
+}
+
+.inventory-item-quantity {
+    position: absolute;
+    bottom: 2px;
+    right: 2px;
+    background: #000;
+    color: #00ff00;
+    font-size: 8px;
+    padding: 1px 3px;
+    border-radius: 2px;
+    font-weight: bold;
+    border: 1px solid #00ff00;
+}
+
+.inventory-controls {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+}
+
+.inventory-controls button {
+    min-width: 100px;
+}
+
+/* Tooltip styles for inventory items */
+.inventory-tooltip {
+    position: absolute;
+    background: #000;
+    border: 2px solid #00ff00;
+    padding: 10px;
+    color: #00ff00;
+    font-size: 12px;
+    max-width: 250px;
+    z-index: 1001;
+    pointer-events: none;
+    box-shadow: 0 0 10px rgba(0, 255, 0, 0.5);
+    border-radius: 5px;
+    word-wrap: break-word;
+    white-space: normal;
+}
+
+.inventory-tooltip h4 {
+    margin: 0 0 5px 0;
+    color: #ffffff;
+    border-bottom: 1px solid #00ff00;
+    padding-bottom: 3px;
+}
+
+.inventory-tooltip p {
+    margin: 3px 0;
+    font-size: 11px;
+    line-height: 1.3;
+}
+
+/* Drag preview */
+.drag-preview {
+    position: fixed;
+    pointer-events: none;
+    z-index: 10000;
+    background: rgba(0, 0, 0, 0.8);
+    border: 2px solid #00ff00;
+    padding: 5px;
+    border-radius: 5px;
+    font-size: 12px;
+    color: #00ff00;
+    max-width: 150px;
+}
+
+/* Responsive grid */
+@media (max-width: 768px) {
+    .inventory-grid {
+        grid-template-columns: repeat(6, 1fr);
+        gap: 3px;
+        padding: 10px;
+    }
+    
+    .inventory-slot {
+        width: 50px;
+        height: 50px;
+    }
+    
+    .inventory-item-icon {
+        font-size: 16px;
+    }
+    
+    .inventory-item-name {
+        font-size: 7px;
+    }
+}
+
+@media (max-width: 480px) {
+    .inventory-grid {
+        grid-template-columns: repeat(4, 1fr);
+        gap: 2px;
+        padding: 8px;
+    }
+    
+    .inventory-slot {
+        width: 45px;
+        height: 45px;
+    }
+}
+
+/* Trash Zone Styles */
+.trash-zone {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    width: 80px;
+    height: 80px;
+    border: 3px dashed #ff0000;
+    border-radius: 50%;
+    background: rgba(255, 0, 0, 0.1);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.3s;
+    z-index: 1002;
+}
+
+.trash-zone:hover {
+    background: rgba(255, 0, 0, 0.2);
+    border-color: #ff6666;
+    transform: scale(1.1);
+}
+
+.trash-zone.drag-over {
+    background: rgba(255, 0, 0, 0.3);
+    border-color: #ffffff;
+    border-style: solid;
+    transform: scale(1.2);
+    box-shadow: 0 0 20px rgba(255, 0, 0, 0.5);
+}
+
+.trash-icon {
+    font-size: 24px;
+    margin-bottom: 5px;
+}
+
+.trash-text {
+    font-size: 8px;
+    color: #ff0000;
+    text-align: center;
+    font-weight: bold;
+    line-height: 1.2;
+}
+
+/* Confirmation Modal Styles */
+.confirmation-modal {
+    display: none;
+    position: fixed;
+    z-index: 2000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.8);
+}
+
+.confirmation-content {
+    background: #000;
+    border: 3px solid #ff0000;
+    margin: 20% auto;
+    padding: 25px;
+    width: 90%;
+    max-width: 400px;
+    box-shadow: 0 0 35px rgba(255, 0, 0, 0.5);
+    text-align: center;
+}
+
+.confirmation-content h3 {
+    color: #ff0000;
+    margin-bottom: 15px;
+}
+
+.confirmation-content p {
+    color: #ffffff;
+    margin-bottom: 20px;
+    line-height: 1.4;
+}
+
+.confirmation-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+}
+
+.confirmation-buttons button {
+    min-width: 80px;
+}
+
+.confirm-destroy-btn {
+    background: #800000 !important;
+    border-color: #ff0000 !important;
+    color: #ffffff !important;
+}
+
+.confirm-destroy-btn:hover {
+    background: #ff0000 !important;
+    color: #ffffff !important;
+}
+
+.cancel-btn {
+    background: #000 !important;
+    border-color: #00ff00 !important;
+    color: #00ff00 !important;
+}
+
+.cancel-btn:hover {
+    background: #00ff00 !important;
+    color: #000 !important;
+}
+
+/* Collapsible Panel Styles */
+.panel-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+    border-bottom: 2px solid #00ff00;
+    padding-bottom: 8px;
+}
+
+.panel-header h3 {
+    margin: 0;
+    border: none;
+    padding: 0;
+    text-align: left;
+}
+
+.collapse-btn {
+    background: #000;
+    color: #00ff00;
+    border: 1px solid #00ff00;
+    padding: 4px 8px;
+    font-family: 'Press Start 2P', monospace;
+    font-size: 12px;
+    cursor: pointer;
+    transition: all 0.2s;
+    min-width: 24px;
+    height: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.collapse-btn:hover {
+    background: #00ff00;
+    color: #000;
+}
+
+.panel-content {
+    transition: max-height 0.3s ease-out, opacity 0.3s ease-out;
+    overflow: hidden;
+}
+
+.panel-content.collapsed {
+    max-height: 0;
+    opacity: 0;
+    padding: 0;
+    margin: 0;
+}
+
+/* Inventory Category Styles */
+.inventory-category {
+    font-size: 12px;
+    margin-bottom: 8px;
+}
+
+.inventory-item {
+    transition: background-color 0.2s;
+}
+
+.inventory-item:hover {
+    background-color: rgba(0, 255, 0, 0.1);
+}
+
+/* Death Modal Specific Styles */
+.death-modal {
+    border-color: #ff0000;
+    box-shadow: 0 0 35px rgba(255, 0, 0, 0.5);
+    text-align: center;
+}
+
+.death-modal h2 {
+    color: #ff0000;
+    font-size: 28px;
+    margin-bottom: 30px;
+    text-shadow: 0 0 10px rgba(255, 0, 0, 0.5);
+}
+
+.death-info {
+    margin-bottom: 30px;
+}
+
+.death-info p {
+    font-size: 16px;
+    margin: 10px 0;
+    color: #ccc;
+}
+
+.death-stats {
+    background: rgba(255, 0, 0, 0.1);
+    border: 2px solid #ff0000;
+    padding: 20px;
+    margin: 20px 0;
+    border-radius: 5px;
+}
+
+.death-stats p {
+    font-size: 14px;
+    margin: 8px 0;
+    color: #fff;
+}
+
+.death-stats span {
+    color: #ff6666;
+    font-weight: bold;
+}
+
+.death-actions {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    flex-wrap: wrap;
+}
+
+.death-actions button {
+    background: #000;
+    color: #ff0000;
+    border: 2px solid #ff0000;
+    padding: 15px 25px;
+    font-family: 'Press Start 2P', monospace;
+    font-size: 12px;
+    cursor: pointer;
+    transition: all 0.2s;
+    min-width: 150px;
+}
+
+.death-actions button:hover {
+    background: #ff0000;
+    color: #000;
+    box-shadow: 0 0 15px rgba(255, 0, 0, 0.5);
+}
+
+.death-actions button:active {
+    transform: scale(0.95);
+}
+
+/* Grid-based Inventory Styles */
+.inventory-grid-container {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.inventory-info {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px;
+    background: rgba(0, 0, 0, 0.3);
+    border: 1px solid #00ff00;
+    border-radius: 5px;
+}
+
+.inventory-info span {
+    color: #00ff00;
+    font-size: 14px;
+    font-weight: bold;
+}
+
+.inventory-grid {
+    display: grid;
+    grid-template-columns: repeat(8, 1fr);
+    gap: 5px;
+    padding: 15px;
+    background: rgba(0, 0, 0, 0.5);
+    border: 2px solid #00ff00;
+    border-radius: 8px;
+    min-height: 400px;
+    max-height: 500px;
+    overflow-y: auto;
+}
+
+.inventory-slot {
+    width: 60px;
+    height: 60px;
+    border: 2px solid #333;
+    background: rgba(0, 0, 0, 0.7);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.2s;
+    position: relative;
+    user-select: none;
+}
+
+.inventory-slot:hover {
+    border-color: #00ff00;
+    background: rgba(0, 255, 0, 0.1);
+}
+
+.inventory-slot.empty {
+    border-style: dashed;
+    border-color: #555;
+}
+
+.inventory-slot.empty:hover {
+    border-color: #00ff00;
+    background: rgba(0, 255, 0, 0.05);
+}
+
+.inventory-slot.drag-over {
+    border-color: #ffff00;
+    background: rgba(255, 255, 0, 0.2);
+    transform: scale(1.05);
+}
+
+.inventory-slot.dragging {
+    opacity: 0.5;
+    transform: scale(0.95);
+}
+
+/* Rarity-based borders for inventory slots */
+.inventory-slot.rarity-common {
+    border-color: #ffffff;
+    box-shadow: 0 0 5px rgba(255, 255, 255, 0.3);
+    animation: glow-common 2s ease-in-out infinite alternate;
+}
+
+.inventory-slot.rarity-uncommon {
+    border-color: #00ff00;
+    box-shadow: 0 0 5px rgba(0, 255, 0, 0.3);
+    animation: glow-uncommon 2s ease-in-out infinite alternate;
+}
+
+.inventory-slot.rarity-rare {
+    border-color: #0080ff;
+    box-shadow: 0 0 5px rgba(0, 128, 255, 0.3);
+    animation: glow-rare 2s ease-in-out infinite alternate;
+}
+
+.inventory-slot.rarity-epic {
+    border-color: #8000ff;
+    box-shadow: 0 0 5px rgba(128, 0, 255, 0.3);
+    animation: glow-epic 2s ease-in-out infinite alternate;
+}
+
+.inventory-slot.rarity-legendary {
+    border-color: #ff8000;
+    box-shadow: 0 0 5px rgba(255, 128, 0, 0.3);
+    animation: glow-legendary 2s ease-in-out infinite alternate;
+}
+
+/* Rarity glow animations */
+@keyframes glow-common {
+    from { box-shadow: 0 0 5px rgba(255, 255, 255, 0.3); }
+    to { box-shadow: 0 0 8px rgba(255, 255, 255, 0.5); }
+}
+
+@keyframes glow-uncommon {
+    from { box-shadow: 0 0 5px rgba(0, 255, 0, 0.3); }
+    to { box-shadow: 0 0 8px rgba(0, 255, 0, 0.5); }
+}
+
+@keyframes glow-rare {
+    from { box-shadow: 0 0 5px rgba(0, 128, 255, 0.3); }
+    to { box-shadow: 0 0 8px rgba(0, 128, 255, 0.5); }
+}
+
+@keyframes glow-epic {
+    from { box-shadow: 0 0 5px rgba(128, 0, 255, 0.3); }
+    to { box-shadow: 0 0 8px rgba(128, 0, 255, 0.5); }
+}
+
+@keyframes glow-legendary {
+    from { box-shadow: 0 0 5px rgba(255, 128, 0, 0.3); }
+    to { box-shadow: 0 0 8px rgba(255, 128, 0, 0.5); }
+}
+
+.inventory-item {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    font-size: 10px;
+    color: #ffffff;
+    cursor: grab;
+    transition: all 0.2s;
+    position: relative;
+}
+
+.inventory-item:active {
+    cursor: grabbing;
+}
+
+.inventory-item.dragging {
+    opacity: 0.7;
+    transform: scale(0.9);
+    z-index: 1000;
+}
+
+.inventory-item-icon {
+    font-size: 20px;
+    margin-bottom: 2px;
+    line-height: 1;
+}
+
+.inventory-item-name {
+    font-size: 8px;
+    line-height: 1.1;
+    max-width: 100%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    padding: 0 2px;
+}
+
+.inventory-item-stats {
+    font-size: 7px;
+    color: #888;
+    line-height: 1;
+    margin-top: 1px;
+}
+
+.inventory-item-equipped {
+    position: absolute;
+    top: 2px;
+    right: 2px;
+    background: #00ff00;
+    color: #000;
+    font-size: 8px;
+    padding: 1px 3px;
+    border-radius: 2px;
+    font-weight: bold;
+}
+
+.inventory-item-quantity {
+    position: absolute;
+    bottom: 2px;
+    right: 2px;
+    background: #000;
+    color: #00ff00;
+    font-size: 8px;
+    padding: 1px 3px;
+    border-radius: 2px;
+    font-weight: bold;
+    border: 1px solid #00ff00;
+}
+
+.inventory-controls {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+}
+
+.inventory-controls button {
+    min-width: 100px;
+}
+
+/* Tooltip styles for inventory items */
+.inventory-tooltip {
+    position: absolute;
+    background: #000;
+    border: 2px solid #00ff00;
+    padding: 10px;
+    color: #00ff00;
+    font-size: 12px;
+    max-width: 250px;
+    z-index: 1001;
+    pointer-events: none;
+    box-shadow: 0 0 10px rgba(0, 255, 0, 0.5);
+    border-radius: 5px;
+    word-wrap: break-word;
+    white-space: normal;
+}
+
+.inventory-tooltip h4 {
+    margin: 0 0 5px 0;
+    color: #ffffff;
+    border-bottom: 1px solid #00ff00;
+    padding-bottom: 3px;
+}
+
+.inventory-tooltip p {
+    margin: 3px 0;
+    font-size: 11px;
+    line-height: 1.3;
+}
+
+/* Drag preview */
+.drag-preview {
+    position: fixed;
+    pointer-events: none;
+    z-index: 10000;
+    background: rgba(0, 0, 0, 0.8);
+    border: 2px solid #00ff00;
+    padding: 5px;
+    border-radius: 5px;
+    font-size: 12px;
+    color: #00ff00;
+    max-width: 150px;
+}
+
+/* Responsive grid */
+@media (max-width: 768px) {
+    .inventory-grid {
+        grid-template-columns: repeat(6, 1fr);
+        gap: 3px;
+        padding: 10px;
+    }
+    
+    .inventory-slot {
+        width: 50px;
+        height: 50px;
+    }
+    
+    .inventory-item-icon {
+        font-size: 16px;
+    }
+    
+    .inventory-item-name {
+        font-size: 7px;
+    }
+}
+
+@media (max-width: 480px) {
+    .inventory-grid {
+        grid-template-columns: repeat(4, 1fr);
+        gap: 2px;
+        padding: 8px;
+    }
+    
+    .inventory-slot {
+        width: 45px;
+        height: 45px;
+    }
+}
+
+/* Trash Zone Styles */
+.trash-zone {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    width: 80px;
+    height: 80px;
+    border: 3px dashed #ff0000;
+    border-radius: 50%;
+    background: rgba(255, 0, 0, 0.1);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.3s;
+    z-index: 1002;
+}
+
+.trash-zone:hover {
+    background: rgba(255, 0, 0, 0.2);
+    border-color: #ff6666;
+    transform: scale(1.1);
+}
+
+.trash-zone.drag-over {
+    background: rgba(255, 0, 0, 0.3);
+    border-color: #ffffff;
+    border-style: solid;
+    transform: scale(1.2);
+    box-shadow: 0 0 20px rgba(255, 0, 0, 0.5);
+}
+
+.trash-icon {
+    font-size: 24px;
+    margin-bottom: 5px;
+}
+
+.trash-text {
+    font-size: 8px;
+    color: #ff0000;
+    text-align: center;
+    font-weight: bold;
+    line-height: 1.2;
+}
+
+/* Confirmation Modal Styles */
+.confirmation-modal {
+    display: none;
+    position: fixed;
+    z-index: 2000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.8);
+}
+
+.confirmation-content {
+    background: #000;
+    border: 3px solid #ff0000;
+    margin: 20% auto;
+    padding: 25px;
+    width: 90%;
+    max-width: 400px;
+    box-shadow: 0 0 35px rgba(255, 0, 0, 0.5);
+    text-align: center;
+}
+
+.confirmation-content h3 {
+    color: #ff0000;
+    margin-bottom: 15px;
+}
+
+.confirmation-content p {
+    color: #ffffff;
+    margin-bottom: 20px;
+    line-height: 1.4;
+}
+
+.confirmation-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+}
+
+.confirmation-buttons button {
+    min-width: 80px;
+}
+
+.confirm-destroy-btn {
+    background: #800000 !important;
+    border-color: #ff0000 !important;
+    color: #ffffff !important;
+}
+
+.confirm-destroy-btn:hover {
+    background: #ff0000 !important;
+    color: #ffffff !important;
+}
+
+.cancel-btn {
+    background: #000 !important;
+    border-color: #00ff00 !important;
+    color: #00ff00 !important;
+}
+
+.cancel-btn:hover {
+    background: #00ff00 !important;
+    color: #000 !important;
+}
+
+/* Collapsible Panel Styles */
+.panel-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+    border-bottom: 2px solid #00ff00;
+    padding-bottom: 8px;
+}
+
+.panel-header h3 {
+    margin: 0;
+    border: none;
+    padding: 0;
+    text-align: left;
+}
+
+.collapse-btn {
+    background: #000;
+    color: #00ff00;
+    border: 1px solid #00ff00;
+    padding: 4px 8px;
+    font-family: 'Press Start 2P', monospace;
+    font-size: 12px;
+    cursor: pointer;
+    transition: all 0.2s;
+    min-width: 24px;
+    height: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.collapse-btn:hover {
+    background: #00ff00;
+    color: #000;
+}
+
+.panel-content {
+    transition: max-height 0.3s ease-out, opacity 0.3s ease-out;
+    overflow: hidden;
+}
+
+.panel-content.collapsed {
+    max-height: 0;
+    opacity: 0;
+    padding: 0;
+    margin: 0;
+}
+
+/* Inventory Category Styles */
+.inventory-category {
+    font-size: 12px;
+    margin-bottom: 8px;
+}
+
+.inventory-item {
+    transition: background-color 0.2s;
+}
+
+.inventory-item:hover {
+    background-color: rgba(0, 255, 0, 0.1);
+}
+
+/* Death Modal Specific Styles */
+.death-modal {
+    border-color: #ff0000;
+    box-shadow: 0 0 35px rgba(255, 0, 0, 0.5);
+    text-align: center;
+}
+
+.death-modal h2 {
+    color: #ff0000;
+    font-size: 28px;
+    margin-bottom: 30px;
+    text-shadow: 0 0 10px rgba(255, 0, 0, 0.5);
+}
+
+.death-info {
+    margin-bottom: 30px;
+}
+
+.death-info p {
+    font-size: 16px;
+    margin: 10px 0;
+    color: #ccc;
+}
+
+.death-stats {
+    background: rgba(255, 0, 0, 0.1);
+    border: 2px solid #ff0000;
+    padding: 20px;
+    margin: 20px 0;
+    border-radius: 5px;
+}
+
+.death-stats p {
+    font-size: 14px;
+    margin: 8px 0;
+    color: #fff;
+}
+
+.death-stats span {
+    color: #ff6666;
+    font-weight: bold;
+}
+
+.death-actions {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    flex-wrap: wrap;
+}
+
+.death-actions button {
+    background: #000;
+    color: #ff0000;
+    border: 2px solid #ff0000;
+    padding: 15px 25px;
+    font-family: 'Press Start 2P', monospace;
+    font-size: 12px;
+    cursor: pointer;
+    transition: all 0.2s;
+    min-width: 150px;
+}
+
+.death-actions button:hover {
+    background: #ff0000;
+    color: #000;
+    box-shadow: 0 0 15px rgba(255, 0, 0, 0.5);
+}
+
+.death-actions button:active {
+    transform: scale(0.95);
+}
+
+/* Grid-based Inventory Styles */
+.inventory-grid-container {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.inventory-info {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px;
+    background: rgba(0, 0, 0, 0.3);
+    border: 1px solid #00ff00;
+    border-radius: 5px;
+}
+
+.inventory-info span {
+    color: #00ff00;
+    font-size: 14px;
+    font-weight: bold;
+}
+
+.inventory-grid {
+    display: grid;
+    grid-template-columns: repeat(8, 1fr);
+    gap: 5px;
+    padding: 15px;
+    background: rgba(0, 0, 0, 0.5);
+    border: 2px solid #00ff00;
+    border-radius: 8px;
+    min-height: 400px;
+    max-height: 500px;
+    overflow-y: auto;
+}
+
+.inventory-slot {
+    width: 60px;
+    height: 60px;
+    border: 2px solid #333;
+    background: rgba(0, 0, 0, 0.7);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.2s;
+    position: relative;
+    user-select: none;
+}
+
+.inventory-slot:hover {
+    border-color: #00ff00;
+    background: rgba(0, 255, 0, 0.1);
+}
+
+.inventory-slot.empty {
+    border-style: dashed;
+    border-color: #555;
+}
+
+.inventory-slot.empty:hover {
+    border-color: #00ff00;
+    background: rgba(0, 255, 0, 0.05);
+}
+
+.inventory-slot.drag-over {
+    border-color: #ffff00;
+    background: rgba(255, 255, 0, 0.2);
+    transform: scale(1.05);
+}
+
+.inventory-slot.dragging {
+    opacity: 0.5;
+    transform: scale(0.95);
+}
+
+/* Rarity-based borders for inventory slots */
+.inventory-slot.rarity-common {
+    border-color: #ffffff;
+    box-shadow: 0 0 5px rgba(255, 255, 255, 0.3);
+    animation: glow-common 2s ease-in-out infinite alternate;
+}
+
+.inventory-slot.rarity-uncommon {
+    border-color: #00ff00;
+    box-shadow: 0 0 5px rgba(0, 255, 0, 0.3);
+    animation: glow-uncommon 2s ease-in-out infinite alternate;
+}
+
+.inventory-slot.rarity-rare {
+    border-color: #0080ff;
+    box-shadow: 0 0 5px rgba(0, 128, 255, 0.3);
+    animation: glow-rare 2s ease-in-out infinite alternate;
+}
+
+.inventory-slot.rarity-epic {
+    border-color: #8000ff;
+    box-shadow: 0 0 5px rgba(128, 0, 255, 0.3);
+    animation: glow-epic 2s ease-in-out infinite alternate;
+}
+
+.inventory-slot.rarity-legendary {
+    border-color: #ff8000;
+    box-shadow: 0 0 5px rgba(255, 128, 0, 0.3);
+    animation: glow-legendary 2s ease-in-out infinite alternate;
+}
+
+/* Rarity glow animations */
+@keyframes glow-common {
+    from { box-shadow: 0 0 5px rgba(255, 255, 255, 0.3); }
+    to { box-shadow: 0 0 8px rgba(255, 255, 255, 0.5); }
+}
+
+@keyframes glow-uncommon {
+    from { box-shadow: 0 0 5px rgba(0, 255, 0, 0.3); }
+    to { box-shadow: 0 0 8px rgba(0, 255, 0, 0.5); }
+}
+
+@keyframes glow-rare {
+    from { box-shadow: 0 0 5px rgba(0, 128, 255, 0.3); }
+    to { box-shadow: 0 0 8px rgba(0, 128, 255, 0.5); }
+}
+
+@keyframes glow-epic {
+    from { box-shadow: 0 0 5px rgba(128, 0, 255, 0.3); }
+    to { box-shadow: 0 0 8px rgba(128, 0, 255, 0.5); }
+}
+
+@keyframes glow-legendary {
+    from { box-shadow: 0 0 5px rgba(255, 128, 0, 0.3); }
+    to { box-shadow: 0 0 8px rgba(255, 128, 0, 0.5); }
+}
+
+.inventory-item {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    font-size: 10px;
+    color: #ffffff;
+    cursor: grab;
+    transition: all 0.2s;
+    position: relative;
+}
+
+.inventory-item:active {
+    cursor: grabbing;
+}
+
+.inventory-item.dragging {
+    opacity: 0.7;
+    transform: scale(0.9);
+    z-index: 1000;
+}
+
+.inventory-item-icon {
+    font-size: 20px;
+    margin-bottom: 2px;
+    line-height: 1;
+}
+
+.inventory-item-name {
+    font-size: 8px;
+    line-height: 1.1;
+    max-width: 100%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    padding: 0 2px;
+}
+
+.inventory-item-stats {
+    font-size: 7px;
+    color: #888;
+    line-height: 1;
+    margin-top: 1px;
+}
+
+.inventory-item-equipped {
+    position: absolute;
+    top: 2px;
+    right: 2px;
+    background: #00ff00;
+    color: #000;
+    font-size: 8px;
+    padding: 1px 3px;
+    border-radius: 2px;
+    font-weight: bold;
+}
+
+.inventory-item-quantity {
+    position: absolute;
+    bottom: 2px;
+    right: 2px;
+    background: #000;
+    color: #00ff00;
+    font-size: 8px;
+    padding: 1px 3px;
+    border-radius: 2px;
+    font-weight: bold;
+    border: 1px solid #00ff00;
+}
+
+.inventory-controls {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+}
+
+.inventory-controls button {
+    min-width: 100px;
+}
+
+/* Tooltip styles for inventory items */
+.inventory-tooltip {
+    position: absolute;
+    background: #000;
+    border: 2px solid #00ff00;
+    padding: 10px;
+    color: #00ff00;
+    font-size: 12px;
+    max-width: 250px;
+    z-index: 1001;
+    pointer-events: none;
+    box-shadow: 0 0 10px rgba(0, 255, 0, 0.5);
+    border-radius: 5px;
+    word-wrap: break-word;
+    white-space: normal;
+}
+
+.inventory-tooltip h4 {
+    margin: 0 0 5px 0;
+    color: #ffffff;
+    border-bottom: 1px solid #00ff00;
+    padding-bottom: 3px;
+}
+
+.inventory-tooltip p {
+    margin: 3px 0;
+    font-size: 11px;
+    line-height: 1.3;
+}
+
+/* Drag preview */
+.drag-preview {
+    position: fixed;
+    pointer-events: none;
+    z-index: 10000;
+    background: rgba(0, 0, 0, 0.8);
+    border: 2px solid #00ff00;
+    padding: 5px;
+    border-radius: 5px;
+    font-size: 12px;
+    color: #00ff00;
+    max-width: 150px;
+}
+
+/* Responsive grid */
+@media (max-width: 768px) {
+    .inventory-grid {
+        grid-template-columns: repeat(6, 1fr);
+        gap: 3px;
+        padding: 10px;
+    }
+    
+    .inventory-slot {
+        width: 50px;
+        height: 50px;
+    }
+    
+    .inventory-item-icon {
+        font-size: 16px;
+    }
+    
+    .inventory-item-name {
+        font-size: 7px;
+    }
+}
+
+@media (max-width: 480px) {
+    .inventory-grid {
+        grid-template-columns: repeat(4, 1fr);
+        gap: 2px;
+        padding: 8px;
+    }
+    
+    .inventory-slot {
+        width: 45px;
+        height: 45px;
+    }
+}
+
+/* Trash Zone Styles */
+.trash-zone {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    width: 80px;
+    height: 80px;
+    border: 3px dashed #ff0000;
+    border-radius: 50%;
+    background: rgba(255, 0, 0, 0.1);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.3s;
+    z-index: 1002;
+}
+
+.trash-zone:hover {
+    background: rgba(255, 0, 0, 0.2);
+    border-color: #ff6666;
+    transform: scale(1.1);
+}
+
+.trash-zone.drag-over {
+    background: rgba(255, 0, 0, 0.3);
+    border-color: #ffffff;
+    border-style: solid;
+    transform: scale(1.2);
+    box-shadow: 0 0 20px rgba(255, 0, 0, 0.5);
+}
+
+.trash-icon {
+    font-size: 24px;
+    margin-bottom: 5px;
+}
+
+.trash-text {
+    font-size: 8px;
+    color: #ff0000;
+    text-align: center;
+    font-weight: bold;
+    line-height: 1.2;
+}
+
+/* Confirmation Modal Styles */
+.confirmation-modal {
+    display: none;
+    position: fixed;
+    z-index: 2000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.8);
+}
+
+.confirmation-content {
+    background: #00

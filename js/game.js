@@ -19,16 +19,16 @@ class Game {
     this.mapWidth = 50;
     this.mapHeight = 38;
 
-    // Calculate viewport dimensions based on canvas size
-    this.viewportWidth = Math.floor(this.canvas.width / this.tileSize);
-    this.viewportHeight = Math.floor(this.canvas.height / this.tileSize);
+    // Set a smaller, more focused viewport (25x25 tiles)
+    this.viewportWidth = 25;
+    this.viewportHeight = 25;
 
     // Ensure viewport doesn't exceed map size
     this.viewportWidth = Math.min(this.viewportWidth, this.mapWidth);
     this.viewportHeight = Math.min(this.viewportHeight, this.mapHeight);
 
     console.log(
-      `Viewport calculated: ${this.viewportWidth}x${this.viewportHeight} tiles`
+      `Viewport set to: ${this.viewportWidth}x${this.viewportHeight} tiles`
     );
     console.log(
       `Canvas size: ${this.canvas.width}x${this.canvas.height} pixels`
@@ -113,6 +113,9 @@ class Game {
       console.log("Setting up event listeners...");
       // Set up event listeners
       this.setupEventListeners();
+
+      // Canvas touch handling for movement
+      this.setupCanvasTouchControls();
 
       console.log("Starting game loop...");
       // Start game loop
@@ -297,12 +300,6 @@ class Game {
       }
     });
 
-    // Mobile touch controls
-    this.setupMobileControls();
-
-    // Canvas touch handling for movement
-    this.setupCanvasTouchControls();
-
     // Battle modal event listeners
     document.getElementById("attackBtn").addEventListener("click", () => {
       this.battleSystem.playerAttack();
@@ -340,36 +337,6 @@ class Game {
         e.preventDefault();
         this.closeInventory();
       });
-  }
-
-  setupMobileControls() {
-    // D-pad controls
-    const dpadButtons = document.querySelectorAll('.dpad-btn');
-    dpadButtons.forEach(button => {
-      button.addEventListener('touchstart', (e) => {
-        e.preventDefault();
-        this.handleMobileInput(button.dataset.direction || button.dataset.action);
-      });
-      
-      button.addEventListener('click', (e) => {
-        e.preventDefault();
-        this.handleMobileInput(button.dataset.direction || button.dataset.action);
-      });
-    });
-
-    // Action buttons
-    const actionButtons = document.querySelectorAll('.action-btn');
-    actionButtons.forEach(button => {
-      button.addEventListener('touchstart', (e) => {
-        e.preventDefault();
-        this.handleMobileAction(button.id);
-      });
-      
-      button.addEventListener('click', (e) => {
-        e.preventDefault();
-        this.handleMobileAction(button.id);
-      });
-    });
   }
 
   setupCanvasTouchControls() {
@@ -429,60 +396,6 @@ class Game {
       } else {
         this.movePlayer(0, -1); // Up
       }
-    }
-  }
-
-  handleMobileInput(input) {
-    if (this.gameState !== "playing") return;
-
-    let dx = 0, dy = 0;
-
-    switch (input) {
-      case 'up':
-        dy = -1;
-        break;
-      case 'down':
-        dy = 1;
-        break;
-      case 'left':
-        dx = -1;
-        break;
-      case 'right':
-        dx = 1;
-        break;
-      case 'wait':
-        this.addMessage("You wait a moment...");
-        this.updateEnemies();
-        
-        if (this.player.checkForDeath()) {
-          return;
-        }
-        break;
-    }
-
-    if (dx !== 0 || dy !== 0) {
-      this.movePlayer(dx, dy);
-    }
-  }
-
-  handleMobileAction(actionId) {
-    if (this.gameState !== "playing") return;
-
-    switch (actionId) {
-      case 'mobileInventoryBtn':
-        this.openInventory();
-        break;
-      case 'mobileExamineBtn':
-        this.examineTile();
-        break;
-      case 'mobileWaitBtn':
-        this.addMessage("You wait a moment...");
-        this.updateEnemies();
-        
-        if (this.player.checkForDeath()) {
-          return;
-        }
-        break;
     }
   }
 
