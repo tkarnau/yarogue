@@ -8,7 +8,6 @@ body {
     font-family: 'Press Start 2P', monospace;
     background: #0a0a0a;
     color: #00ff00;
-    overflow: hidden;
     image-rendering: pixelated;
     image-rendering: -moz-crisp-edges;
     image-rendering: crisp-edges;
@@ -25,7 +24,7 @@ body {
 .game-container {
     display: flex;
     flex-direction: column;
-    height: 100vh;
+    min-height: 100vh;
     padding: 15px;
     background: linear-gradient(45deg, #0a0a0a, #1a1a1a);
 }
@@ -723,24 +722,34 @@ body {
 
 /* Mobile responsive layout */
 @media (max-width: 768px) {
+    .game-container {
+        min-height: auto;
+        height: auto;
+        overflow-y: auto;
+    }
+    
     .main-content {
         flex-direction: column;
         gap: 10px;
+        height: auto;
     }
     
     .game-area {
         width: 100%;
+        height: auto;
     }
     
     #gameCanvas {
         width: 100%;
         max-width: 100vw;
         height: auto;
+        touch-action: manipulation;
     }
     
     .sidebar {
         width: 100%;
         order: 2; /* Move sidebar below game area */
+        height: auto;
     }
     
     .player-stats, .inventory, .message-log, .status-effects, .character-panel {
@@ -755,5 +764,47 @@ body {
     #playerStats p, #inventoryList p, #messageLog p, #statusEffectsList p, #characterPanel p {
         font-size: 10px;
         margin: 4px 0;
+    }
+    
+    /* Ensure modals are properly positioned on mobile */
+    .modal {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        z-index: 2000;
+        overflow-y: auto;
+        -webkit-overflow-scrolling: touch;
+    }
+    
+    .modal-content {
+        margin: 5% auto;
+        width: 95%;
+        max-width: 400px;
+        max-height: 90vh;
+        overflow-y: auto;
+        -webkit-overflow-scrolling: touch;
+    }
+    
+    /* Make buttons larger and more touch-friendly on mobile */
+    button {
+        min-height: 44px;
+        padding: 12px 16px;
+        font-size: 14px;
+    }
+    
+    /* Ensure battle modal buttons are touch-friendly */
+    .battle-actions button {
+        min-width: 100px;
+        min-height: 50px;
+        margin: 5px;
+        font-size: 16px;
+    }
+    
+    /* Make inventory grid more touch-friendly */
+    .inventory-slot {
+        min-width: 60px;
+        min-height: 60px;
     }
 }
