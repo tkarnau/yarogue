@@ -15,22 +15,28 @@ class Game {
       throw new Error("Could not get 2D context from canvas");
     }
 
-    // Calculate optimal tile size to fill the canvas with 25x25 viewport
-    const maxTileSizeX = Math.floor(this.canvas.width / 25);
-    const maxTileSizeY = Math.floor(this.canvas.height / 25);
-    this.tileSize = Math.min(maxTileSizeX, maxTileSizeY); // Use the smaller dimension to ensure everything fits
-    
+    // Set map dimensions first
     this.mapWidth = 50;
     this.mapHeight = 38;
 
-    // Set a smaller, more focused viewport (25x25 tiles)
-    this.viewportWidth = 25;
+    // Calculate optimal tile size to fit 25 tiles tall within canvas bounds
+    const maxTileSizeY = Math.floor(this.canvas.height / 25);
+    this.tileSize = maxTileSizeY; // Use height-based tile size to ensure 25 tiles tall
+    
+    // Safety check: ensure tile size is valid
+    if (!this.tileSize || this.tileSize <= 0 || !isFinite(this.tileSize)) {
+      console.warn("Invalid tile size calculated, using fallback value of 24");
+      this.tileSize = 24;
+    }
+    
+    // Calculate viewport: 25 tiles tall, width fills the canvas
     this.viewportHeight = 25;
-
+    this.viewportWidth = Math.floor(this.canvas.width / this.tileSize);
+    
     // Ensure viewport doesn't exceed map size
     this.viewportWidth = Math.min(this.viewportWidth, this.mapWidth);
     this.viewportHeight = Math.min(this.viewportHeight, this.mapHeight);
-
+    
     console.log(
       `Viewport set to: ${this.viewportWidth}x${this.viewportHeight} tiles`
     );
