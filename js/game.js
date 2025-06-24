@@ -1924,6 +1924,17 @@ Enemies Defeated: ${this.deathStats.enemiesDefeated}
     this.ctx.fillRect(x, y, this.tileSize, this.tileSize);
   }
 
+  update() {
+    // Only update game state if we're in playing mode
+    if (this.gameState === "playing") {
+      // Update enemies (AI movement, etc.)
+      this.updateEnemies();
+      
+      // Update camera position to follow player
+      this.updateCamera();
+    }
+  }
+
   gameLoop() {
     // Update game state
     this.update();
